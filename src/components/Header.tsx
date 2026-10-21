@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react'
-import { Moon, Sun } from 'lucide-react'
+import { Menu, Moon, Sun, X } from 'lucide-react'
 
 type Language = 'pt' | 'en'
 
@@ -20,14 +20,36 @@ function Header({ language, onLanguageChange }: HeaderProps) {
     return 'light'
   })
 
-  // Aplica o tema e salva a preferência do visitante.
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     localStorage.setItem('portfolio-theme', theme)
   }, [theme])
 
+  // Fecha o menu ao pressionar Escape.
+  useEffect(() => {
+    if (!isMenuOpen) return
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+
+    return () => {
+      window.removeEventListener('keydown', handleEscape)
+    }
+  }, [isMenuOpen])
+
   function toggleTheme() {
     setTheme((current) => current === 'light' ? 'dark' : 'light')
+  }
+
+  function changeLanguage(nextLanguage: Language) {
+    onLanguageChange(nextLanguage)
   }
 
   const translations = {
@@ -37,10 +59,14 @@ function Header({ language, onLanguageChange }: HeaderProps) {
       about: 'Sobre',
       skills: 'Tecnologias',
       projects: 'Projetos',
+      experience: 'Experiência',
+      certifications: 'Certificações',
       contact: 'Contato',
       darkTheme: 'Ativar tema escuro',
       lightTheme: 'Ativar tema claro',
       language: 'Selecionar idioma',
+      openMenu: 'Abrir menu de navegação',
+      closeMenu: 'Fechar menu de navegação',
     },
     en: {
       navigation: 'Main navigation',
@@ -48,10 +74,14 @@ function Header({ language, onLanguageChange }: HeaderProps) {
       about: 'About',
       skills: 'Technologies',
       projects: 'Projects',
+      experience: 'Experience',
+      certifications: 'Certifications',
       contact: 'Contact',
       darkTheme: 'Switch to dark mode',
       lightTheme: 'Switch to light mode',
       language: 'Select language',
+      openMenu: 'Open navigation menu',
+      closeMenu: 'Close navigation menu',
     },
   }
 
@@ -61,6 +91,8 @@ function Header({ language, onLanguageChange }: HeaderProps) {
     { href: '#about', label: text.about },
     { href: '#skills', label: text.skills },
     { href: '#projects', label: text.projects },
+    { href: '#experience', label: text.experience },
+    { href: '#certifications', label: text.certifications },
     { href: '#contact', label: text.contact },
   ]
 
@@ -68,78 +100,122 @@ function Header({ language, onLanguageChange }: HeaderProps) {
     <header className="absolute inset-x-0 top-0 z-50">
       <nav
         aria-label={text.navigation}
-        className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6"
+        className="mx-auto max-w-7xl px-4 py-6 sm:px-6"
       >
-        <a
-          href="#home"
-          aria-label={text.home}
-          className="font-display text-2xl font-bold tracking-tight text-(--color-text) transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
-        >
-          AL<span className="text-(--color-primary)">.</span>
-        </a>
-
-        <div className="hidden items-center gap-8 md:flex">
-          {navigationLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-(--color-text-muted) transition hover:text-(--color-primary)"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* Seletor de idioma */}
-          <div
-            role="group"
-            aria-label={text.language}
-            className="flex items-center rounded-full border border-(--color-border) bg-(--color-surface) p-1"
+        <div className="flex items-center justify-between gap-3">
+          {/* Logotipo */}
+          <a
+            href="#home"
+            aria-label={text.home}
+            onClick={() => setIsMenuOpen(false)}
+            className="font-display shrink-0 text-2xl font-bold tracking-tight text-(--color-text) transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
           >
-            <button
-              type="button"
-              onClick={() => onLanguageChange('pt')}
-              aria-pressed={language === 'pt'}
-              lang="pt-BR"
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ${
-                language === 'pt'
-                  ? 'bg-[#0b3d3e] text-white'
-                  : 'text-(--color-text-muted) hover:text-(--color-primary)'
-              }`}
-            >
-              PT
-            </button>
+            AL<span className="text-(--color-primary)">.</span>
+          </a>
 
-            <button
-              type="button"
-              onClick={() => onLanguageChange('en')}
-              aria-pressed={language === 'en'}
-              lang="en"
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ${
-                language === 'en'
-                  ? 'bg-[#0b3d3e] text-white'
-                  : 'text-(--color-text-muted) hover:text-(--color-primary)'
-              }`}
-            >
-              EN
-            </button>
+          {/* Navegação desktop */}
+          <div className="hidden items-center gap-5 xl:flex">
+            {navigationLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm whitespace-nowrap text-(--color-text-muted) transition hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
 
-          {/* Alternância entre tema claro e escuro */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={theme === 'light' ? text.darkTheme : text.lightTheme}
-            title={theme === 'light' ? text.darkTheme : text.lightTheme}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
-          >
-            {theme === 'light' ? (
-              <Moon size={20} strokeWidth={1.8} aria-hidden="true" />
-            ) : (
-              <Sun size={20} strokeWidth={1.8} aria-hidden="true" />
-            )}
-          </button>
+          {/* Controles */}
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            {/* Seletor de idioma */}
+            <div
+              role="group"
+              aria-label={text.language}
+              className="flex items-center rounded-full border border-(--color-border) bg-(--color-surface) p-1"
+            >
+              <button
+                type="button"
+                onClick={() => changeLanguage('pt')}
+                aria-pressed={language === 'pt'}
+                lang="pt-BR"
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ${
+                  language === 'pt'
+                    ? 'bg-[#0b3d3e] text-white'
+                    : 'text-(--color-text-muted) hover:text-(--color-primary)'
+                }`}
+              >
+                PT
+              </button>
+
+              <button
+                type="button"
+                onClick={() => changeLanguage('en')}
+                aria-pressed={language === 'en'}
+                lang="en"
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ${
+                  language === 'en'
+                    ? 'bg-[#0b3d3e] text-white'
+                    : 'text-(--color-text-muted) hover:text-(--color-primary)'
+                }`}
+              >
+                EN
+              </button>
+            </div>
+
+            {/* Tema claro/escuro */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={theme === 'light' ? text.darkTheme : text.lightTheme}
+              title={theme === 'light' ? text.darkTheme : text.lightTheme}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+            >
+              {theme === 'light' ? (
+                <Moon size={20} strokeWidth={1.8} aria-hidden="true" />
+              ) : (
+                <Sun size={20} strokeWidth={1.8} aria-hidden="true" />
+              )}
+            </button>
+
+            {/* Menu para telas menores */}
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen((current) => !current)}
+              aria-label={isMenuOpen ? text.closeMenu : text.openMenu}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) xl:hidden"
+            >
+              {isMenuOpen ? (
+                <X size={20} strokeWidth={1.8} aria-hidden="true" />
+              ) : (
+                <Menu size={20} strokeWidth={1.8} aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Navegação responsiva */}
+        <div
+          id="mobile-navigation"
+          hidden={!isMenuOpen}
+          className={`mt-4 rounded-2xl border border-(--color-border) bg-(--color-surface) p-3 shadow-lg xl:hidden ${
+            isMenuOpen ? 'block' : 'hidden'
+          }`}
+        >
+          <div className="flex flex-col">
+            {navigationLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMenuOpen(false)}
+                className="rounded-xl px-4 py-3 text-sm font-medium text-(--color-text) transition-colors hover:bg-(--color-background) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
       </nav>
     </header>
