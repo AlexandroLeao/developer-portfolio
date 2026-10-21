@@ -24,7 +24,7 @@
   --color-border: #d4d9c6;
 }
 
-/* Tema escuro: preto profundo + Deep Teal + Beige */
+/* Tema escuro */
 :root.dark {
   color-scheme: dark;
 
@@ -54,6 +54,46 @@ body {
     color 300ms ease;
 }
 
+/* Letras do indicador surgem e desaparecem suavemente */
+@keyframes scroll-hint-letter-fade {
+  0%, 12%, 100% {
+    opacity: 0.15;
+    transform: translateY(3px);
+  }
+
+  35%, 65% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  85% {
+    opacity: 0.15;
+    transform: translateY(-2px);
+  }
+}
+
+.scroll-hint-letter {
+  animation: scroll-hint-letter-fade 3.4s ease-in-out infinite both;
+}
+
+/* Movimento vertical discreto da seta */
+@keyframes scroll-hint-arrow-move {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: translateY(5px);
+    opacity: 1;
+  }
+}
+
+.scroll-hint-arrow {
+  animation: scroll-hint-arrow-move 2.4s ease-in-out infinite;
+}
+
+/* Respeita a preferência por movimento reduzido */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -61,5 +101,12 @@ body {
 
   body {
     transition: none;
+  }
+
+  .scroll-hint-letter,
+  .scroll-hint-arrow {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

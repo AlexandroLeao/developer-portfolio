@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react'
-import { Download, Mail } from 'lucide-react'
+import { ChevronDown, Download, Mail } from 'lucide-react'
 import Header from './components/Header'
 
 type Language = 'pt' | 'en'
@@ -14,6 +14,7 @@ const translations = {
       resume: 'Currículo em breve',
       resumeLabel: 'Download do currículo disponível em breve',
       illustration: 'Ilustração de Alexandro Leão utilizando um notebook',
+      scrollHint: 'Role para explorar',
     },
     about: {
       eyebrow: 'CONHEÇA UM POUCO SOBRE MIM',
@@ -35,6 +36,7 @@ const translations = {
       resume: 'Résumé coming soon',
       resumeLabel: 'Résumé download coming soon',
       illustration: 'Illustration of Alexandro Leão using a laptop',
+      scrollHint: 'Scroll to explore',
     },
     about: {
       eyebrow: 'GET TO KNOW ME',
@@ -61,10 +63,31 @@ function App() {
     return 'pt'
   })
 
+  const [isAtTop, setIsAtTop] = useState(() => {
+    return typeof window === 'undefined' || window.scrollY < 80
+  })
+
   useEffect(() => {
     localStorage.setItem('portfolio-language', language)
     document.documentElement.lang = language === 'pt' ? 'pt-BR' : 'en'
   }, [language])
+
+  // Mostra o indicador somente quando o visitante está no topo.
+  useEffect(() => {
+    function handleScroll() {
+      setIsAtTop(window.scrollY < 80)
+    }
+
+    handleScroll()
+
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   const text = translations[language]
 
@@ -78,7 +101,7 @@ function App() {
       {/* HERO */}
       <section
         aria-labelledby="hero-title"
-        className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-12 px-6 pt-32 pb-16 lg:flex-row lg:gap-16"
+        className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-12 px-6 pt-32 pb-32 lg:flex-row lg:gap-16"
       >
         <div className="flex w-full flex-1 flex-col items-center text-center lg:items-start lg:text-left">
           <span className="mb-6 rounded-full border border-(--color-border) bg-(--color-surface) px-4 py-2 text-sm font-medium text-(--color-primary)">
@@ -130,6 +153,43 @@ function App() {
             className="relative z-10 h-auto w-full max-w-lg object-contain"
           />
         </div>
+
+        {/* Indicador animado de rolagem */}
+        <a
+          href="#about"
+          aria-label={text.hero.scrollHint}
+          aria-hidden={!isAtTop}
+          tabIndex={isAtTop ? 0 : -1}
+          className={`absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 whitespace-nowrap text-(--color-text-muted) transition-opacity duration-500 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) sm:bottom-8 ${
+            isAtTop
+              ? 'opacity-100'
+              : 'pointer-events-none opacity-0'
+          }`}
+        >
+          <span
+            aria-hidden="true"
+            className="flex text-xs font-medium tracking-[0.12em] sm:text-sm"
+          >
+            {Array.from(text.hero.scrollHint).map((letter, index) => (
+              <span
+                key={`${language}-${index}`}
+                className="scroll-hint-letter inline-block"
+                style={{
+                  animationDelay: `${index * 65}ms`,
+                }}
+              >
+                {letter === ' ' ? '\u00A0' : letter}
+              </span>
+            ))}
+          </span>
+
+          <ChevronDown
+            size={22}
+            strokeWidth={1.6}
+            aria-hidden="true"
+            className="scroll-hint-arrow text-(--color-primary)"
+          />
+        </a>
       </section>
 
       {/* SOBRE MIM / ABOUT */}
