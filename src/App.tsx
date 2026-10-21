@@ -49,13 +49,21 @@ function App() {
           </div>
         </div>
 
-        <div className="flex w-full flex-1 items-center justify-center">
+        {/* Ilustração com brilho suave apenas no tema escuro */}
+        <div className="relative isolate flex w-full flex-1 items-center justify-center">
+          {/* Brilho atrás da ilustração */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 -z-10 hidden rounded-full bg-[#235d59]/45 blur-[75px] dark:block"
+          />
+
+          {/* Ilustração original preservada */}
           <img
             src="/images/hero-illustration.png"
             alt="Ilustração de Alexandro Leão utilizando um notebook"
             width={1448}
             height={1086}
-            className="h-auto w-full max-w-lg object-contain"
+            className="relative z-10 h-auto w-full max-w-lg object-contain"
           />
         </div>
       </section>
