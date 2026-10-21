@@ -8,36 +8,36 @@
   --font-display: "Space Grotesk", sans-serif;
 }
 
-/* Tema claro: Light Cream + Royal Blue */
+/* Tema claro: Beige + Teal */
 :root {
   color-scheme: light;
 
-  --color-background: #f8f3f0;
-  --color-surface: #fffdfb;
+  --color-background: #f5f5dc;
+  --color-surface: #fffef2;
 
-  --color-text: #151515;
-  --color-text-muted: #4f4b49;
+  --color-text: #173b38;
+  --color-text-muted: #355c57;
 
-  --color-primary: #0b4db5;
-  --color-secondary: #082052;
+  --color-primary: #008080;
+  --color-secondary: #173b38;
 
-  --color-border: #ddd4ce;
+  --color-border: #d4d9c6;
 }
 
-/* Tema escuro: preto + Royal Blue + Light Cream */
+/* Tema escuro: preto profundo + Teal + Beige */
 :root.dark {
   color-scheme: dark;
 
-  --color-background: #090909;
-  --color-surface: #171717;
+  --color-background: #090c0b;
+  --color-surface: #161c1a;
 
-  --color-text: #f8f3f0;
-  --color-text-muted: #c8beb8;
+  --color-text: #f5f5dc;
+  --color-text-muted: #c3d3cb;
 
-  --color-primary: #78aaff;
-  --color-secondary: #f8f3f0;
+  --color-primary: #51c7b8;
+  --color-secondary: #f5f5dc;
 
-  --color-border: #383838;
+  --color-border: #34423d;
 }
 
 html {
