@@ -8,7 +8,7 @@
   --font-display: "Space Grotesk", sans-serif;
 }
 
-/* Tema claro: Beige + Teal */
+/* Tema claro: Beige + Deep Teal */
 :root {
   color-scheme: light;
 
@@ -18,13 +18,13 @@
   --color-text: #173b38;
   --color-text-muted: #355c57;
 
-  --color-primary: #008080;
+  --color-primary: #0b3d3e;
   --color-secondary: #173b38;
 
   --color-border: #d4d9c6;
 }
 
-/* Tema escuro: preto profundo + Teal + Beige */
+/* Tema escuro: preto profundo + Deep Teal + Beige */
 :root.dark {
   color-scheme: dark;
 
