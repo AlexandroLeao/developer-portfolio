@@ -5,7 +5,7 @@ import { Moon, Sun } from 'lucide-react'
 function Header() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
 
-  // Recupera e Persiste a preferência de tema do usuário no navegador.
+  // Recupera e persiste a preferência de tema do usuário no navegador.
   useEffect(() => {
     const savedTheme = localStorage.getItem('portfolio-theme')
 
@@ -31,9 +31,10 @@ function Header() {
       >
         <a
           href="#home"
-          className="font-display text-xl font-bold tracking-tight text-(--color-text)"
+          aria-label="Alexandro Leão — voltar ao início"
+          className="font-display text-2xl font-bold tracking-tight text-(--color-text) transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
         >
-          <span className="text-(--color-primary)">&lt;/&gt;</span> Alexandro
+          AL<span className="text-(--color-primary)">.</span>
         </a>
 
         <div className="hidden items-center gap-8 md:flex">
