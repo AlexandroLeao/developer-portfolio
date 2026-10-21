@@ -33,7 +33,7 @@ function App() {
           <div className="flex flex-col gap-4 sm:flex-row">
             <a
               href="#contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#263e93] px-8 py-3 font-semibold text-white transition hover:bg-[#344eaa] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0b4db5] px-8 py-3 font-semibold text-white transition hover:bg-[#0a4199] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
               <Mail size={18} aria-hidden="true" />
               Entrar em contato
