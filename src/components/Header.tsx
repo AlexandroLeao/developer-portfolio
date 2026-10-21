@@ -1,9 +1,11 @@
 
 import { useEffect, useState } from 'react'
+import { Moon, Sun } from 'lucide-react'
 
 function Header() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
 
+  // Recupera e Persiste a preferência de tema do usuário no navegador.
   useEffect(() => {
     const savedTheme = localStorage.getItem('portfolio-theme')
 
@@ -35,16 +37,31 @@ function Header() {
         </a>
 
         <div className="hidden items-center gap-8 md:flex">
-          <a href="#about" className="text-sm text-(--color-text-muted) transition hover:text-(--color-primary)">
+          <a
+            href="#about"
+            className="text-sm text-(--color-text-muted) transition hover:text-(--color-primary)"
+          >
             Sobre
           </a>
-          <a href="#skills" className="text-sm text-(--color-text-muted) transition hover:text-(--color-primary)">
+
+          <a
+            href="#skills"
+            className="text-sm text-(--color-text-muted) transition hover:text-(--color-primary)"
+          >
             Tecnologias
           </a>
-          <a href="#projects" className="text-sm text-(--color-text-muted) transition hover:text-(--color-primary)">
+
+          <a
+            href="#projects"
+            className="text-sm text-(--color-text-muted) transition hover:text-(--color-primary)"
+          >
             Projetos
           </a>
-          <a href="#contact" className="text-sm text-(--color-text-muted) transition hover:text-(--color-primary)">
+
+          <a
+            href="#contact"
+            className="text-sm text-(--color-text-muted) transition hover:text-(--color-primary)"
+          >
             Contato
           </a>
         </div>
@@ -54,9 +71,13 @@ function Header() {
           onClick={toggleTheme}
           aria-label={theme === 'light' ? 'Ativar tema escuro' : 'Ativar tema claro'}
           title={theme === 'light' ? 'Ativar tema escuro' : 'Ativar tema claro'}
-          className="rounded-full border border-(--color-border) bg-(--color-surface) px-4 py-2 text-sm text-(--color-text) transition-colors duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
         >
-          {theme === 'light' ? '🌙' : '☀️'}
+          {theme === 'light' ? (
+            <Moon size={20} strokeWidth={1.8} aria-hidden="true" />
+          ) : (
+            <Sun size={20} strokeWidth={1.8} aria-hidden="true" />
+          )}
         </button>
       </nav>
     </header>
