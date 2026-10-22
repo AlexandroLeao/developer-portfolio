@@ -58,6 +58,7 @@ Production deployment configuration and release procedures will be reviewed befo
 - Back-to-top navigation
 - Animated scroll indicator
 - Continuous Integration for pull requests targeting `main`
+- Initial automated component tests
 
 ## Getting Started
 
@@ -120,7 +121,7 @@ The initial tests cover:
 - Switching the application language to English
 - Switching between light and dark themes
 
-Automated tests currently run locally. Integration into GitHub Actions is planned for a future iteration.
+The GitHub Actions CI workflow also executes `npm run test` automatically on pull requests targeting `main`.
 
 ### Production Build
 
@@ -159,15 +160,16 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed conventions, review practice
 
 GitHub Actions runs on pull requests targeting `main`.
 
-The current workflow:
+The workflow:
 
 1. Checks out the repository.
 2. Configures Node.js 24.
 3. Installs dependencies with `npm ci`.
 4. Runs `npm run lint`.
-5. Runs `npm run build`.
+5. Runs `npm run test`.
+6. Runs `npm run build`.
 
-Automated component tests are configured locally. Running them in GitHub Actions is planned for a separate iteration.
+A failed lint, test, or build command causes the CI job to fail.
 
 ## Roadmap
 
@@ -184,10 +186,11 @@ Automated component tests are configured locally. Running them in GitHub Actions
 - [x] Add light and dark themes
 - [x] Implement responsive navigation
 - [x] Standardize project documentation and development workflow
+- [x] Establish initial automated tests
 
 ### In Progress
 
-- [ ] Establish initial automated tests
+- [ ] Integrate automated tests into GitHub Actions
 
 ### Planned
 
