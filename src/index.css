@@ -56,7 +56,7 @@ body {
     color 300ms ease;
 }
 
-/* ANIMAÇÃO DAS LETRAS */
+/* ANIMAÇÃO DAS LETRAS DO INDICADOR DA HERO */
 @keyframes scroll-hint-letter-fade {
   0%, 12%, 100% {
     opacity: 0.15;
@@ -83,7 +83,7 @@ body {
     both;
 }
 
-/* ANIMAÇÃO DA SETA */
+/* ANIMAÇÃO DA SETA DA HERO */
 @keyframes scroll-hint-arrow-move {
   0%, 100% {
     transform: translateY(0);
@@ -102,46 +102,6 @@ body {
     2.4s
     ease-in-out
     infinite;
-}
-
-/* APARECER E DESAPARECER DO INDICADOR COMPLETO */
-@keyframes section-scroll-hint-fade {
-  0%, 100% {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-
-  25%, 70% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.section-scroll-hint {
-  text-decoration: none;
-
-  animation:
-    section-scroll-hint-fade
-    4s
-    ease-in-out
-    infinite;
-}
-
-.section-scroll-hint:hover {
-  color: var(--color-primary);
-  animation-play-state: paused;
-  opacity: 1;
-}
-
-.section-scroll-hint:hover .scroll-hint-letter,
-.section-scroll-hint:hover .scroll-hint-arrow {
-  animation-play-state: paused;
-}
-
-.section-scroll-hint:hover .scroll-hint-arrow {
-  filter: drop-shadow(
-    0 0 8px var(--color-primary)
-  );
 }
 
 /* CARDS DE TECNOLOGIAS */
@@ -233,7 +193,6 @@ body {
 
   .scroll-hint-letter,
   .scroll-hint-arrow,
-  .section-scroll-hint,
   .technology-details {
     animation: none;
     opacity: 1;
@@ -244,8 +203,7 @@ body {
   .technology-card::before,
   .technology-icon,
   .smart-header,
-  .back-to-top,
-  .section-scroll-hint {
+  .back-to-top {
     transition: none;
   }
 

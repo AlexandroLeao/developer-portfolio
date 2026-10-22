@@ -15,6 +15,7 @@ import {
 import Header from './components/Header'
 
 type Language = 'pt' | 'en'
+
 type CategoryId =
   | 'frontend'
   | 'backend'
@@ -385,8 +386,6 @@ const translations = {
     },
     navigation: {
       backToTop: 'Voltar ao topo da página',
-      continueExploring: 'Continue explorando',
-      nextSkills: 'Ir para Tecnologias',
     },
   },
   en: {
@@ -420,8 +419,6 @@ const translations = {
     },
     navigation: {
       backToTop: 'Back to the top of the page',
-      continueExploring: 'Keep exploring',
-      nextSkills: 'Go to Technologies',
     },
   },
 }
@@ -480,52 +477,6 @@ function TechnologyDetails({
         <X size={18} aria-hidden="true" />
       </button>
     </div>
-  )
-}
-
-type SectionScrollHintProps = {
-  label: string
-  destinationLabel: string
-  href: string
-  language: Language
-}
-
-function SectionScrollHint({
-  label,
-  destinationLabel,
-  href,
-  language,
-}: SectionScrollHintProps) {
-  return (
-    <a
-      href={href}
-      aria-label={destinationLabel}
-      className="section-scroll-hint mx-auto mt-5 hidden w-fit flex-col items-center gap-1 rounded-xl px-4 py-2 text-(--color-text-muted) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) md:flex"
-    >
-      <span
-        aria-hidden="true"
-        className="flex text-xs font-medium tracking-[0.12em]"
-      >
-        {Array.from(label).map((letter, index) => (
-          <span
-            key={`${language}-${index}`}
-            className="scroll-hint-letter inline-block"
-            style={{
-              animationDelay: `${index * 65}ms`,
-            }}
-          >
-            {letter === ' ' ? '\u00A0' : letter}
-          </span>
-        ))}
-      </span>
-
-      <ChevronDown
-        size={20}
-        strokeWidth={1.6}
-        aria-hidden="true"
-        className="scroll-hint-arrow text-(--color-primary)"
-      />
-    </a>
   )
 }
 
@@ -748,14 +699,6 @@ function App() {
             )}
           </div>
         </div>
-
-        {/* INDICADOR ENTRE SEÇÕES — APENAS DESKTOP */}
-        <SectionScrollHint
-          label={text.navigation.continueExploring}
-          destinationLabel={text.navigation.nextSkills}
-          href="#skills"
-          language={language}
-        />
       </section>
 
       {/* TECNOLOGIAS */}
