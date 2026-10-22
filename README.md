@@ -35,6 +35,10 @@ The Projects, Experience, Certifications, and Contact sections are planned for f
 - ESLint
 - TypeScript compilation
 - GitHub Actions
+- Vitest
+- React Testing Library
+- Testing Library jest-dom and user-event
+- jsdom
 
 ### Deployment
 
@@ -94,6 +98,30 @@ Run ESLint:
 npm run lint
 ```
 
+### Automated Tests
+
+The project uses Vitest and React Testing Library with jsdom to test application behavior.
+
+Run all tests once:
+
+```bash
+npm run test
+```
+
+Run tests in watch mode during development:
+
+```bash
+npm run test:watch
+```
+
+The initial tests cover:
+
+- Rendering the main portfolio sections
+- Switching the application language to English
+- Switching between light and dark themes
+
+Automated tests currently run locally. Integration into GitHub Actions is planned for a future iteration.
+
 ### Production Build
 
 Run TypeScript compilation and the Vite production build:
@@ -139,7 +167,7 @@ The current workflow:
 4. Runs `npm run lint`.
 5. Runs `npm run build`.
 
-Automated unit, integration, and end-to-end tests are planned for future iterations.
+Automated component tests are configured locally. Running them in GitHub Actions is planned for a separate iteration.
 
 ## Roadmap
 
@@ -155,14 +183,14 @@ Automated unit, integration, and end-to-end tests are planned for future iterati
 - [x] Add bilingual support
 - [x] Add light and dark themes
 - [x] Implement responsive navigation
+- [x] Standardize project documentation and development workflow
 
 ### In Progress
 
-- [ ] Standardize project documentation and development workflow
+- [ ] Establish initial automated tests
 
 ### Planned
 
-- [ ] Establish initial automated tests
 - [ ] Review `main` branch protection
 - [ ] Implement the Projects section
 - [ ] Implement the Experience section
