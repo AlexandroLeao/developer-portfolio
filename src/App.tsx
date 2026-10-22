@@ -500,11 +500,11 @@ function SectionScrollHint({
     <a
       href={href}
       aria-label={destinationLabel}
-      className="section-scroll-hint group mx-auto mt-16 flex w-fit flex-col items-center gap-2 rounded-xl px-5 py-3 text-(--color-text-muted) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) sm:mt-20"
+      className="section-scroll-hint mx-auto mt-5 hidden w-fit flex-col items-center gap-1 rounded-xl px-4 py-2 text-(--color-text-muted) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) md:flex"
     >
       <span
         aria-hidden="true"
-        className="flex text-xs font-medium tracking-[0.12em] sm:text-sm"
+        className="flex text-xs font-medium tracking-[0.12em]"
       >
         {Array.from(label).map((letter, index) => (
           <span
@@ -520,7 +520,7 @@ function SectionScrollHint({
       </span>
 
       <ChevronDown
-        size={22}
+        size={20}
         strokeWidth={1.6}
         aria-hidden="true"
         className="scroll-hint-arrow text-(--color-primary)"
@@ -606,7 +606,7 @@ function App() {
       {/* HERO */}
       <section
         aria-labelledby="hero-title"
-        className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-12 px-6 pt-32 pb-32 lg:flex-row lg:gap-16"
+        className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center gap-12 px-6 pt-32 pb-20 lg:flex-row lg:gap-16 lg:pb-28"
       >
         <div className="flex w-full flex-1 flex-col items-center text-center lg:items-start lg:text-left">
           <span className="mb-6 rounded-full border border-(--color-border) bg-(--color-surface) px-4 py-2 text-sm font-medium text-(--color-primary)">
@@ -659,13 +659,13 @@ function App() {
           />
         </div>
 
-        {/* INDICADOR DA HERO */}
+        {/* INDICADOR DA HERO — APENAS DESKTOP */}
         <a
           href="#about"
           aria-label={text.hero.scrollHint}
           aria-hidden={!isAtTop}
           tabIndex={isAtTop ? 0 : -1}
-          className={`absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 whitespace-nowrap text-(--color-text-muted) transition-opacity duration-500 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) sm:bottom-8 ${
+          className={`absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 whitespace-nowrap text-(--color-text-muted) transition-opacity duration-500 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) md:flex ${
             isAtTop
               ? 'opacity-100'
               : 'pointer-events-none opacity-0'
@@ -703,9 +703,9 @@ function App() {
       <section
         id="about"
         aria-labelledby="about-title"
-        className="scroll-mt-12 border-t border-(--color-border) py-24 sm:py-32"
+        className="scroll-mt-12 border-t border-(--color-border) pt-16 pb-10 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-8"
       >
-        <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-12 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
           <div className="flex flex-col items-start">
             <span className="mb-5 text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
               {text.about.eyebrow}
@@ -749,7 +749,7 @@ function App() {
           </div>
         </div>
 
-        {/* CONTINUE EXPLORANDO: SOBRE MIM → TECNOLOGIAS */}
+        {/* INDICADOR ENTRE SEÇÕES — APENAS DESKTOP */}
         <SectionScrollHint
           label={text.navigation.continueExploring}
           destinationLabel={text.navigation.nextSkills}
@@ -762,7 +762,7 @@ function App() {
       <section
         id="skills"
         aria-labelledby="skills-title"
-        className="scroll-mt-12 border-t border-(--color-border) py-24 sm:py-32"
+        className="scroll-mt-12 border-t border-(--color-border) pt-14 pb-24 sm:pt-16 sm:pb-32"
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-14 max-w-2xl">

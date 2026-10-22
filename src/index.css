@@ -56,7 +56,7 @@ body {
     color 300ms ease;
 }
 
-/* INDICADOR DE ROLAGEM: LETRAS */
+/* ANIMAÇÃO DAS LETRAS */
 @keyframes scroll-hint-letter-fade {
   0%, 12%, 100% {
     opacity: 0.15;
@@ -83,7 +83,7 @@ body {
     both;
 }
 
-/* INDICADOR DE ROLAGEM: SETA */
+/* ANIMAÇÃO DA SETA */
 @keyframes scroll-hint-arrow-move {
   0%, 100% {
     transform: translateY(0);
@@ -104,14 +104,38 @@ body {
     infinite;
 }
 
-/* INDICADOR ENTRE SEÇÕES */
+/* APARECER E DESAPARECER DO INDICADOR COMPLETO */
+@keyframes section-scroll-hint-fade {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  25%, 70% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .section-scroll-hint {
   text-decoration: none;
-  transition: color 300ms ease;
+
+  animation:
+    section-scroll-hint-fade
+    4s
+    ease-in-out
+    infinite;
 }
 
 .section-scroll-hint:hover {
   color: var(--color-primary);
+  animation-play-state: paused;
+  opacity: 1;
+}
+
+.section-scroll-hint:hover .scroll-hint-letter,
+.section-scroll-hint:hover .scroll-hint-arrow {
+  animation-play-state: paused;
 }
 
 .section-scroll-hint:hover .scroll-hint-arrow {
@@ -209,6 +233,7 @@ body {
 
   .scroll-hint-letter,
   .scroll-hint-arrow,
+  .section-scroll-hint,
   .technology-details {
     animation: none;
     opacity: 1;
