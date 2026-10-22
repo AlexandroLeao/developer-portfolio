@@ -1,6 +1,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
+@import url('https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/devicon.min.css');
+
 @import "tailwindcss";
 
 @theme {
@@ -8,7 +10,7 @@
   --font-display: "Outfit", sans-serif;
 }
 
-/* Tema claro: Beige + Deep Teal */
+/* TEMA CLARO */
 :root {
   color-scheme: light;
 
@@ -24,7 +26,7 @@
   --color-border: #d4d9c6;
 }
 
-/* Tema escuro */
+/* TEMA ESCURO */
 :root.dark {
   color-scheme: dark;
 
@@ -54,7 +56,7 @@ body {
     color 300ms ease;
 }
 
-/* Letras do indicador surgem e desaparecem suavemente */
+/* INDICADOR DE ROLAGEM */
 @keyframes scroll-hint-letter-fade {
   0%, 12%, 100% {
     opacity: 0.15;
@@ -76,7 +78,6 @@ body {
   animation: scroll-hint-letter-fade 3.4s ease-in-out infinite both;
 }
 
-/* Movimento vertical discreto da seta */
 @keyframes scroll-hint-arrow-move {
   0%, 100% {
     transform: translateY(0);
@@ -93,7 +94,72 @@ body {
   animation: scroll-hint-arrow-move 2.4s ease-in-out infinite;
 }
 
-/* Respeita a preferência por movimento reduzido */
+/* CARDS DE TECNOLOGIAS */
+.technology-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.technology-card::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 20%;
+  border-radius: 50%;
+  background: var(--color-primary);
+  opacity: 0;
+  filter: blur(28px);
+  transform: scale(0.7);
+  transition:
+    opacity 300ms ease,
+    transform 300ms ease;
+}
+
+.technology-icon {
+  color: var(--color-text-muted);
+  filter: grayscale(1);
+}
+
+.technology-card:hover,
+.technology-card-selected {
+  border-color: var(--color-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px -14px var(--color-primary);
+}
+
+.technology-card:hover::before,
+.technology-card-selected::before {
+  opacity: 0.12;
+  transform: scale(1);
+}
+
+.technology-card:hover .technology-icon,
+.technology-card-selected .technology-icon {
+  color: var(--color-primary);
+  filter: grayscale(0);
+  transform: scale(1.1);
+}
+
+/* PAINEL DE DETALHES */
+@keyframes technology-details-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.technology-details {
+  animation: technology-details-appear 300ms ease-out both;
+}
+
+/* ACESSIBILIDADE */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -104,9 +170,23 @@ body {
   }
 
   .scroll-hint-letter,
-  .scroll-hint-arrow {
+  .scroll-hint-arrow,
+  .technology-details {
     animation: none;
     opacity: 1;
+    transform: none;
+  }
+
+  .technology-card,
+  .technology-card::before,
+  .technology-icon {
+    transition: none;
+  }
+
+  .technology-card:hover,
+  .technology-card-selected,
+  .technology-card:hover .technology-icon,
+  .technology-card-selected .technology-icon {
     transform: none;
   }
 }
