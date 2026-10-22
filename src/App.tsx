@@ -1,6 +1,7 @@
 
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import {
+  ArrowUp,
   BrainCircuit,
   ChevronDown,
   Cloud,
@@ -38,10 +39,7 @@ type TechnologyCategory = {
 const technologyCategories: TechnologyCategory[] = [
   {
     id: 'frontend',
-    title: {
-      pt: 'Front-End',
-      en: 'Front-End',
-    },
+    title: { pt: 'Front-End', en: 'Front-End' },
     technologies: [
       {
         id: 'html',
@@ -119,10 +117,7 @@ const technologyCategories: TechnologyCategory[] = [
   },
   {
     id: 'backend',
-    title: {
-      pt: 'Back-End & Dados',
-      en: 'Back-End & Data',
-    },
+    title: { pt: 'Back-End & Dados', en: 'Back-End & Data' },
     technologies: [
       {
         id: 'nodejs',
@@ -383,6 +378,9 @@ const translations = {
       detailsLabel: 'Como utilizo ou pretendo aplicar',
       close: 'Fechar detalhes',
     },
+    navigation: {
+      backToTop: 'Voltar ao topo da página',
+    },
   },
   en: {
     hero: {
@@ -413,6 +411,9 @@ const translations = {
       detailsLabel: 'How I use it or plan to apply it',
       close: 'Close details',
     },
+    navigation: {
+      backToTop: 'Back to the top of the page',
+    },
   },
 }
 
@@ -424,6 +425,55 @@ const categoryIcons = {
   engineering: Workflow,
 }
 
+type TechnologyDetailsProps = {
+  technology: Technology
+  language: Language
+  detailsLabel: string
+  closeLabel: string
+  onClose: () => void
+  className?: string
+}
+
+function TechnologyDetails({
+  technology,
+  language,
+  detailsLabel,
+  closeLabel,
+  onClose,
+  className = '',
+}: TechnologyDetailsProps) {
+  return (
+    <div
+      className={`technology-details flex items-start justify-between gap-4 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 sm:p-6 ${className}`}
+      role="region"
+      aria-label={`${technology.name} — ${detailsLabel}`}
+    >
+      <div className="max-w-3xl">
+        <span className="mb-2 block text-xs font-medium uppercase tracking-wider text-(--color-primary)">
+          {detailsLabel}
+        </span>
+
+        <h4 className="font-display mb-2 text-lg font-semibold">
+          {technology.name}
+        </h4>
+
+        <p className="text-sm leading-7 text-(--color-text-muted) sm:text-base">
+          {technology.description[language]}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label={closeLabel}
+        className="shrink-0 rounded-full p-2 text-(--color-text-muted) transition-colors hover:bg-(--color-background) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-(--color-primary)"
+      >
+        <X size={18} aria-hidden="true" />
+      </button>
+    </div>
+  )
+}
+
 function App() {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
@@ -431,12 +481,15 @@ function App() {
         ? 'en'
         : 'pt'
     }
+
     return 'pt'
   })
 
   const [isAtTop, setIsAtTop] = useState(() => {
     return typeof window === 'undefined' || window.scrollY < 80
   })
+
+  const [showBackToTop, setShowBackToTop] = useState(false)
 
   const [selectedTechnologies, setSelectedTechnologies] = useState<
     Partial<Record<CategoryId, string>>
@@ -449,13 +502,25 @@ function App() {
 
   useEffect(() => {
     function handleScroll() {
-      setIsAtTop(window.scrollY < 80)
+      const currentY = window.scrollY
+
+      setIsAtTop(currentY < 80)
+
+      // Só mostra o botão depois de uma rolagem significativa.
+      setShowBackToTop(
+        currentY > Math.max(window.innerHeight * 1.5, 900),
+      )
     }
 
     handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
 
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [])
 
   const text = translations[language]
@@ -515,6 +580,7 @@ function App() {
           </div>
         </div>
 
+        {/* ILUSTRAÇÃO */}
         <div className="relative isolate flex w-full flex-1 items-center justify-center">
           <div
             aria-hidden="true"
@@ -530,14 +596,16 @@ function App() {
           />
         </div>
 
-        {/* INDICADOR DE ROLAGEM */}
+        {/* INDICADOR ANIMADO DE ROLAGEM */}
         <a
           href="#about"
           aria-label={text.hero.scrollHint}
           aria-hidden={!isAtTop}
           tabIndex={isAtTop ? 0 : -1}
           className={`absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 whitespace-nowrap text-(--color-text-muted) transition-opacity duration-500 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) sm:bottom-8 ${
-            isAtTop ? 'opacity-100' : 'pointer-events-none opacity-0'
+            isAtTop
+              ? 'opacity-100'
+              : 'pointer-events-none opacity-0'
           }`}
         >
           <span
@@ -548,7 +616,9 @@ function App() {
               <span
                 key={`${language}-${index}`}
                 className="scroll-hint-letter inline-block"
-                style={{ animationDelay: `${index * 65}ms` }}
+                style={{
+                  animationDelay: `${index * 65}ms`,
+                }}
               >
                 {letter === ' ' ? '\u00A0' : letter}
               </span>
@@ -593,6 +663,7 @@ function App() {
               <p className="text-lg font-semibold text-(--color-text)">
                 {text.about.subtitle}
               </p>
+
               <p className="max-w-sm text-sm leading-relaxed text-(--color-text-muted)">
                 {text.about.education}
               </p>
@@ -646,9 +717,14 @@ function App() {
             {technologyCategories.map((category) => {
               const CategoryIcon = categoryIcons[category.id]
               const selectedId = selectedTechnologies[category.id]
-              const selectedTechnology = category.technologies.find(
+              const selectedIndex = category.technologies.findIndex(
                 (technology) => technology.id === selectedId,
               )
+
+              const selectedTechnology =
+                selectedIndex >= 0
+                  ? category.technologies[selectedIndex]
+                  : undefined
 
               return (
                 <div key={category.id}>
@@ -666,68 +742,77 @@ function App() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-                    {category.technologies.map((technology) => {
+                    {category.technologies.map((technology, index) => {
                       const isSelected = selectedId === technology.id
 
-                      return (
-                        <button
-                          key={technology.id}
-                          type="button"
-                          aria-pressed={isSelected}
-                          aria-expanded={isSelected}
-                          onClick={() =>
-                            toggleTechnology(category.id, technology.id)
-                          }
-                          className={`technology-card group flex min-h-32 flex-col items-center justify-center gap-4 rounded-2xl border bg-(--color-surface) px-3 py-5 text-center transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
-                            isSelected
-                              ? 'technology-card-selected border-(--color-primary)'
-                              : 'border-(--color-border)'
-                          }`}
-                        >
-                          <i
-                            aria-hidden="true"
-                            className={`${technology.icon} technology-icon text-4xl transition-all duration-300`}
-                          />
+                      // No mobile, cada linha contém dois cards.
+                      const isEndOfMobileRow =
+                        index % 2 === 1 ||
+                        index === category.technologies.length - 1
 
-                          <span className="text-xs font-semibold leading-snug text-(--color-text) sm:text-sm">
-                            {technology.name}
-                          </span>
-                        </button>
+                      const selectedIsInThisRow =
+                        selectedTechnology &&
+                        Math.floor(selectedIndex / 2) ===
+                          Math.floor(index / 2)
+
+                      return (
+                        <Fragment key={technology.id}>
+                          <button
+                            type="button"
+                            aria-pressed={isSelected}
+                            aria-expanded={isSelected}
+                            onClick={() =>
+                              toggleTechnology(category.id, technology.id)
+                            }
+                            className={`technology-card group flex min-h-32 flex-col items-center justify-center gap-4 rounded-2xl border bg-(--color-surface) px-3 py-5 text-center transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
+                              isSelected
+                                ? 'technology-card-selected border-(--color-primary)'
+                                : 'border-(--color-border)'
+                            }`}
+                          >
+                            <i
+                              aria-hidden="true"
+                              className={`${technology.icon} technology-icon text-4xl transition-all duration-300`}
+                            />
+
+                            <span className="text-xs font-semibold leading-snug text-(--color-text) sm:text-sm">
+                              {technology.name}
+                            </span>
+                          </button>
+
+                          {/* PAINEL MOBILE: DEPOIS DA LINHA SELECIONADA */}
+                          {isEndOfMobileRow && selectedIsInThisRow && (
+                            <TechnologyDetails
+                              technology={selectedTechnology}
+                              language={language}
+                              detailsLabel={text.skills.detailsLabel}
+                              closeLabel={text.skills.close}
+                              onClose={() =>
+                                toggleTechnology(
+                                  category.id,
+                                  selectedTechnology.id,
+                                )
+                              }
+                              className="col-span-2 sm:hidden"
+                            />
+                          )}
+                        </Fragment>
                       )
                     })}
                   </div>
 
+                  {/* PAINEL DESKTOP: ABAIXO DA CATEGORIA */}
                   {selectedTechnology && (
-                    <div
-                      className="technology-details mt-5 flex items-start justify-between gap-4 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 sm:p-6"
-                      role="region"
-                      aria-label={`${selectedTechnology.name} — ${text.skills.detailsLabel}`}
-                    >
-                      <div className="max-w-3xl">
-                        <span className="mb-2 block text-xs font-medium uppercase tracking-wider text-(--color-primary)">
-                          {text.skills.detailsLabel}
-                        </span>
-
-                        <h4 className="font-display mb-2 text-lg font-semibold">
-                          {selectedTechnology.name}
-                        </h4>
-
-                        <p className="text-sm leading-7 text-(--color-text-muted) sm:text-base">
-                          {selectedTechnology.description[language]}
-                        </p>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          toggleTechnology(category.id, selectedTechnology.id)
-                        }
-                        aria-label={text.skills.close}
-                        className="rounded-full p-2 text-(--color-text-muted) transition-colors hover:bg-(--color-background) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-(--color-primary)"
-                      >
-                        <X size={18} aria-hidden="true" />
-                      </button>
-                    </div>
+                    <TechnologyDetails
+                      technology={selectedTechnology}
+                      language={language}
+                      detailsLabel={text.skills.detailsLabel}
+                      closeLabel={text.skills.close}
+                      onClose={() =>
+                        toggleTechnology(category.id, selectedTechnology.id)
+                      }
+                      className="mt-5 hidden sm:flex"
+                    />
                   )}
                 </div>
               )
@@ -735,6 +820,22 @@ function App() {
           </div>
         </div>
       </section>
+
+      {/* BOTÃO FLUTUANTE: VOLTAR AO TOPO */}
+      <a
+        href="#home"
+        aria-label={text.navigation.backToTop}
+        title={text.navigation.backToTop}
+        aria-hidden={!showBackToTop}
+        tabIndex={showBackToTop ? 0 : -1}
+        className={`back-to-top fixed right-5 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-primary) shadow-lg transition-all duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) sm:right-8 sm:bottom-8 ${
+          showBackToTop
+            ? 'translate-y-0 opacity-100'
+            : 'pointer-events-none translate-y-4 opacity-0'
+        }`}
+      >
+        <ArrowUp size={20} strokeWidth={1.8} aria-hidden="true" />
+      </a>
     </main>
   )
 }

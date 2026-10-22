@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Menu, Moon, Sun, X } from 'lucide-react'
 
 type Language = 'pt' | 'en'
@@ -21,13 +21,19 @@ function Header({ language, onLanguageChange }: HeaderProps) {
   })
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  const lastScrollY = useRef(0)
+  const scrollDistance = useRef(0)
+  const lastDirection = useRef<'up' | 'down' | null>(null)
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     localStorage.setItem('portfolio-theme', theme)
   }, [theme])
 
-  // Fecha o menu ao pressionar Escape.
+  // Fecha o menu com a tecla Escape.
   useEffect(() => {
     if (!isMenuOpen) return
 
@@ -44,12 +50,66 @@ function Header({ language, onLanguageChange }: HeaderProps) {
     }
   }, [isMenuOpen])
 
+  // Header inteligente: desaparece ao descer e reaparece ao subir.
+  useEffect(() => {
+    lastScrollY.current = window.scrollY
+
+    function handleScroll() {
+      const currentY = Math.max(0, window.scrollY)
+      const difference = currentY - lastScrollY.current
+
+      setIsScrolled(currentY > 24)
+
+      if (currentY < 100) {
+        setIsHeaderVisible(true)
+        scrollDistance.current = 0
+        lastDirection.current = null
+      } else if (isMenuOpen) {
+        setIsHeaderVisible(true)
+      } else if (Math.abs(difference) >= 1) {
+        const direction = difference > 0 ? 'down' : 'up'
+
+        if (lastDirection.current !== direction) {
+          scrollDistance.current = 0
+          lastDirection.current = direction
+        }
+
+        scrollDistance.current += Math.abs(difference)
+
+        // Evita que pequenos movimentos façam o Header piscar.
+        if (direction === 'down' && scrollDistance.current > 45) {
+          setIsHeaderVisible(false)
+          scrollDistance.current = 0
+        }
+
+        if (direction === 'up' && scrollDistance.current > 25) {
+          setIsHeaderVisible(true)
+          scrollDistance.current = 0
+        }
+      }
+
+      lastScrollY.current = currentY
+    }
+
+    handleScroll()
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [isMenuOpen])
+
   function toggleTheme() {
-    setTheme((current) => current === 'light' ? 'dark' : 'light')
+    setTheme((current) => (current === 'light' ? 'dark' : 'light'))
   }
 
   function changeLanguage(nextLanguage: Language) {
     onLanguageChange(nextLanguage)
+  }
+
+  function closeMenu() {
+    setIsMenuOpen(false)
   }
 
   const translations = {
@@ -96,24 +156,42 @@ function Header({ language, onLanguageChange }: HeaderProps) {
     { href: '#contact', label: text.contact },
   ]
 
+  const shouldShowHeader = isHeaderVisible || isMenuOpen
+
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    <header
+      onFocusCapture={() => setIsHeaderVisible(true)}
+      className={`smart-header fixed inset-x-0 top-0 z-50 border-b transition-all duration-500 ease-in-out ${
+        shouldShowHeader
+          ? 'translate-y-0 opacity-100'
+          : 'pointer-events-none -translate-y-full opacity-0'
+      } ${
+        isScrolled
+          ? 'border-(--color-border) shadow-sm backdrop-blur-md'
+          : 'border-transparent'
+      }`}
+      style={{
+        backgroundColor: isScrolled
+          ? 'var(--color-background)'
+          : 'transparent',
+      }}
+    >
       <nav
         aria-label={text.navigation}
         className="mx-auto max-w-7xl px-4 py-6 sm:px-6"
       >
         <div className="flex items-center justify-between gap-3">
-          {/* Logotipo */}
+          {/* LOGOTIPO */}
           <a
             href="#home"
             aria-label={text.home}
-            onClick={() => setIsMenuOpen(false)}
+            onClick={closeMenu}
             className="font-display shrink-0 text-2xl font-bold tracking-tight text-(--color-text) transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
           >
             AL<span className="text-(--color-primary)">.</span>
           </a>
 
-          {/* Navegação desktop */}
+          {/* NAVEGAÇÃO DESKTOP */}
           <div className="hidden items-center gap-5 xl:flex">
             {navigationLinks.map((link) => (
               <a
@@ -126,9 +204,9 @@ function Header({ language, onLanguageChange }: HeaderProps) {
             ))}
           </div>
 
-          {/* Controles */}
+          {/* CONTROLES */}
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            {/* Seletor de idioma */}
+            {/* IDIOMA */}
             <div
               role="group"
               aria-label={text.language}
@@ -163,7 +241,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
               </button>
             </div>
 
-            {/* Tema claro/escuro */}
+            {/* TEMA */}
             <button
               type="button"
               onClick={toggleTheme}
@@ -178,7 +256,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
               )}
             </button>
 
-            {/* Menu para telas menores */}
+            {/* MENU MOBILE */}
             <button
               type="button"
               onClick={() => setIsMenuOpen((current) => !current)}
@@ -196,7 +274,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
           </div>
         </div>
 
-        {/* Navegação responsiva */}
+        {/* NAVEGAÇÃO MOBILE */}
         <div
           id="mobile-navigation"
           hidden={!isMenuOpen}
@@ -209,7 +287,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={closeMenu}
                 className="rounded-xl px-4 py-3 text-sm font-medium text-(--color-text) transition-colors hover:bg-(--color-background) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
               >
                 {link.label}

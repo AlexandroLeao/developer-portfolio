@@ -159,6 +159,12 @@ body {
   animation: technology-details-appear 300ms ease-out both;
 }
 
+/* BOTÃO VOLTAR AO TOPO */
+.back-to-top:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px -14px var(--color-primary);
+}
+
 /* ACESSIBILIDADE */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -179,14 +185,17 @@ body {
 
   .technology-card,
   .technology-card::before,
-  .technology-icon {
+  .technology-icon,
+  .smart-header,
+  .back-to-top {
     transition: none;
   }
 
   .technology-card:hover,
   .technology-card-selected,
   .technology-card:hover .technology-icon,
-  .technology-card-selected .technology-icon {
+  .technology-card-selected .technology-icon,
+  .back-to-top:hover {
     transform: none;
   }
 }
