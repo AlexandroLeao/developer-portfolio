@@ -24,16 +24,17 @@ function Header({ language, onLanguageChange }: HeaderProps) {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
 
+  const headerRef = useRef<HTMLElement>(null)
   const lastScrollY = useRef(0)
-  const scrollDistance = useRef(0)
-  const lastDirection = useRef<'up' | 'down' | null>(null)
+  const upwardDistance = useRef(0)
 
+  // Aplica e salva o tema escolhido.
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     localStorage.setItem('portfolio-theme', theme)
   }, [theme])
 
-  // Fecha o menu com a tecla Escape.
+  // Fecha o menu com Escape ou ao clicar fora do Header.
   useEffect(() => {
     if (!isMenuOpen) return
 
@@ -43,48 +44,64 @@ function Header({ language, onLanguageChange }: HeaderProps) {
       }
     }
 
-    window.addEventListener('keydown', handleEscape)
+    function handleOutsideClick(event: PointerEvent) {
+      const target = event.target
+
+      if (
+        target instanceof Node &&
+        headerRef.current &&
+        !headerRef.current.contains(target)
+      ) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    document.addEventListener('pointerdown', handleOutsideClick)
 
     return () => {
-      window.removeEventListener('keydown', handleEscape)
+      document.removeEventListener('keydown', handleEscape)
+      document.removeEventListener('pointerdown', handleOutsideClick)
     }
   }, [isMenuOpen])
 
-  // Header inteligente: desaparece ao descer e reaparece ao subir.
+  // Header inteligente:
+  // - visível no topo;
+  // - escondido durante a descida;
+  // - reaparece ao subir, depois de passar pela Hero;
+  // - permanece visível com o menu mobile aberto.
   useEffect(() => {
-    lastScrollY.current = window.scrollY
+    lastScrollY.current = Math.max(0, window.scrollY)
 
     function handleScroll() {
       const currentY = Math.max(0, window.scrollY)
       const difference = currentY - lastScrollY.current
 
+      const topLimit = 80
+      const heroLimit = Math.max(window.innerHeight * 0.85, 500)
+
       setIsScrolled(currentY > 24)
 
-      if (currentY < 100) {
+      if (isMenuOpen) {
         setIsHeaderVisible(true)
-        scrollDistance.current = 0
-        lastDirection.current = null
-      } else if (isMenuOpen) {
+        upwardDistance.current = 0
+      } else if (currentY <= topLimit) {
         setIsHeaderVisible(true)
-      } else if (Math.abs(difference) >= 1) {
-        const direction = difference > 0 ? 'down' : 'up'
+        upwardDistance.current = 0
+      } else if (currentY < heroLimit) {
+        // Não deixa o Header acompanhar a parte inicial da Hero.
+        setIsHeaderVisible(false)
+        upwardDistance.current = 0
+      } else if (difference > 0) {
+        // Qualquer movimento real de descida esconde o Header.
+        setIsHeaderVisible(false)
+        upwardDistance.current = 0
+      } else if (difference < 0) {
+        // Pequenas oscilações não fazem o Header reaparecer.
+        upwardDistance.current += Math.abs(difference)
 
-        if (lastDirection.current !== direction) {
-          scrollDistance.current = 0
-          lastDirection.current = direction
-        }
-
-        scrollDistance.current += Math.abs(difference)
-
-        // Evita que pequenos movimentos façam o Header piscar.
-        if (direction === 'down' && scrollDistance.current > 45) {
-          setIsHeaderVisible(false)
-          scrollDistance.current = 0
-        }
-
-        if (direction === 'up' && scrollDistance.current > 25) {
+        if (upwardDistance.current >= 32) {
           setIsHeaderVisible(true)
-          scrollDistance.current = 0
         }
       }
 
@@ -93,7 +110,9 @@ function Header({ language, onLanguageChange }: HeaderProps) {
 
     handleScroll()
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    })
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
@@ -101,7 +120,9 @@ function Header({ language, onLanguageChange }: HeaderProps) {
   }, [isMenuOpen])
 
   function toggleTheme() {
-    setTheme((current) => (current === 'light' ? 'dark' : 'light'))
+    setTheme((current) =>
+      current === 'light' ? 'dark' : 'light',
+    )
   }
 
   function changeLanguage(nextLanguage: Language) {
@@ -160,6 +181,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
 
   return (
     <header
+      ref={headerRef}
       onFocusCapture={() => setIsHeaderVisible(true)}
       className={`smart-header fixed inset-x-0 top-0 z-50 border-b transition-all duration-500 ease-in-out ${
         shouldShowHeader
@@ -206,7 +228,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
 
           {/* CONTROLES */}
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            {/* IDIOMA */}
+            {/* SELETOR DE IDIOMA */}
             <div
               role="group"
               aria-label={text.language}
@@ -241,40 +263,70 @@ function Header({ language, onLanguageChange }: HeaderProps) {
               </button>
             </div>
 
-            {/* TEMA */}
+            {/* TEMA CLARO / ESCURO */}
             <button
               type="button"
               onClick={toggleTheme}
-              aria-label={theme === 'light' ? text.darkTheme : text.lightTheme}
-              title={theme === 'light' ? text.darkTheme : text.lightTheme}
+              aria-label={
+                theme === 'light'
+                  ? text.darkTheme
+                  : text.lightTheme
+              }
+              title={
+                theme === 'light'
+                  ? text.darkTheme
+                  : text.lightTheme
+              }
               className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
               {theme === 'light' ? (
-                <Moon size={20} strokeWidth={1.8} aria-hidden="true" />
+                <Moon
+                  size={20}
+                  strokeWidth={1.8}
+                  aria-hidden="true"
+                />
               ) : (
-                <Sun size={20} strokeWidth={1.8} aria-hidden="true" />
+                <Sun
+                  size={20}
+                  strokeWidth={1.8}
+                  aria-hidden="true"
+                />
               )}
             </button>
 
-            {/* MENU MOBILE */}
+            {/* BOTÃO DO MENU MOBILE */}
             <button
               type="button"
-              onClick={() => setIsMenuOpen((current) => !current)}
-              aria-label={isMenuOpen ? text.closeMenu : text.openMenu}
+              onClick={() =>
+                setIsMenuOpen((current) => !current)
+              }
+              aria-label={
+                isMenuOpen
+                  ? text.closeMenu
+                  : text.openMenu
+              }
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) xl:hidden"
             >
               {isMenuOpen ? (
-                <X size={20} strokeWidth={1.8} aria-hidden="true" />
+                <X
+                  size={20}
+                  strokeWidth={1.8}
+                  aria-hidden="true"
+                />
               ) : (
-                <Menu size={20} strokeWidth={1.8} aria-hidden="true" />
+                <Menu
+                  size={20}
+                  strokeWidth={1.8}
+                  aria-hidden="true"
+                />
               )}
             </button>
           </div>
         </div>
 
-        {/* NAVEGAÇÃO MOBILE */}
+        {/* NAVEGAÇÃO RESPONSIVA */}
         <div
           id="mobile-navigation"
           hidden={!isMenuOpen}

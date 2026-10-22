@@ -15,7 +15,12 @@ import {
 import Header from './components/Header'
 
 type Language = 'pt' | 'en'
-type CategoryId = 'frontend' | 'backend' | 'ai' | 'cloud' | 'engineering'
+type CategoryId =
+  | 'frontend'
+  | 'backend'
+  | 'ai'
+  | 'cloud'
+  | 'engineering'
 
 type Technology = {
   id: string
@@ -380,6 +385,8 @@ const translations = {
     },
     navigation: {
       backToTop: 'Voltar ao topo da página',
+      continueExploring: 'Continue explorando',
+      nextSkills: 'Ir para Tecnologias',
     },
   },
   en: {
@@ -413,6 +420,8 @@ const translations = {
     },
     navigation: {
       backToTop: 'Back to the top of the page',
+      continueExploring: 'Keep exploring',
+      nextSkills: 'Go to Technologies',
     },
   },
 }
@@ -474,6 +483,52 @@ function TechnologyDetails({
   )
 }
 
+type SectionScrollHintProps = {
+  label: string
+  destinationLabel: string
+  href: string
+  language: Language
+}
+
+function SectionScrollHint({
+  label,
+  destinationLabel,
+  href,
+  language,
+}: SectionScrollHintProps) {
+  return (
+    <a
+      href={href}
+      aria-label={destinationLabel}
+      className="section-scroll-hint group mx-auto mt-16 flex w-fit flex-col items-center gap-2 rounded-xl px-5 py-3 text-(--color-text-muted) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) sm:mt-20"
+    >
+      <span
+        aria-hidden="true"
+        className="flex text-xs font-medium tracking-[0.12em] sm:text-sm"
+      >
+        {Array.from(label).map((letter, index) => (
+          <span
+            key={`${language}-${index}`}
+            className="scroll-hint-letter inline-block"
+            style={{
+              animationDelay: `${index * 65}ms`,
+            }}
+          >
+            {letter === ' ' ? '\u00A0' : letter}
+          </span>
+        ))}
+      </span>
+
+      <ChevronDown
+        size={22}
+        strokeWidth={1.6}
+        aria-hidden="true"
+        className="scroll-hint-arrow text-(--color-primary)"
+      />
+    </a>
+  )
+}
+
 function App() {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
@@ -497,7 +552,8 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('portfolio-language', language)
-    document.documentElement.lang = language === 'pt' ? 'pt-BR' : 'en'
+    document.documentElement.lang =
+      language === 'pt' ? 'pt-BR' : 'en'
   }, [language])
 
   useEffect(() => {
@@ -506,7 +562,6 @@ function App() {
 
       setIsAtTop(currentY < 80)
 
-      // Só mostra o botão depois de uma rolagem significativa.
       setShowBackToTop(
         currentY > Math.max(window.innerHeight * 1.5, 900),
       )
@@ -525,11 +580,16 @@ function App() {
 
   const text = translations[language]
 
-  function toggleTechnology(categoryId: CategoryId, technologyId: string) {
+  function toggleTechnology(
+    categoryId: CategoryId,
+    technologyId: string,
+  ) {
     setSelectedTechnologies((current) => ({
       ...current,
       [categoryId]:
-        current[categoryId] === technologyId ? undefined : technologyId,
+        current[categoryId] === technologyId
+          ? undefined
+          : technologyId,
     }))
   }
 
@@ -538,7 +598,10 @@ function App() {
       id="home"
       className="min-h-screen bg-(--color-background) text-(--color-text) transition-colors duration-300"
     >
-      <Header language={language} onLanguageChange={setLanguage} />
+      <Header
+        language={language}
+        onLanguageChange={setLanguage}
+      />
 
       {/* HERO */}
       <section
@@ -596,7 +659,7 @@ function App() {
           />
         </div>
 
-        {/* INDICADOR ANIMADO DE ROLAGEM */}
+        {/* INDICADOR DA HERO */}
         <a
           href="#about"
           aria-label={text.hero.scrollHint}
@@ -612,17 +675,19 @@ function App() {
             aria-hidden="true"
             className="flex text-xs font-medium tracking-[0.12em] sm:text-sm"
           >
-            {Array.from(text.hero.scrollHint).map((letter, index) => (
-              <span
-                key={`${language}-${index}`}
-                className="scroll-hint-letter inline-block"
-                style={{
-                  animationDelay: `${index * 65}ms`,
-                }}
-              >
-                {letter === ' ' ? '\u00A0' : letter}
-              </span>
-            ))}
+            {Array.from(text.hero.scrollHint).map(
+              (letter, index) => (
+                <span
+                  key={`${language}-${index}`}
+                  className="scroll-hint-letter inline-block"
+                  style={{
+                    animationDelay: `${index * 65}ms`,
+                  }}
+                >
+                  {letter === ' ' ? '\u00A0' : letter}
+                </span>
+              ),
+            )}
           </span>
 
           <ChevronDown
@@ -671,16 +736,26 @@ function App() {
           </div>
 
           <div className="space-y-6">
-            {text.about.paragraphs.map((paragraph, index) => (
-              <p
-                key={index}
-                className="text-base leading-8 text-(--color-text-muted) sm:text-lg sm:leading-9"
-              >
-                {paragraph}
-              </p>
-            ))}
+            {text.about.paragraphs.map(
+              (paragraph, index) => (
+                <p
+                  key={index}
+                  className="text-base leading-8 text-(--color-text-muted) sm:text-lg sm:leading-9"
+                >
+                  {paragraph}
+                </p>
+              ),
+            )}
           </div>
         </div>
+
+        {/* CONTINUE EXPLORANDO: SOBRE MIM → TECNOLOGIAS */}
+        <SectionScrollHint
+          label={text.navigation.continueExploring}
+          destinationLabel={text.navigation.nextSkills}
+          href="#skills"
+          language={language}
+        />
       </section>
 
       {/* TECNOLOGIAS */}
@@ -715,11 +790,17 @@ function App() {
 
           <div className="space-y-14">
             {technologyCategories.map((category) => {
-              const CategoryIcon = categoryIcons[category.id]
-              const selectedId = selectedTechnologies[category.id]
-              const selectedIndex = category.technologies.findIndex(
-                (technology) => technology.id === selectedId,
-              )
+              const CategoryIcon =
+                categoryIcons[category.id]
+
+              const selectedId =
+                selectedTechnologies[category.id]
+
+              const selectedIndex =
+                category.technologies.findIndex(
+                  (technology) =>
+                    technology.id === selectedId,
+                )
 
               const selectedTechnology =
                 selectedIndex >= 0
@@ -742,74 +823,92 @@ function App() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-                    {category.technologies.map((technology, index) => {
-                      const isSelected = selectedId === technology.id
+                    {category.technologies.map(
+                      (technology, index) => {
+                        const isSelected =
+                          selectedId === technology.id
 
-                      // No mobile, cada linha contém dois cards.
-                      const isEndOfMobileRow =
-                        index % 2 === 1 ||
-                        index === category.technologies.length - 1
+                        const isEndOfMobileRow =
+                          index % 2 === 1 ||
+                          index ===
+                            category.technologies.length - 1
 
-                      const selectedIsInThisRow =
-                        selectedTechnology &&
-                        Math.floor(selectedIndex / 2) ===
-                          Math.floor(index / 2)
+                        const selectedIsInThisRow =
+                          selectedTechnology &&
+                          Math.floor(selectedIndex / 2) ===
+                            Math.floor(index / 2)
 
-                      return (
-                        <Fragment key={technology.id}>
-                          <button
-                            type="button"
-                            aria-pressed={isSelected}
-                            aria-expanded={isSelected}
-                            onClick={() =>
-                              toggleTechnology(category.id, technology.id)
-                            }
-                            className={`technology-card group flex min-h-32 flex-col items-center justify-center gap-4 rounded-2xl border bg-(--color-surface) px-3 py-5 text-center transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
-                              isSelected
-                                ? 'technology-card-selected border-(--color-primary)'
-                                : 'border-(--color-border)'
-                            }`}
-                          >
-                            <i
-                              aria-hidden="true"
-                              className={`${technology.icon} technology-icon text-4xl transition-all duration-300`}
-                            />
-
-                            <span className="text-xs font-semibold leading-snug text-(--color-text) sm:text-sm">
-                              {technology.name}
-                            </span>
-                          </button>
-
-                          {/* PAINEL MOBILE: DEPOIS DA LINHA SELECIONADA */}
-                          {isEndOfMobileRow && selectedIsInThisRow && (
-                            <TechnologyDetails
-                              technology={selectedTechnology}
-                              language={language}
-                              detailsLabel={text.skills.detailsLabel}
-                              closeLabel={text.skills.close}
-                              onClose={() =>
+                        return (
+                          <Fragment key={technology.id}>
+                            <button
+                              type="button"
+                              aria-pressed={isSelected}
+                              aria-expanded={isSelected}
+                              onClick={() =>
                                 toggleTechnology(
                                   category.id,
-                                  selectedTechnology.id,
+                                  technology.id,
                                 )
                               }
-                              className="col-span-2 sm:hidden"
-                            />
-                          )}
-                        </Fragment>
-                      )
-                    })}
+                              className={`technology-card group flex min-h-32 flex-col items-center justify-center gap-4 rounded-2xl border bg-(--color-surface) px-3 py-5 text-center transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
+                                isSelected
+                                  ? 'technology-card-selected border-(--color-primary)'
+                                  : 'border-(--color-border)'
+                              }`}
+                            >
+                              <i
+                                aria-hidden="true"
+                                className={`${technology.icon} technology-icon text-4xl transition-all duration-300`}
+                              />
+
+                              <span className="text-xs font-semibold leading-snug text-(--color-text) sm:text-sm">
+                                {technology.name}
+                              </span>
+                            </button>
+
+                            {/* DETALHES NO MOBILE */}
+                            {isEndOfMobileRow &&
+                              selectedIsInThisRow && (
+                                <TechnologyDetails
+                                  technology={
+                                    selectedTechnology
+                                  }
+                                  language={language}
+                                  detailsLabel={
+                                    text.skills.detailsLabel
+                                  }
+                                  closeLabel={
+                                    text.skills.close
+                                  }
+                                  onClose={() =>
+                                    toggleTechnology(
+                                      category.id,
+                                      selectedTechnology.id,
+                                    )
+                                  }
+                                  className="col-span-2 sm:hidden"
+                                />
+                              )}
+                          </Fragment>
+                        )
+                      },
+                    )}
                   </div>
 
-                  {/* PAINEL DESKTOP: ABAIXO DA CATEGORIA */}
+                  {/* DETALHES NO DESKTOP */}
                   {selectedTechnology && (
                     <TechnologyDetails
                       technology={selectedTechnology}
                       language={language}
-                      detailsLabel={text.skills.detailsLabel}
+                      detailsLabel={
+                        text.skills.detailsLabel
+                      }
                       closeLabel={text.skills.close}
                       onClose={() =>
-                        toggleTechnology(category.id, selectedTechnology.id)
+                        toggleTechnology(
+                          category.id,
+                          selectedTechnology.id,
+                        )
                       }
                       className="mt-5 hidden sm:flex"
                     />
@@ -821,7 +920,7 @@ function App() {
         </div>
       </section>
 
-      {/* BOTÃO FLUTUANTE: VOLTAR AO TOPO */}
+      {/* BOTÃO VOLTAR AO TOPO */}
       <a
         href="#home"
         aria-label={text.navigation.backToTop}
@@ -834,7 +933,11 @@ function App() {
             : 'pointer-events-none translate-y-4 opacity-0'
         }`}
       >
-        <ArrowUp size={20} strokeWidth={1.8} aria-hidden="true" />
+        <ArrowUp
+          size={20}
+          strokeWidth={1.8}
+          aria-hidden="true"
+        />
       </a>
     </main>
   )
