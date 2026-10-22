@@ -1,4 +1,3 @@
-
 import { Fragment, useEffect, useState } from 'react'
 import {
   ArrowUp,
@@ -13,6 +12,8 @@ import {
   X,
 } from 'lucide-react'
 import Header from './components/Header'
+import ProjectCard from './components/ProjectCard'
+import { projects } from './data/projects'
 
 type Language = 'pt' | 'en'
 
@@ -384,6 +385,12 @@ const translations = {
       detailsLabel: 'Como utilizo ou pretendo aplicar',
       close: 'Fechar detalhes',
     },
+    projects: {
+      eyebrow: 'SOLUÇÕES QUE DESENVOLVI',
+      title: 'Projetos',
+      description:
+        'Uma seleção de projetos que desenvolvi para transformar necessidades e ideias em soluções práticas.',
+    },
     navigation: {
       backToTop: 'Voltar ao topo da página',
     },
@@ -416,6 +423,12 @@ const translations = {
         'Technologies, tools, and concepts I use and explore to turn ideas into solutions.',
       detailsLabel: 'How I use it or plan to apply it',
       close: 'Close details',
+    },
+    projects: {
+      eyebrow: 'SOLUTIONS I HAVE BUILT',
+      title: 'Projects',
+      description:
+        'A selection of projects I have built to turn needs and ideas into practical solutions.',
     },
     navigation: {
       backToTop: 'Back to the top of the page',
@@ -859,6 +872,48 @@ function App() {
                 </div>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* PROJETOS */}
+      <section
+        id="projects"
+        aria-labelledby="projects-title"
+        className="scroll-mt-12 border-t border-(--color-border) py-16 sm:py-20 lg:py-24"
+      >
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-12 max-w-2xl">
+            <span className="mb-5 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+              {text.projects.eyebrow}
+            </span>
+
+            <h2
+              id="projects-title"
+              className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
+            >
+              {text.projects.title}
+              <span className="text-(--color-primary)">.</span>
+            </h2>
+
+            <div
+              aria-hidden="true"
+              className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
+            />
+
+            <p className="mt-6 text-base leading-8 text-(--color-text-muted) sm:text-lg">
+              {text.projects.description}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
+            {projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                language={language}
+              />
+            ))}
           </div>
         </div>
       </section>
