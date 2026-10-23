@@ -1,6 +1,8 @@
 import { Fragment, useEffect, useState } from 'react'
 import {
   ArrowUp,
+  BookOpen,
+  GraduationCap,
   BrainCircuit,
   ChevronDown,
   Cloud,
@@ -12,6 +14,13 @@ import {
   X,
 } from 'lucide-react'
 import Header from './components/Header'
+import CertificationCard from './components/CertificationCard'
+import {
+  academicEducation,
+  certificationCategories,
+  certifications,
+  ongoingEducation,
+} from './data/certifications'
 import ExperienceCard from './components/ExperienceCard'
 import { experiences } from './data/experiences'
 import ProjectCard from './components/ProjectCard'
@@ -399,6 +408,19 @@ const translations = {
       description:
         'Minha trajetória reúne experiências em desenvolvimento de software, suporte técnico, gestão de processos e tecnologia, com foco em resolver problemas, melhorar operações e entregar resultados.',
     },
+    certifications: {
+      eyebrow: 'FORMAÇÃO E APRENDIZADO CONTÍNUO',
+      title: 'Formação e certificações',
+      description:
+        'Minha formação acadêmica e os estudos que aprofundam minhas competências em desenvolvimento de software, engenharia, cloud e tecnologia.',
+      degreeLabel: 'Formação acadêmica',
+      degreeStatus: 'Concluída',
+      certificationLabel: 'Cursos e certificações',
+      showAll: 'Mostrar todas as certificações',
+      showLess: 'Mostrar menos certificações',
+      ongoingLabel: 'Em desenvolvimento',
+      ongoingStatus: 'Em andamento',
+    },
     navigation: {
       backToTop: 'Voltar ao topo da página',
     },
@@ -443,6 +465,19 @@ const translations = {
       title: 'Experience',
       description:
         'My professional journey combines software development, technical support, process management, and technology, with a focus on solving problems, improving operations, and delivering results.',
+    },
+    certifications: {
+      eyebrow: 'EDUCATION AND CONTINUOUS LEARNING',
+      title: 'Education and certifications',
+      description:
+        'My academic background and continuous learning in software development, engineering, cloud computing, and technology.',
+      degreeLabel: 'Academic education',
+      degreeStatus: 'Completed',
+      certificationLabel: 'Courses and certifications',
+      showAll: 'Show all certifications',
+      showLess: 'Show fewer certifications',
+      ongoingLabel: 'Currently learning',
+      ongoingStatus: 'In progress',
     },
     navigation: {
       backToTop: 'Back to the top of the page',
@@ -523,6 +558,7 @@ function App() {
   })
 
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [showAllCertifications, setShowAllCertifications] = useState(false)
 
   const [selectedTechnologies, setSelectedTechnologies] = useState<
     Partial<Record<CategoryId, string>>
@@ -977,6 +1013,161 @@ function App() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      {/* FORMAÇÃO E CERTIFICAÇÕES */}
+      <section
+        id="certifications"
+        aria-labelledby="certifications-title"
+        className="scroll-mt-12 border-t border-(--color-border) pt-14 pb-24 sm:pt-16 sm:pb-32"
+      >
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-12 max-w-2xl">
+            <span className="mb-5 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+              {text.certifications.eyebrow}
+            </span>
+
+            <h2
+              id="certifications-title"
+              className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
+            >
+              {text.certifications.title}
+              <span className="text-(--color-primary)">.</span>
+            </h2>
+
+            <div
+              aria-hidden="true"
+              className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
+            />
+
+            <p className="mt-6 text-base leading-8 text-(--color-text-muted) sm:text-lg">
+              {text.certifications.description}
+            </p>
+          </div>
+
+          {/* GRADUAÇÃO */}
+          <div className="mb-14">
+            <h3 className="font-display mb-5 text-xl font-semibold text-(--color-text) sm:text-2xl">
+              {text.certifications.degreeLabel}
+            </h3>
+
+            <article className="flex flex-col gap-5 rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 sm:flex-row sm:items-start sm:p-8">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-(--color-border) bg-(--color-background) text-(--color-primary)">
+                <GraduationCap size={27} strokeWidth={1.7} aria-hidden="true" />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <div className="mb-3 flex flex-wrap items-center gap-3">
+                  <span className="text-sm font-semibold text-(--color-primary)">
+                    {academicEducation.institution}
+                  </span>
+                  <span className="rounded-full border border-(--color-border) bg-(--color-background) px-3 py-1 text-xs font-medium text-(--color-text-muted)">
+                    {text.certifications.degreeStatus} · {academicEducation.completionYear}
+                  </span>
+                </div>
+
+                <h4 className="font-display text-xl font-bold tracking-tight text-(--color-text) sm:text-2xl">
+                  {academicEducation.degree[language]}
+                </h4>
+
+                <p className="mt-4 max-w-3xl text-sm leading-7 text-(--color-text-muted) sm:text-base">
+                  {academicEducation.summary[language]}
+                </p>
+              </div>
+            </article>
+          </div>
+
+          {/* CURSOS E CERTIFICAÇÕES */}
+          <div>
+            <h3 className="font-display mb-8 text-xl font-semibold text-(--color-text) sm:text-2xl">
+              {text.certifications.certificationLabel}
+            </h3>
+
+            <div className="space-y-12">
+              {certificationCategories.map((category) => {
+                const categoryCertifications = certifications.filter(
+                  (certification) =>
+                    certification.category === category.id &&
+                    (showAllCertifications || certification.featured),
+                )
+
+                if (categoryCertifications.length === 0) {
+                  return null
+                }
+
+                return (
+                  <div key={category.id}>
+                    <h4 className="font-display mb-5 text-lg font-semibold text-(--color-text) sm:text-xl">
+                      {category.title[language]}
+                    </h4>
+
+                    <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2 xl:grid-cols-3">
+                      {categoryCertifications.map((certification) => (
+                        <CertificationCard
+                          key={certification.id}
+                          certification={certification}
+                          language={language}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="mt-10 flex justify-center">
+              <button
+                type="button"
+                aria-expanded={showAllCertifications}
+                onClick={() => setShowAllCertifications((current) => !current)}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface) px-6 py-3 text-sm font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+              >
+                {showAllCertifications
+                  ? text.certifications.showLess
+                  : `${text.certifications.showAll} (${certifications.length})`}
+                <ChevronDown
+                  size={17}
+                  aria-hidden="true"
+                  className={`transition-transform duration-200 motion-reduce:transition-none ${
+                    showAllCertifications ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
+          {/* FORMAÇÃO EM ANDAMENTO */}
+          <div className="mt-16">
+            <h3 className="font-display mb-5 text-xl font-semibold text-(--color-text) sm:text-2xl">
+              {text.certifications.ongoingLabel}
+            </h3>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {ongoingEducation.map((course) => (
+                <article
+                  key={course.id}
+                  className="flex min-w-0 gap-4 rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 sm:p-7"
+                >
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-(--color-border) bg-(--color-background) text-(--color-primary)">
+                    <BookOpen size={23} strokeWidth={1.7} aria-hidden="true" />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <span className="inline-block rounded-full border border-(--color-border) bg-(--color-background) px-3 py-1 text-xs font-semibold text-(--color-primary)">
+                      {text.certifications.ongoingStatus}
+                    </span>
+                    <h4 className="font-display mt-3 text-xl font-bold text-(--color-text)">
+                      {course.title[language]}
+                    </h4>
+                    <p className="mt-3 text-sm leading-7 text-(--color-text-muted)">
+                      {course.summary[language]}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
