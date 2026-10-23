@@ -12,6 +12,8 @@ import {
   X,
 } from 'lucide-react'
 import Header from './components/Header'
+import ExperienceCard from './components/ExperienceCard'
+import { experiences } from './data/experiences'
 import ProjectCard from './components/ProjectCard'
 import { projects } from './data/projects'
 
@@ -391,6 +393,12 @@ const translations = {
       description:
         'Uma seleção de projetos que desenvolvi para transformar necessidades e ideias em soluções práticas.',
     },
+    experience: {
+      eyebrow: 'MINHA TRAJETÓRIA PROFISSIONAL',
+      title: 'Experiência',
+      description:
+        'Minha trajetória reúne experiências em desenvolvimento de software, suporte técnico, gestão de processos e tecnologia, com foco em resolver problemas, melhorar operações e entregar resultados.',
+    },
     navigation: {
       backToTop: 'Voltar ao topo da página',
     },
@@ -429,6 +437,12 @@ const translations = {
       title: 'Projects',
       description:
         'A selection of projects I have built to turn needs and ideas into practical solutions.',
+    },
+    experience: {
+      eyebrow: 'MY PROFESSIONAL JOURNEY',
+      title: 'Experience',
+      description:
+        'My professional journey combines software development, technical support, process management, and technology, with a focus on solving problems, improving operations, and delivering results.',
     },
     navigation: {
       backToTop: 'Back to the top of the page',
@@ -915,6 +929,54 @@ function App() {
               />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* EXPERIÊNCIA PROFISSIONAL */}
+      <section
+        id="experience"
+        aria-labelledby="experience-title"
+        className="scroll-mt-12 border-t border-(--color-border) pt-14 pb-24 sm:pt-16 sm:pb-32"
+      >
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-12 max-w-2xl">
+            <span className="mb-5 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+              {text.experience.eyebrow}
+            </span>
+
+            <h2
+              id="experience-title"
+              className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
+            >
+              {text.experience.title}
+              <span className="text-(--color-primary)">.</span>
+            </h2>
+
+            <div
+              aria-hidden="true"
+              className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
+            />
+
+            <p className="mt-6 text-base leading-8 text-(--color-text-muted) sm:text-lg">
+              {text.experience.description}
+            </p>
+          </div>
+
+          <ol className="relative ml-2 max-w-5xl space-y-7 border-l-2 border-(--color-border) pl-8 sm:ml-3 sm:space-y-8 sm:pl-10">
+            {experiences.map((experience) => (
+              <li key={experience.id} className="relative">
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-9.5 top-8 h-3 w-3 rounded-full border-2 border-(--color-background) bg-(--color-primary) sm:-left-11.5"
+                />
+
+                <ExperienceCard
+                  experience={experience}
+                  language={language}
+                />
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
