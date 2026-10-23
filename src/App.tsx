@@ -14,6 +14,8 @@ import {
   X,
 } from 'lucide-react'
 import Header from './components/Header'
+import ContactModal from './components/ContactModal'
+import Footer from './components/Footer'
 import CertificationCard from './components/CertificationCard'
 import {
   academicEducation,
@@ -421,6 +423,13 @@ const translations = {
       ongoingLabel: 'Em desenvolvimento',
       ongoingStatus: 'Em andamento',
     },
+    contact: {
+      eyebrow: 'VAMOS CONVERSAR?',
+      title: 'Tem uma ideia ou oportunidade?',
+      description:
+        'Se você tem um projeto em mente, uma oportunidade profissional ou quer trocar uma ideia sobre tecnologia, será um prazer conversar.',
+      button: 'Entrar em contato',
+    },
     navigation: {
       backToTop: 'Voltar ao topo da página',
     },
@@ -478,6 +487,13 @@ const translations = {
       showLess: 'Show fewer certifications',
       ongoingLabel: 'Currently learning',
       ongoingStatus: 'In progress',
+    },
+    contact: {
+      eyebrow: "LET'S CONNECT",
+      title: 'Have an idea or an opportunity?',
+      description:
+        "If you have a project in mind, a professional opportunity, or simply want to talk about technology, I'd be happy to connect.",
+      button: 'Get in touch',
     },
     navigation: {
       backToTop: 'Back to the top of the page',
@@ -559,6 +575,7 @@ function App() {
 
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [showAllCertifications, setShowAllCertifications] = useState(false)
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   const [selectedTechnologies, setSelectedTechnologies] = useState<
     Partial<Record<CategoryId, string>>
@@ -608,7 +625,8 @@ function App() {
   }
 
   return (
-    <main
+    <>
+      <main
       id="home"
       className="min-h-screen bg-(--color-background) text-(--color-text) transition-colors duration-300"
     >
@@ -639,13 +657,14 @@ function App() {
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row">
-            <a
-              href="#contact"
+            <button
+              type="button"
+              onClick={() => setIsContactModalOpen(true)}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0b3d3e] px-8 py-3 font-semibold text-white transition-colors duration-300 hover:bg-[#082e2f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
               <Mail size={18} aria-hidden="true" />
               {text.hero.contact}
-            </a>
+            </button>
 
             <span
               aria-label={text.hero.resumeLabel}
@@ -1171,6 +1190,44 @@ function App() {
         </div>
       </section>
 
+      {/* CONTATO */}
+      <section
+        id="contact"
+        aria-labelledby="contact-title"
+        className="scroll-mt-12 border-t border-(--color-border) py-20 sm:py-28"
+      >
+        <div className="mx-auto flex max-w-7xl flex-col items-center px-6 text-center">
+          <span className="mb-5 text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+            {text.contact.eyebrow}
+          </span>
+
+          <h2
+            id="contact-title"
+            className="font-display max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl"
+          >
+            {text.contact.title}
+          </h2>
+
+          <div
+            aria-hidden="true"
+            className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
+          />
+
+          <p className="mt-7 max-w-2xl text-base leading-8 text-(--color-text-muted) sm:text-lg">
+            {text.contact.description}
+          </p>
+
+          <button
+            type="button"
+            onClick={() => setIsContactModalOpen(true)}
+            className="mt-9 inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#0b3d3e] px-8 py-3 font-semibold text-white transition-colors duration-300 hover:bg-[#082e2f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+          >
+            <Mail size={18} aria-hidden="true" />
+            {text.contact.button}
+          </button>
+        </div>
+      </section>
+
       {/* BOTÃO VOLTAR AO TOPO */}
       <a
         href="#home"
@@ -1190,7 +1247,14 @@ function App() {
           aria-hidden="true"
         />
       </a>
-    </main>
+      </main>
+      <Footer language={language} />
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        language={language}
+      />
+    </>
   )
 }
 
