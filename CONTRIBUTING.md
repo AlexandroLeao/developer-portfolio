@@ -1,4 +1,3 @@
-
 # Contributing Guide
 
 This document defines the development practices used in the Developer Portfolio project.
@@ -146,6 +145,18 @@ Run static analysis:
 npm run lint
 ```
 
+Run automated tests once:
+
+```bash
+npm run test
+```
+
+Run tests in watch mode during development:
+
+```bash
+npm run test:watch
+```
+
 Run TypeScript compilation and production build:
 
 ```bash
@@ -175,9 +186,13 @@ When relevant, verify:
 
 ### Automated Tests
 
-Vitest, React Testing Library, and Playwright are planned.
+Vitest, React Testing Library, Testing Library jest-dom, and jsdom are implemented in the project.
 
-Once introduced, applicable automated tests will become part of the validation process and CI workflow.
+At the completion of the Contact section, the test suite contained 33 tests across six test files, covering the application and selected components. This count is a documented baseline and may increase as the project evolves.
+
+GitHub Actions automatically runs `npm run lint`, `npm run test`, and `npm run build` on pull requests targeting `main`. A failing command causes the CI job to fail.
+
+End-to-end tests with Playwright are a potential future improvement; they are not currently implemented.
 
 ## 7. Pull Requests
 
