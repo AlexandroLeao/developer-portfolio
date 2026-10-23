@@ -427,7 +427,7 @@ const translations = {
       eyebrow: 'VAMOS CONVERSAR?',
       title: 'Tem uma ideia ou oportunidade?',
       description:
-        'Estou aberto a oportunidades profissionais, novos projetos e colaborações. Vamos conversar sobre como podemos construir algo juntos.',
+        'Se você tem um projeto em mente, uma oportunidade profissional ou quer trocar uma ideia sobre tecnologia, será um prazer conversar.',
       button: 'Entrar em contato',
     },
     navigation: {
@@ -492,7 +492,7 @@ const translations = {
       eyebrow: "LET'S CONNECT",
       title: 'Have an idea or an opportunity?',
       description:
-        "I'm open to professional opportunities, new projects, and collaborations. Let's discuss what we can build together.",
+        "If you have a project in mind, a professional opportunity, or simply want to talk about technology, I'd be happy to connect.",
       button: 'Get in touch',
     },
     navigation: {
@@ -1206,7 +1206,6 @@ function App() {
             className="font-display max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl"
           >
             {text.contact.title}
-            <span className="text-(--color-primary)">.</span>
           </h2>
 
           <div

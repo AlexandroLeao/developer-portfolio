@@ -1,4 +1,3 @@
-
 import { ArrowUpRight } from 'lucide-react'
 import ContactIcon from './ContactIcon'
 import {
@@ -14,7 +13,7 @@ const translations = {
   pt: {
     role: 'Desenvolvedor de Software',
     description:
-      'Construindo soluções digitais com tecnologia, criatividade e propósito.',
+      'Gosto de entender problemas e transformar ideias em soluções que facilitem o dia a dia.',
     rights: 'Todos os direitos reservados.',
     contactLabel: 'Redes sociais e canais de contato',
     opensNewTab: 'Abre em uma nova aba',
@@ -23,7 +22,7 @@ const translations = {
   en: {
     role: 'Software Developer',
     description:
-      'Building digital solutions with technology, creativity, and purpose.',
+      'I enjoy understanding problems and turning ideas into solutions that make everyday life easier.',
     rights: 'All rights reserved.',
     contactLabel: 'Social networks and contact channels',
     opensNewTab: 'Opens in a new tab',
@@ -61,7 +60,7 @@ export default function Footer({ language }: FooterProps) {
 
           {/* DIRECT CONTACT LINKS */}
           <nav aria-label={text.contactLabel}>
-            <ul className="flex flex-wrap items-center gap-3">
+            <ul className="flex flex-wrap items-center justify-center gap-3 md:justify-end">
               {contacts.map((contact) => (
                 <li key={contact.id}>
                   <a
