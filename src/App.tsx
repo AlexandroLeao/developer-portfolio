@@ -666,13 +666,14 @@ function App() {
               {text.hero.contact}
             </button>
 
-            <span
-              aria-label={text.hero.resumeLabel}
-              className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface) px-8 py-3 font-semibold text-(--color-text-muted) opacity-60"
+            <button
+              type="button"
+              disabled
+              className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface) px-8 py-3 font-semibold text-(--color-text-muted)"
             >
               <Download size={18} aria-hidden="true" />
               {text.hero.resume}
-            </span>
+            </button>
           </div>
         </div>
 
