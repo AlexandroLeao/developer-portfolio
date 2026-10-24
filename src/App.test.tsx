@@ -85,4 +85,23 @@ describe('Developer Portfolio', () => {
     expect(document.documentElement).not.toHaveClass('dark')
     expect(localStorage.getItem('portfolio-theme')).toBe('light')
   })
+
+  it('keeps the resume download disabled in both languages', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    expect(
+      screen.getByRole('button', { name: 'Currículo em breve' }),
+    ).toBeDisabled()
+
+    await user.click(
+      screen.getByRole('button', { name: 'EN' }),
+    )
+
+    expect(
+      screen.getByRole('button', { name: 'Résumé coming soon' }),
+    ).toBeDisabled()
+  })
+
 })
