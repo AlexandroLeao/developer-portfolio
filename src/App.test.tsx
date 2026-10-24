@@ -85,6 +85,7 @@ describe('Developer Portfolio', () => {
     expect(document.documentElement).not.toHaveClass('dark')
     expect(localStorage.getItem('portfolio-theme')).toBe('light')
   })
+
   it('keeps the resume download disabled in both languages', async () => {
     const user = userEvent.setup()
 
