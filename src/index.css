@@ -1,7 +1,7 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import "./styles/local-fonts.css";
 
-@import url('https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/devicon.min.css');
+@import "./styles/devicon-subset.css";
 
 @import "tailwindcss";
 

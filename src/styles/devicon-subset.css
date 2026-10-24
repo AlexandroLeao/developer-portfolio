@@ -1,0 +1,40 @@
+/* Devicon v2.17.0 - optimized local subset. */
+/* Original project: https://github.com/devicons/devicon */
+
+@font-face {
+  font-family: "devicon";
+  src: url("/fonts/devicon-subset.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^=devicon-],[class*=" devicon-"]{font-family:"devicon" !important;speak:never;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+
+.devicon-amazonwebservices-plain-wordmark:before { content: "\e90c"; }
+.devicon-azure-plain:before { content: "\e93a"; }
+.devicon-azuresqldatabase-plain:before { content: "\e93c"; }
+.devicon-bootstrap-plain:before { content: "\e950"; }
+.devicon-css3-plain:before { content: "\e9a1"; }
+.devicon-docker-plain:before { content: "\e9c3"; }
+.devicon-express-original:before { content: "\e9ec"; }
+.devicon-fastapi-plain:before { content: "\e9ef"; }
+.devicon-git-plain:before { content: "\ea2d"; }
+.devicon-github-original:before { content: "\ea29"; }
+.devicon-githubactions-plain:before { content: "\ed6b"; }
+.devicon-googlecloud-plain:before { content: "\ea38"; }
+.devicon-html5-plain:before { content: "\ea67"; }
+.devicon-java-plain:before { content: "\ea7f"; }
+.devicon-javascript-plain:before { content: "\ea81"; }
+.devicon-jira-plain:before { content: "\ea90"; }
+.devicon-kubernetes-plain:before { content: "\eabd"; }
+.devicon-nodejs-plain:before { content: "\ed9e"; }
+.devicon-postgresql-plain:before { content: "\eb79"; }
+.devicon-python-plain:before { content: "\eb9c"; }
+.devicon-pytorch-original:before { content: "\eb9e"; }
+.devicon-react-original:before { content: "\ebbc"; }
+.devicon-selenium-original:before { content: "\ebf8"; }
+.devicon-tailwindcss-original:before { content: "\ec39"; }
+.devicon-tensorflow-original:before { content: "\ec3f"; }
+.devicon-typescript-plain:before { content: "\ec63"; }
+.devicon-unifiedmodelinglanguage-plain:before { content: "\ec6a"; }
