@@ -8,6 +8,7 @@ export type Project = {
   name: string
   year: number
   image: string
+  imageSrcSet: string
   imageAlt: TranslatedText
   description: TranslatedText
   technologies: string[]
@@ -26,7 +27,12 @@ export const projects: Project[] = [
     id: 'ideas-organizer',
     name: 'Organizador de Ideias e Projetos',
     year: 2026,
-    image: '/images/projects/organizador-ideias.png',
+    image: '/images/projects/organizador-ideias-1200.webp',
+    imageSrcSet: [
+      '/images/projects/organizador-ideias-640.webp 640w',
+      '/images/projects/organizador-ideias-1200.webp 1200w',
+      '/images/projects/organizador-ideias-1672.webp 1672w',
+    ].join(', '),
     imageAlt: {
       pt: 'Ilustração de um organizador de ideias com cartões de projetos, indicadores e uma lâmpada.',
       en: 'Illustration of an ideas organizer with project cards, status indicators, and a light bulb.',
@@ -83,7 +89,12 @@ export const projects: Project[] = [
     id: 'natsu-matsuri',
     name: 'Natsu Matsuri Project',
     year: 2023,
-    image: '/images/projects/natsu-matsuri.png',
+    image: '/images/projects/natsu-matsuri-1200.webp',
+    imageSrcSet: [
+      '/images/projects/natsu-matsuri-640.webp 640w',
+      '/images/projects/natsu-matsuri-1200.webp 1200w',
+      '/images/projects/natsu-matsuri-1672.webp 1672w',
+    ].join(', '),
     imageAlt: {
       pt: 'Ilustração de um sistema financeiro com cartões de entradas, saídas e saldo, além de registros de vendas.',
       en: 'Illustration of a financial system with income, expense, and balance cards alongside sales records.',
