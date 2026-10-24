@@ -684,10 +684,14 @@ function App() {
           />
 
           <img
-            src="/images/hero-illustration.png"
+            src="/images/hero-illustration-1024.webp"
+            srcSet="/images/hero-illustration-640.webp 640w, /images/hero-illustration-1024.webp 1024w, /images/hero-illustration-1448.webp 1448w"
+            sizes="(max-width: 640px) calc(100vw - 3rem), 512px"
             alt={text.hero.illustration}
             width={1448}
             height={1086}
+            loading="eager"
+            fetchPriority="high"
             className="relative z-10 h-auto w-full max-w-lg object-contain"
           />
         </div>

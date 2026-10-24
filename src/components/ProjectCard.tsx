@@ -52,6 +52,8 @@ export default function ProjectCard({
       <div className="aspect-video overflow-hidden border-b border-(--color-border) bg-(--color-background)">
         <img
           src={project.image}
+          srcSet={project.imageSrcSet}
+          sizes="(min-width: 1024px) 600px, calc(100vw - 3rem)"
           alt={project.imageAlt[language]}
           loading="lazy"
           decoding="async"
