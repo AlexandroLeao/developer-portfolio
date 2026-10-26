@@ -10,13 +10,13 @@ The repository also documents the engineering practices behind the portfolio: an
 
 - Default language: Portuguese, with an English option.
 - Appearance: light and dark themes.
-- Current automated test suite: **34 tests across 6 test files**.
+- Current automated test suite: **35 tests across 6 test files**.
 - Development: GitHub Issues, feature branches, Pull Requests, GitHub Actions, and Vercel Preview.
 - Deployment: the `main` branch is published to Vercel Production.
 
 ## Implemented Features
 
-- **Hero and Header:** professional introduction, responsive navigation, theme/language controls, and scroll-aware behavior.
+- **Hero and Header:** professional introduction, responsive navigation, theme/language controls, language-specific PDF resume downloads, and scroll-aware behavior.
 - **About Me:** professional background and approach to software development.
 - **Technologies:** categorized skills with interactive details.
 - **Projects:** project cards with technology tags, expandable technical descriptions, repository links, and live demos when available.
@@ -107,7 +107,7 @@ Vite starts a local development server and prints its address in the terminal. U
 
 ## Testing and Quality
 
-The current suite includes **34 automated tests in 6 test files**, covering the main application and interactive cards/components for projects, experience, certifications, the contact modal, and the footer.
+The current suite includes **35 automated tests in 6 test files**, covering the main application and interactive cards/components for projects, experience, certifications, the contact modal, and the footer.
 
 ```bash
 npm run lint
@@ -202,7 +202,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Configure ESLint and TypeScript validation.
 - [x] Establish an Issue-driven development workflow.
 - [x] Implement GitHub Actions continuous integration.
-- [x] Add 34 automated tests across 6 test files.
+- [x] Add 35 automated tests across 6 test files.
 - [x] Implement all core portfolio sections.
 - [x] Support Portuguese and English languages.
 - [x] Support light and dark themes.
@@ -216,18 +216,18 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Achieve 100/100 in all four Lighthouse categories in a production audit.
 - [x] Purchase the custom domain alexandroleao.com.br.
 - [x] Complete custom domain DNS configuration and verification.
+- [x] Update canonical URLs and social metadata for the verified domain.
+- [x] Create Portuguese and English resume PDFs.
 - [x] Update and expand technical project documentation.
 - [x] Document software architecture and UML diagrams.
 - [x] Record significant architectural decisions using ADRs.
 
 ### In Progress
 
-- [ ] Update canonical URLs and social metadata for the verified domain.
+- [ ] Enable language-specific resume downloads.
 
 ### Planned
 - [ ] Perform a final production review of links, SEO, and accessibility.
-- [ ] Create Portuguese and English resume PDFs.
-- [ ] Enable language-specific resume downloads.
 - [ ] Align LinkedIn with the completed portfolio and resume.
 - [ ] Complete final release-readiness checks.
 - [ ] Publish the first stable release (v1.0.0).
