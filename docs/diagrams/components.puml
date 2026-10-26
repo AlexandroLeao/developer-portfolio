@@ -1,0 +1,67 @@
+@startuml
+title Developer Portfolio - Component Diagram
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+left to right direction
+
+package "Application" {
+  component "main.tsx" as Main
+  component "App.tsx" as App
+  component "Header" as Header
+  component "ProjectCard" as ProjectCard
+  component "ExperienceCard" as ExperienceCard
+  component "CertificationCard" as CertificationCard
+  component "ContactModal" as ContactModal
+  component "Footer" as Footer
+  component "ContactIcon" as ContactIcon
+}
+
+package "Typed Data Modules" {
+  component "projects.ts" as Projects
+  component "experiences.ts" as Experiences
+  component "certifications.ts" as Certifications
+  component "contacts.ts" as Contacts
+}
+
+package "Presentation" {
+  component "Global CSS and Tailwind" as Styles
+  component "Static Assets" as Assets
+}
+
+component "Browser LocalStorage" as Storage
+cloud "External Contact and Project Links" as External
+
+Main --> App : renders
+Main --> Styles : imports
+
+App --> Header : renders
+App --> ProjectCard : renders
+App --> ExperienceCard : renders
+App --> CertificationCard : renders
+App --> ContactModal : renders
+App --> Footer : renders
+
+App ..> Projects : imports
+App ..> Experiences : imports
+App ..> Certifications : imports
+
+ProjectCard ..> Projects : types and content
+ExperienceCard ..> Experiences : types and content
+CertificationCard ..> Certifications : types and content
+
+ContactModal --> ContactIcon : renders
+Footer --> ContactIcon : renders
+ContactModal ..> Contacts : uses
+Footer ..> Contacts : uses
+
+App ..> Storage : language preference
+Header ..> Storage : theme preference
+
+App ..> Assets : hero image
+ProjectCard ..> Assets : project images
+
+ProjectCard ..> External : project links
+ContactModal ..> External : contact links
+Footer ..> External : contact links
+
+@enduml
