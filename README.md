@@ -6,11 +6,11 @@ The repository also documents the engineering practices behind the portfolio: an
 
 ## Project Status
 
-**Core portfolio sections are implemented and deployed to Vercel Production.** The project is undergoing documentation, SEO, accessibility, performance, and release-readiness refinements. A custom domain and the first tagged stable release (`v1.0.0`) are not yet configured or published.
+**The portfolio is implemented and deployed to Vercel Production.** SEO, performance, accessibility, and visual identity improvements have been completed. The custom domain `alexandroleao.com.br` has been purchased and added to Vercel, with DNS configuration pending. Technical documentation and preparation for the first stable release (`v1.0.0`) are in progress.
 
 - Default language: Portuguese, with an English option.
 - Appearance: light and dark themes.
-- Current automated test suite: **33 tests across 6 test files**.
+- Current automated test suite: **34 tests across 6 test files**.
 - Development: GitHub Issues, feature branches, Pull Requests, GitHub Actions, and Vercel Preview.
 - Deployment: the `main` branch is published to Vercel Production.
 
@@ -27,7 +27,7 @@ The repository also documents the engineering practices behind the portfolio: an
 - **Accessibility and responsiveness:** semantic elements, accessible labels and interactive states, keyboard interactions, reduced-motion considerations, and desktop/mobile layouts.
 - **Navigation:** responsive menu, section anchors, and a back-to-top control.
 
-Accessibility and performance improvements remain part of the release-readiness audit; the features above are not a claim of a completed WCAG or Lighthouse certification.
+Accessibility and performance improvements have been validated through automated tests, manual reviews, and Lighthouse audits. Recorded scores are individual measurements and do not constitute WCAG certification or guarantee future scores.
 
 ## Technology Stack
 
@@ -35,7 +35,7 @@ Accessibility and performance improvements remain part of the release-readiness 
 | --- | --- |
 | Application | React 19, TypeScript, Vite 8 |
 | Styling | Tailwind CSS v4, CSS custom properties |
-| Icons and typography | Lucide React, Devicon assets, Google Fonts |
+| Icons and typography | Lucide React, local Devicon WOFF2 subset, self-hosted Inter and Outfit fonts |
 | Unit/component testing | Vitest, React Testing Library, jest-dom, user-event, jsdom |
 | Code quality | ESLint, TypeScript compiler |
 | Source control | Git, GitHub, GitHub Codespaces |
@@ -52,7 +52,7 @@ Docker and AWS are **not** required to build or host the current portfolio. They
   workflows/ci.yml       Pull Request CI
 public/
   images/                Portfolio and project illustrations
-  favicon.svg            Current favicon (branding update planned)
+  favicon.svg            Custom AL favicon
 src/
   components/            Reusable UI components and component tests
   data/                  Typed content for projects, experience, certifications, and contact
@@ -60,7 +60,12 @@ src/
   App.tsx                Main page, sections, and language integration
   App.test.tsx           Main application tests
   index.css              Global styles and theme tokens
-index.html               HTML entry point (SEO updates planned)
+index.html               HTML entry point and SEO metadata
+docs/
+  architecture.md         Architecture overview
+  use-cases.md            Visitor use case catalog
+  diagrams/               PlantUML diagrams
+  decisions/              Architectural decision records
 CONTRIBUTING.md          Development and review conventions
 README.md                Project overview and setup
 ```
@@ -102,7 +107,7 @@ Vite starts a local development server and prints its address in the terminal. U
 
 ## Testing and Quality
 
-The current suite includes **33 automated tests in 6 test files**, covering the main application and interactive cards/components for projects, experience, certifications, the contact modal, and the footer.
+The current suite includes **34 automated tests in 6 test files**, covering the main application and interactive cards/components for projects, experience, certifications, the contact modal, and the footer.
 
 ```bash
 npm run lint
@@ -124,6 +129,35 @@ GitHub Actions runs the [Continuous Integration workflow](.github/workflows/ci.y
 6. Runs `npm run build`.
 
 A failed step fails the CI job. Vercel deployment checks are handled separately from this GitHub Actions workflow.
+
+## Technical Documentation
+
+The repository includes documentation of the implemented
+software architecture, visitor use cases, engineering workflow,
+and architectural decisions.
+
+### Architecture and UML
+
+- [Software Architecture](docs/architecture.md)
+- [Visitor Use Cases](docs/use-cases.md)
+- [UML Component Diagram — SVG](docs/diagrams/components.svg) ([PlantUML source](docs/diagrams/components.puml))
+- [UML Use Case Diagram — SVG](docs/diagrams/use-cases.svg) ([PlantUML source](docs/diagrams/use-cases.puml))
+
+The UML diagrams are maintained as PlantUML source files.
+They can be rendered with a compatible PlantUML tool.
+
+### Architectural Decision Records
+
+- [ADR 0001 — Client-Side React Architecture](docs/decisions/0001-client-side-architecture.md)
+- [ADR 0002 — Issue-Driven Development and CI/CD](docs/decisions/0002-ci-cd-workflow.md)
+- [ADR 0003 — Local Fonts and Optimized Static Assets](docs/decisions/0003-local-assets-performance.md)
+
+These records retrospectively document decisions reflected
+in the implemented project. They do not imply that a formal
+ADR process was used from the beginning.
+
+For contribution conventions and validation requirements,
+see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Development Workflow
 
@@ -149,7 +183,7 @@ The portfolio is hosted on **Vercel**:
 - **Preview:** deployments associated with feature branches and Pull Requests are used for design, interaction, and responsive reviews.
 - **Production:** approved changes merged into `main` are deployed to the production environment and verified after merging.
 
-A custom domain has not yet been selected or configured. Hosting options and DNS configuration will be reviewed separately, without changing the working production deployment prematurely.
+The custom domain `alexandroleao.com.br` has been purchased and added to Vercel Production. DNS configuration and final domain verification are pending. The existing Vercel deployment remains available during this process.
 
 The current application is a static frontend built with Vite; it does not require a dedicated application server or database to serve the portfolio.
 
@@ -164,36 +198,50 @@ The current application is a static frontend built with Vite; it does not requir
 
 ### Completed
 
-- [x] Set up React, TypeScript, Vite, Tailwind CSS, and ESLint.
-- [x] Configure GitHub Actions lint, test, and build checks.
-- [x] Establish Issue-driven development and Pull Request reviews.
-- [x] Implement Hero, Header, About Me, and Technologies.
-- [x] Implement Projects and Experience.
-- [x] Implement academic Education and Certifications.
-- [x] Implement Contact modal, contact section, and Footer.
-- [x] Add Portuguese/English and light/dark theme support.
-- [x] Add 33 automated tests across 6 test files.
-- [x] Set up Vercel Preview and Production deployments.
+- [x] Initialize the React, TypeScript, Vite, and Tailwind CSS project.
+- [x] Configure ESLint and TypeScript validation.
+- [x] Establish an Issue-driven development workflow.
+- [x] Implement GitHub Actions continuous integration.
+- [x] Add 34 automated tests across 6 test files.
+- [x] Implement all core portfolio sections.
+- [x] Support Portuguese and English languages.
+- [x] Support light and dark themes.
+- [x] Implement responsive navigation and interactive components.
+- [x] Deploy Preview and Production environments on Vercel.
+- [x] Implement SEO metadata and Open Graph sharing.
+- [x] Create the custom AL favicon and social preview image.
+- [x] Optimize project images using responsive WebP assets.
+- [x] Self-host Inter, Outfit, and optimized Devicon fonts.
+- [x] Improve the resume placeholder's accessibility.
+- [x] Achieve 100/100 in all four Lighthouse categories in a production audit.
+- [x] Purchase the custom domain alexandroleao.com.br.
 
 ### In Progress
 
-- [ ] Update documentation and review unused starter files.
-- [ ] Audit accessibility, performance, content, and release readiness.
+- [ ] Complete custom domain DNS configuration and verification.
+- [ ] Update and expand technical project documentation.
+- [ ] Document software architecture and UML diagrams.
+- [ ] Record significant architectural decisions using ADRs.
 
 ### Planned
 
-- [ ] Improve metadata, Open Graph sharing, and SEO.
-- [ ] Replace the default favicon with portfolio branding.
-- [ ] Review image formats, loading behavior, and page performance.
-- [ ] Improve accessibility based on measured findings.
-- [ ] Add a portfolio case study to the Projects section.
-- [ ] Evaluate hosting terms, register a custom domain, and configure DNS.
-- [ ] Publish reviewed Portuguese and English résumé versions.
-- [ ] Review repository security, links, and final documentation.
-- [ ] Evaluate end-to-end testing and additional CI checks if justified.
-- [ ] Publish the first stable release (`v1.0.0`) after final verification.
+- [ ] Update canonical URLs and social metadata for the verified domain.
+- [ ] Perform a final production review of links, SEO, and accessibility.
+- [ ] Create Portuguese and English resume PDFs.
+- [ ] Enable language-specific resume downloads.
+- [ ] Align LinkedIn with the completed portfolio and resume.
+- [ ] Complete final release-readiness checks.
+- [ ] Publish the first stable release (v1.0.0).
 
-**Separate future exploration:** Docker and AWS experiments for infrastructure learning; these are not current production dependencies.
+### Deferred / Future Improvements
+
+- [ ] Reevaluate adding the Developer Portfolio to the Projects section.
+- [ ] Consider end-to-end tests if future complexity justifies them.
+- [ ] Explore Docker, AWS, and infrastructure automation separately.
+
+The roadmap reflects completed and planned work. Lighthouse scores
+represent individual audit results rather than a permanent guarantee
+of performance or accessibility compliance.
 
 ## Project Management
 

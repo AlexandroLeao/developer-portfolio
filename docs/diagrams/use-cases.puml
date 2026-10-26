@@ -1,0 +1,40 @@
+@startuml
+title Developer Portfolio - Use Case Diagram
+left to right direction
+skinparam packageStyle rectangle
+
+actor Visitor
+
+rectangle "Developer Portfolio" {
+  usecase "Browse portfolio sections" as UC01
+  usecase "Switch language" as UC02
+  usecase "Toggle color theme" as UC03
+  usecase "Explore technology details" as UC04
+  usecase "Explore project details" as UC05
+  usecase "Open project links" as UC06
+  usecase "Explore experience details" as UC07
+  usecase "View certifications and verification" as UC08
+  usecase "Open contact dialog" as UC09
+  usecase "Follow contact channels" as UC10
+  usecase "Navigate to page sections" as UC11
+}
+
+Visitor --> UC01
+Visitor --> UC02
+Visitor --> UC03
+Visitor --> UC04
+Visitor --> UC05
+Visitor --> UC06
+Visitor --> UC07
+Visitor --> UC08
+Visitor --> UC09
+Visitor --> UC10
+Visitor --> UC11
+
+note bottom of UC09
+  Contact channels open external destinations.
+  The portfolio does not submit messages
+  through its own backend.
+end note
+
+@enduml
