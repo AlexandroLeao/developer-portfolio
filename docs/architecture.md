@@ -100,8 +100,9 @@ Vercel builds and hosts the static application. Feature branches
 are reviewed through Vercel Preview, while approved changes
 merged into `main` are published to Production.
 
-The domain `alexandroleao.com.br` has been purchased and added
-to Vercel. DNS configuration and verification are pending.
+The primary domain `alexandroleao.com.br` is connected to
+Vercel Production with validated DNS configuration.
+The `www` subdomain redirects to the apex domain using HTTP 308.
 
 ## Related Documentation
 

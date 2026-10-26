@@ -6,7 +6,7 @@ The repository also documents the engineering practices behind the portfolio: an
 
 ## Project Status
 
-**The portfolio is implemented and deployed to Vercel Production.** SEO, performance, accessibility, and visual identity improvements have been completed. The custom domain `alexandroleao.com.br` has been purchased and added to Vercel, with DNS configuration pending. Technical documentation and preparation for the first stable release (`v1.0.0`) are in progress.
+**The portfolio is implemented and deployed to Vercel Production.** SEO, performance, accessibility, and visual identity improvements have been completed. The custom domain [alexandroleao.com.br](https://alexandroleao.com.br/) is connected to Vercel Production, with DNS configuration validated. Preparation for the first stable release (`v1.0.0`) are in progress.
 
 - Default language: Portuguese, with an English option.
 - Appearance: light and dark themes.
@@ -183,7 +183,7 @@ The portfolio is hosted on **Vercel**:
 - **Preview:** deployments associated with feature branches and Pull Requests are used for design, interaction, and responsive reviews.
 - **Production:** approved changes merged into `main` are deployed to the production environment and verified after merging.
 
-The custom domain `alexandroleao.com.br` has been purchased and added to Vercel Production. DNS configuration and final domain verification are pending. The existing Vercel deployment remains available during this process.
+The primary production domain is [alexandroleao.com.br](https://alexandroleao.com.br/). DNS configuration is validated, and `www.alexandroleao.com.br` redirects permanently to the apex domain using HTTP 308. The original Vercel deployment URL remains available.
 
 The current application is a static frontend built with Vite; it does not require a dedicated application server or database to serve the portfolio.
 
@@ -215,17 +215,16 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Improve the resume placeholder's accessibility.
 - [x] Achieve 100/100 in all four Lighthouse categories in a production audit.
 - [x] Purchase the custom domain alexandroleao.com.br.
+- [x] Complete custom domain DNS configuration and verification.
+- [x] Update and expand technical project documentation.
+- [x] Document software architecture and UML diagrams.
+- [x] Record significant architectural decisions using ADRs.
 
 ### In Progress
 
-- [ ] Complete custom domain DNS configuration and verification.
-- [ ] Update and expand technical project documentation.
-- [ ] Document software architecture and UML diagrams.
-- [ ] Record significant architectural decisions using ADRs.
+- [ ] Update canonical URLs and social metadata for the verified domain.
 
 ### Planned
-
-- [ ] Update canonical URLs and social metadata for the verified domain.
 - [ ] Perform a final production review of links, SEO, and accessibility.
 - [ ] Create Portuguese and English resume PDFs.
 - [ ] Enable language-specific resume downloads.
