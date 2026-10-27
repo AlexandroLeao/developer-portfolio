@@ -6,7 +6,7 @@ The repository also documents the engineering practices behind the portfolio: an
 
 ## Project Status
 
-**The portfolio is implemented and deployed to Vercel Production.** SEO, performance, accessibility, and visual identity improvements have been completed. The custom domain [alexandroleao.com.br](https://alexandroleao.com.br/) is connected to Vercel Production, with DNS configuration validated. Final release preparation for `v1.0.0` is in progress.
+**The portfolio is implemented and deployed to Vercel Production.** SEO, performance, accessibility, and visual identity improvements have been completed. The custom domain [alexandroleao.com.br](https://alexandroleao.com.br/) is connected to Vercel Production, with DNS configuration validated. The first stable release (`v1.0.0`) has been published. See the [official GitHub Release](https://github.com/AlexandroLeao/developer-portfolio/releases/tag/v1.0.0).
 
 - Default language: Portuguese, with an English option.
 - Appearance: light and dark themes.
@@ -220,16 +220,14 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Create Portuguese and English resume PDFs.
 - [x] Enable and validate language-specific resume downloads.
 - [x] Complete final production QA review (Issue #39).
+- [x] Complete final release-readiness checks.
+- [x] Publish the first stable release (v1.0.0).
 - [x] Update and expand technical project documentation.
 - [x] Document software architecture and UML diagrams.
 - [x] Record significant architectural decisions using ADRs.
 
-### In Progress
-
-- [ ] Complete final release-readiness checks.
-
 ### Planned
-- [ ] Publish the first stable release (v1.0.0).
+
 - [ ] Align LinkedIn with the completed portfolio and resume.
 
 ### Deferred / Future Improvements
