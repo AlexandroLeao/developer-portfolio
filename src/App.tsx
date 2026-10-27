@@ -374,8 +374,8 @@ const translations = {
       role: 'Desenvolvedor de Software',
       description: 'Transformando código em soluções.',
       contact: 'Entrar em contato',
-      resume: 'Currículo em breve',
-      resumeLabel: 'Download do currículo disponível em breve',
+      resume: 'Baixar currículo',
+      resumeLabel: 'Baixar currículo em PDF',
       illustration: 'Ilustração de Alexandro Leão utilizando um notebook',
       scrollHint: 'Role para explorar',
     },
@@ -439,8 +439,8 @@ const translations = {
       role: 'Software Developer',
       description: 'Turning code into solutions.',
       contact: 'Get in touch',
-      resume: 'Résumé coming soon',
-      resumeLabel: 'Résumé download coming soon',
+      resume: 'Download résumé',
+      resumeLabel: 'Download résumé as PDF',
       illustration: 'Illustration of Alexandro Leão using a laptop',
       scrollHint: 'Scroll to explore',
     },
@@ -666,14 +666,19 @@ function App() {
               {text.hero.contact}
             </button>
 
-            <button
-              type="button"
-              disabled
-              className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface) px-8 py-3 font-semibold text-(--color-text-muted)"
+            <a
+              href={
+                language === 'pt'
+                  ? '/resumes/alexandro-leao-curriculo-pt.pdf'
+                  : '/resumes/alexandro-leao-resume-en.pdf'
+              }
+              download
+              aria-label={text.hero.resumeLabel}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface) px-8 py-3 font-semibold text-(--color-text-muted) transition-colors hover:text-(--color-text) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
               <Download size={18} aria-hidden="true" />
               {text.hero.resume}
-            </button>
+            </a>
           </div>
         </div>
 

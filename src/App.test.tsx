@@ -86,22 +86,40 @@ describe('Developer Portfolio', () => {
     expect(localStorage.getItem('portfolio-theme')).toBe('light')
   })
 
-  it('keeps the resume download disabled in both languages', async () => {
+  it('provides the Portuguese resume download', () => {
+    render(<App />)
+
+    const resumeLink = screen.getByRole('link', {
+      name: 'Baixar currículo em PDF',
+    })
+
+    expect(resumeLink).toHaveTextContent('Baixar currículo')
+    expect(resumeLink).toHaveAttribute(
+      'href',
+      '/resumes/alexandro-leao-curriculo-pt.pdf',
+    )
+    expect(resumeLink).toHaveAttribute('download')
+  })
+
+  it('provides the English resume download', async () => {
     const user = userEvent.setup()
 
     render(<App />)
-
-    expect(
-      screen.getByRole('button', { name: 'Currículo em breve' }),
-    ).toBeDisabled()
 
     await user.click(
       screen.getByRole('button', { name: 'EN' }),
     )
 
-    expect(
-      screen.getByRole('button', { name: 'Résumé coming soon' }),
-    ).toBeDisabled()
+    const resumeLink = screen.getByRole('link', {
+      name: 'Download résumé as PDF',
+    })
+
+    expect(resumeLink).toHaveTextContent('Download résumé')
+    expect(resumeLink).toHaveAttribute(
+      'href',
+      '/resumes/alexandro-leao-resume-en.pdf',
+    )
+    expect(resumeLink).toHaveAttribute('download')
   })
 
 })
