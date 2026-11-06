@@ -24,6 +24,67 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    id: 'adventure-files',
+    name: 'Adventure Files',
+    year: 2026,
+    image: '/images/projects/adventure-files-1200.webp',
+    imageSrcSet: [
+      '/images/projects/adventure-files-640.webp 640w',
+      '/images/projects/adventure-files-1200.webp 1200w',
+      '/images/projects/adventure-files-1672.webp 1672w',
+    ].join(', '),
+    imageAlt: {
+      pt: 'Ilustração do Adventure Files com uma interface de criação de personagens RPG, classes de aventureiros e cenário de fantasia.',
+      en: 'Adventure Files illustration showing an RPG character creator, adventurer classes, and a fantasy landscape.',
+    },
+    description: {
+      pt: 'Aplicação full-stack para criar, personalizar e salvar personagens de RPG, com autenticação, banco de dados e exportação de fichas em PNG.',
+      en: 'Full-stack application for creating, customizing, and saving RPG characters, with authentication, database storage, and PNG character-sheet exports.',
+    },
+    technologies: [
+      'React',
+      'TypeScript',
+      'Node.js',
+      'Express',
+      'PostgreSQL',
+      'Supabase',
+    ],
+    githubUrl: 'https://github.com/AlexandroLeao/rpg-character-creator',
+    liveUrl: 'https://adventure-files-staging.vercel.app/',
+    details: {
+      features: [
+        {
+          pt: 'Cadastro, login, recuperação de senha e gerenciamento da conta.',
+          en: 'Registration, sign-in, password recovery, and account management.',
+        },
+        {
+          pt: 'Criação guiada em seis etapas, com oito classes e personalização de personagens.',
+          en: 'Guided six-stage creator with eight character classes and customization options.',
+        },
+        {
+          pt: 'Persistência, edição e exclusão de um personagem por conta.',
+          en: 'Persistent storage, editing, and deletion of one character per account.',
+        },
+        {
+          pt: 'Exportação de fichas de personagem em PNG nos formatos Story/Status e Portrait.',
+          en: 'PNG character-sheet exports in Story/Status and Portrait formats.',
+        },
+      ],
+      architecture: {
+        pt: 'Front-end React e TypeScript, API REST com Node.js e Express, autenticação pelo Supabase Auth e armazenamento PostgreSQL com políticas de Row Level Security (RLS).',
+        en: 'React and TypeScript frontend, Node.js and Express REST API, Supabase Auth, and PostgreSQL persistence with Row Level Security (RLS) policies.',
+      },
+      challenges: {
+        pt: 'Integrar autenticação, autorização e persistência segura de dados por usuário a uma experiência de criação responsiva, bilíngue e inspirada em jogos retrô.',
+        en: 'Integrating authentication, authorization, and secure user-scoped persistence into a responsive, bilingual character creator inspired by retro games.',
+      },
+      practices: {
+        pt: 'Desenvolvimento com auxílio de IA, documentação técnica, testes automatizados de front-end, API e segurança do banco, controle de versão e integração contínua com GitHub Actions.',
+        en: 'AI-assisted development with technical documentation, automated frontend, API, and database-security tests, version control, and continuous integration with GitHub Actions.',
+      },
+    },
+  },
+  {
     id: 'ideas-organizer',
     name: 'Organizador de Ideias e Projetos',
     year: 2026,
