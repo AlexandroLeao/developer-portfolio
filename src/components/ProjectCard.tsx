@@ -1,6 +1,7 @@
 import { ArrowUpRight, Code2 } from 'lucide-react'
 import type { Language, Project } from '../data/projects'
 import ProjectStackChart from './ProjectStackChart'
+import ProjectDetailsDialog from './ProjectDetailsDialog'
 
 type ProjectCardProps = {
   project: Project
@@ -10,12 +11,12 @@ type ProjectCardProps = {
 const translations = {
   pt: {
     repository: 'GitHub',
-    liveDemo: 'Visitar projeto',
+    liveDemo: 'Visitar',
     opensNewTab: 'Abre em uma nova aba',
   },
   en: {
     repository: 'GitHub',
-    liveDemo: 'Live Demo',
+    liveDemo: 'Visit',
     opensNewTab: 'Opens in a new tab',
   },
 }
@@ -56,17 +57,17 @@ export default function ProjectCard({ project, language }: ProjectCardProps) {
 
         <ProjectStackChart project={project} language={language} />
 
-        <div className="mt-auto flex flex-wrap justify-center gap-2.5 pt-1">
+        <div className="mt-auto flex items-center gap-1.5 pt-1">
+          <ProjectDetailsDialog project={project} language={language} />
           <a
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${projectName} — ${text.repository}. ${text.opensNewTab}`}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-(--color-border) px-3 py-2.5 text-xs font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) xl:px-5 xl:text-sm"
+            className="inline-flex min-h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-(--color-border) px-2 py-2 text-xs font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
           >
-            <Code2 size={17} aria-hidden="true" />
+            <Code2 size={14} aria-hidden="true" />
             {text.repository}
-            <ArrowUpRight size={15} aria-hidden="true" />
           </a>
 
           {project.liveUrl && (
@@ -75,10 +76,10 @@ export default function ProjectCard({ project, language }: ProjectCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${projectName} — ${text.liveDemo}. ${text.opensNewTab}`}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#0b3d3e] px-3 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#082e2f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) xl:px-5 xl:text-sm"
+              className="inline-flex min-h-10 min-w-0 flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-[#0b3d3e] px-2 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#082e2f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
             >
               {text.liveDemo}
-              <ArrowUpRight size={17} aria-hidden="true" />
+              <ArrowUpRight size={14} aria-hidden="true" />
             </a>
           )}
         </div>

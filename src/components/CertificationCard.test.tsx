@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CertificationCard from './CertificationCard'
 import { certifications } from '../data/certifications'
@@ -83,6 +83,24 @@ describe('CertificationCard', () => {
     expect(
       screen.getByRole('button', { name: 'Ver detalhes' }),
     ).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('dismisses certificate details on backdrop taps while preserving content interactions', async () => {
+    const user = userEvent.setup()
+    render(<CertificationCard certification={softwareEngineering} language="pt" />)
+
+    await user.click(screen.getByRole('button', { name: 'Ver detalhes' }))
+    const dialog = screen.getByRole('dialog', { name: 'Engenharia de Software' })
+    const originalRect = dialog.getBoundingClientRect.bind(dialog)
+    const rectSpy = vi.spyOn(dialog, 'getBoundingClientRect').mockReturnValue({
+      ...originalRect(), left: 20, top: 20, right: 400, bottom: 400,
+    } as DOMRect)
+
+    fireEvent.click(within(dialog).getByText('Conteúdos abordados'), { clientX: 100, clientY: 100 })
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    fireEvent.click(dialog, { clientX: 0, clientY: 0, detail: 1 })
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    rectSpy.mockRestore()
   })
 
   it('translates the card and expanded content into English', async () => {

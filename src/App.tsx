@@ -1089,7 +1089,7 @@ function App() {
             <div
               role="group"
               aria-label={text.certifications.categoryLabel}
-              className="mb-4 flex flex-wrap gap-2"
+              className="technology-category-nav mb-4 flex snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0"
             >
               <button
                 type="button"
@@ -1097,7 +1097,7 @@ function App() {
                 aria-controls="certification-results"
                 onClick={() => setSelectedCertificationCategory('all')}
                 className={
-                  'min-h-9 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
+                  'min-h-9 shrink-0 snap-start whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
                   (selectedCertificationCategory === 'all'
                     ? 'border-(--color-primary) bg-(--color-surface) text-(--color-primary)'
                     : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)')
@@ -1113,7 +1113,7 @@ function App() {
                   aria-controls="certification-results"
                   onClick={() => setSelectedCertificationCategory(category.id)}
                   className={
-                    'min-h-9 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
+                    'min-h-9 shrink-0 snap-start whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
                     (selectedCertificationCategory === category.id
                       ? 'border-(--color-primary) bg-(--color-surface) text-(--color-primary)'
                       : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)')

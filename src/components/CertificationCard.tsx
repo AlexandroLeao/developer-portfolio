@@ -197,6 +197,17 @@ export default function CertificationCard({
           <dialog
             ref={dialogRef}
             onClose={() => setIsExpanded(false)}
+            onClick={(event) => {
+              const bounds = event.currentTarget.getBoundingClientRect()
+              if (
+                event.clientX < bounds.left ||
+                event.clientX > bounds.right ||
+                event.clientY < bounds.top ||
+                event.clientY > bounds.bottom
+              ) {
+                event.currentTarget.close()
+              }
+            }}
             aria-modal="true"
             aria-labelledby={`cert-dialog-title-${certification.id}`}
             className="fixed inset-0 m-auto max-h-[calc(100dvh-1.5rem)] w-[min(94vw,54rem)] overflow-y-auto rounded-2xl border border-(--color-border) bg-(--color-surface) p-0 text-(--color-text) shadow-2xl backdrop:bg-black/70"

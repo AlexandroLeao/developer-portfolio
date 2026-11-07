@@ -108,7 +108,7 @@ describe('ContactModal', () => {
     const backdrop = dialog.parentElement
     if (!backdrop) throw new Error('Expected a dialog backdrop')
 
-    fireEvent.mouseDown(backdrop)
+    fireEvent.pointerDown(backdrop, { pointerType: 'touch' })
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
@@ -117,7 +117,7 @@ describe('ContactModal', () => {
     const onClose = vi.fn()
     render(<ContactModal isOpen onClose={onClose} language="pt" />)
 
-    fireEvent.mouseDown(screen.getByRole('dialog'))
+    fireEvent.pointerDown(screen.getByRole('dialog'), { pointerType: 'mouse' })
 
     expect(onClose).not.toHaveBeenCalled()
     expect(screen.getByRole('dialog')).toBeInTheDocument()

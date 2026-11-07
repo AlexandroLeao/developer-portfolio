@@ -62,6 +62,10 @@ describe('Developer Portfolio', () => {
     expect(within(grid).queryByRole('heading', { name: 'UX e UI Design' })).not.toBeInTheDocument()
     expect(within(grid).getByText('Em andamento')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Destaques' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('group', { name: 'Área de conhecimento' }))
+      .toHaveClass('technology-category-nav', 'overflow-x-auto', 'snap-x', 'sm:flex-wrap')
+    expect(screen.getByRole('button', { name: 'Todas as áreas' }))
+      .toHaveClass('shrink-0', 'whitespace-nowrap')
 
     const degree = screen.getByRole('heading', { name: 'Tecnólogo em Análise e Desenvolvimento de Sistemas' })
     expect(degree).toBeInTheDocument()

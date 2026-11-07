@@ -12,7 +12,8 @@ describe('ExperienceTimeline', () => {
     const axia = within(navigation).getByRole('button', { name: /AXIA Energia/ })
     expect(axia).toHaveAttribute('aria-pressed', 'true')
     expect(axia).toHaveClass('nav-hover-lift')
-    expect(navigation.querySelector('ol')).toHaveClass('lg:h-full', 'lg:auto-rows-fr')
+    expect(navigation.querySelector('ol')).toHaveClass('technology-category-nav', 'overflow-x-auto', 'snap-x', 'sm:grid-cols-3', 'lg:auto-rows-fr')
+    expect(navigation.querySelector('li')).toHaveClass('shrink-0', 'snap-start')
     expect(screen.getByRole('region', { name: /Supervisor de Almoxarifado.*AXIA Energia/ })).toHaveClass('lg:h-full')
 
     const panels = container.querySelectorAll('[id^="experience-panel-"]')

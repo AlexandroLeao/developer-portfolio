@@ -173,7 +173,7 @@ export default function ContactModal({
   return (
     <div
       className="fixed inset-0 z-100 flex items-center justify-center bg-black/70 px-4 py-3 backdrop-blur-sm sm:px-6"
-      onMouseDown={(event) => {
+      onPointerDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose()
         }
