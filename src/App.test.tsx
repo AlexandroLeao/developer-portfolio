@@ -57,6 +57,9 @@ describe('Developer Portfolio', () => {
 
     const navigation = screen.getByRole('navigation', { name: 'Áreas de tecnologia' })
     expect(within(navigation).getAllByRole('button')).toHaveLength(5)
+    expect(navigation).toHaveClass('overflow-x-auto', 'lg:flex-col')
+    expect(within(navigation).getByRole('button', { name: /Engenharia & Ferramentas/ }))
+      .toHaveClass('lg:leading-tight', 'lg:py-1.5')
     expect(within(navigation).queryByText('Explore por área')).not.toBeInTheDocument()
 
     const frontendGrid = screen.getByRole('button', { name: 'HTML5' }).parentElement
@@ -64,7 +67,7 @@ describe('Developer Portfolio', () => {
     expect(frontendGrid?.children).toHaveLength(8)
 
     expect(screen.getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'false')
-    expect(document.getElementById('technology-detail-panel')).toHaveClass('hidden')
+    expect(document.getElementById('technology-detail-panel')).toHaveClass('min-h-19')
 
     await user.click(screen.getByRole('button', { name: 'CSS3' }))
     expect(screen.getByRole('button', { name: 'CSS3' })).toHaveAttribute('aria-pressed', 'true')
@@ -74,7 +77,7 @@ describe('Developer Portfolio', () => {
 
     await user.click(screen.getByRole('heading', { level: 2, name: /^Tecnologias/ }))
     expect(screen.getByRole('button', { name: 'CSS3' })).toHaveAttribute('aria-pressed', 'false')
-    expect(document.getElementById('technology-detail-panel')).toHaveClass('hidden')
+    expect(document.getElementById('technology-detail-panel')).toHaveClass('min-h-19')
 
     await user.click(within(navigation).getByRole('button', { name: /Cloud & DevOps/ }))
     const cloudGrid = screen.getByRole('button', { name: 'Azure' }).parentElement
@@ -96,10 +99,18 @@ describe('Developer Portfolio', () => {
     await user.click(within(navigation).getByRole('button', { name: /Back-End & Dados/ }))
     expect(screen.getByRole('button', { name: 'Node.js' }).parentElement?.children).toHaveLength(6)
 
-    await user.click(screen.getByRole('button', { name: 'EN' }))
-    const englishNavigation = screen.getByRole('navigation', { name: 'Technology areas' })
-    await user.click(within(englishNavigation).getByRole('button', { name: /Cloud & DevOps/ }))
+    await user.click(within(navigation).getByRole('button', { name: /Cloud & DevOps/ }))
     await user.click(screen.getByRole('button', { name: 'Azure' }))
+    expect(screen.getByRole('button', { name: 'Azure' })).toHaveAttribute('aria-pressed', 'true')
+
+    await user.click(screen.getByRole('button', { name: 'EN' }))
+    expect(screen.getByRole('button', { name: 'Azure' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('navigation', { name: 'Technology areas' })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: /Azure — Technology details/ }))
+      .toHaveTextContent('I studied Microsoft Azure infrastructure and service fundamentals')
+
+    await user.click(screen.getByRole('button', { name: 'Switch to dark mode' }))
+    expect(screen.getByRole('button', { name: 'Azure' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('region', { name: /Azure — Technology details/ }))
       .toHaveTextContent('I studied Microsoft Azure infrastructure and service fundamentals')
   })
