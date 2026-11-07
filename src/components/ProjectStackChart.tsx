@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import { Code2 } from 'lucide-react'
 import type { Language, Project } from '../data/projects'
 
 type ProjectStackChartProps = {
@@ -24,106 +22,70 @@ const stackColors: Record<string, string> = {
 
 const translations = {
   pt: {
-    ariaLabel: 'Tecnologias do projeto',
-    stackRole: 'Ver uso de',
+    heading: 'Uso das tecnologias',
+    unit: 'arquivos',
+    ariaLabel: 'Tecnologias por arquivos de código',
+    method: 'Arquivos associados a cada tecnologia nos repositórios. Uma mesma origem pode contar para mais de uma tecnologia; os valores não são porcentagens.',
   },
   en: {
-    ariaLabel: 'Project technologies',
-    stackRole: 'See how I used',
+    heading: 'Technology usage',
+    unit: 'files',
+    ariaLabel: 'Technologies by source files',
+    method: 'Source files associated with each technology in the repositories. A file may count toward multiple technologies; these values are not percentages.',
   },
 }
 
+// Repository snapshot: 2026-11-07. Values are code-file counts, not estimated percentages.
+// Each technology is counted by its applicable code files (language, imports,
+// backend modules, routing, style usage, tests, storage calls, or SQL migrations).
 export default function ProjectStackChart({ project, language }: ProjectStackChartProps) {
-  const [activeIndex, setActiveIndex] = useState(0)
   const text = translations[language]
-  const activeTechnology = project.technologies[activeIndex] ?? project.technologies[0]
-  const usage = project.stackUsage[activeTechnology]?.[language]
-  const segmentSize = 100 / project.technologies.length
-  const visibleSegment = segmentSize - 1.8
+  const maxCount = Math.max(1, ...project.technologies.map((technology) => project.stackFileCounts[technology] ?? 0))
 
   return (
-    <div className="border-t border-(--color-border) pt-3">
-      <div className="flex min-h-24 items-center gap-2.5">
-        <div className="relative h-20 w-20 shrink-0">
-          <svg
-            viewBox="0 0 120 120"
-            aria-label={`${project.name} — ${text.ariaLabel}`}
-            className="h-full w-full overflow-visible"
-          >
-            <circle cx="60" cy="60" r="42" fill="none" stroke="var(--color-border)" strokeWidth="13" />
-            {project.technologies.map((technology, index) => {
-              const isActive = index === activeIndex
+    <section className="min-w-0 border-t border-(--color-border) pt-3" aria-label={text.ariaLabel}>
+      <div className="mb-3 flex items-baseline justify-between gap-2">
+        <h4 className="text-[11px] font-semibold tracking-wide text-(--color-text)">
+          {text.heading}
+        </h4>
+        <span className="shrink-0 text-[10px] text-(--color-text-muted)" title={text.method}>
+          {text.unit}
+        </span>
+      </div>
 
-              return (
-                <circle
-                  key={technology}
-                  role="button"
-                  tabIndex={0}
-                  aria-pressed={isActive}
-                  aria-label={`${text.stackRole} ${technology}`}
-                  cx="60"
-                  cy="60"
-                  r="42"
-                  pathLength={100}
-                  fill="none"
-                  stroke={stackColors[technology] ?? '#668d83'}
-                  strokeWidth={isActive ? 17 : 13}
-                  strokeDasharray={`${visibleSegment} ${100 - visibleSegment}`}
-                  strokeDashoffset={-index * segmentSize}
-                  transform="rotate(-90 60 60)"
-                  onClick={() => setActiveIndex(index)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault()
-                      setActiveIndex(index)
-                    }
-                  }}
-                  className="cursor-pointer transition-all duration-150 focus-visible:outline-2 focus-visible:outline-(--color-primary) motion-reduce:transition-none"
-                  style={{ filter: isActive ? 'drop-shadow(0 0 3px rgba(19, 154, 136, 0.26))' : undefined }}
-                />
-              )
-            })}
-          </svg>
-          <Code2
-            size={18}
-            strokeWidth={1.8}
-            aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-(--color-primary)"
-          />
-        </div>
+      <ul className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-3" title={text.method}>
+        {project.technologies.map((technology) => {
+          const count = project.stackFileCounts[technology] ?? 0
+          const width = (count / maxCount) * 100
 
-        <div role="group" aria-label={text.ariaLabel} className="grid min-w-0 flex-1 grid-cols-2 gap-x-1 gap-y-0.5">
-          {project.technologies.map((technology, index) => (
-            <button
+          return (
+            <li
               key={technology}
-              type="button"
-              aria-pressed={index === activeIndex}
-              aria-label={`${project.name} — ${technology}`}
-              title={technology}
-              onClick={() => setActiveIndex(index)}
-              className={`flex min-h-6 min-w-0 items-center gap-1 rounded-md border px-1 py-1 text-left text-[10px] font-medium leading-tight transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-(--color-primary) ${
-                index === activeIndex
-                  ? 'border-(--color-border) bg-(--color-background) text-(--color-text)'
-                  : 'border-transparent text-(--color-text-muted)'
-              }`}
+              className="group min-w-0"
+              aria-label={technology + ': ' + count + ' ' + text.unit}
+              title={technology + ' · ' + count + ' ' + text.unit}
             >
-              <span
-                aria-hidden="true"
-                className="h-2 w-2 shrink-0 rounded-sm"
-                style={{ backgroundColor: stackColors[technology] ?? '#668d83' }}
-              />
-              <span className="min-w-0 break-words">{technology}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div aria-live="polite" className="mt-2 flex min-h-12 items-center rounded-xl border border-(--color-border) bg-(--color-background) px-2.5 py-1.5">
-        <p className="text-xs leading-4 text-(--color-text-muted)">
-          <strong className="font-semibold text-(--color-text)">{activeTechnology} — </strong>
-          {usage}
-        </p>
-      </div>
-    </div>
+              <div className="mb-1 flex min-w-0 items-baseline justify-between gap-1">
+                <span className="min-w-0 break-words text-[10px] font-medium leading-tight text-(--color-text)">
+                  {technology}
+                </span>
+                <span className="shrink-0 text-[10px] tabular-nums text-(--color-text-muted)">
+                  {count}
+                </span>
+              </div>
+              <div aria-hidden="true" className="h-2 overflow-hidden rounded-full bg-(--color-border)">
+                <div
+                  className="h-full rounded-full transition-[filter] duration-200 group-hover:brightness-125 motion-reduce:transition-none"
+                  style={{
+                    width: String(width) + '%',
+                    backgroundColor: stackColors[technology] ?? '#668d83',
+                  }}
+                />
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+    </section>
   )
 }
