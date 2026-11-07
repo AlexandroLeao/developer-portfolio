@@ -55,9 +55,11 @@ export default function ProjectCard({ project, language }: ProjectCardProps) {
           </p>
         </div>
 
-        <ProjectStackChart project={project} language={language} />
+        <div className="mt-auto">
+          <ProjectStackChart project={project} language={language} />
+        </div>
 
-        <div className="mt-auto flex items-center gap-1.5 pt-1">
+        <div className="flex items-center gap-1.5 pt-1">
           <ProjectDetailsDialog project={project} language={language} />
           <a
             href={project.githubUrl}

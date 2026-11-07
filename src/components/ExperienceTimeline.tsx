@@ -18,14 +18,14 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
 
   return (
     <div className="grid items-start gap-6 lg:items-stretch lg:grid-cols-[17rem_minmax(0,1fr)] xl:gap-8">
-      <nav aria-label={text.navigation} className="lg:h-full">
-        <ol className="technology-category-nav flex snap-x snap-proximity gap-2.5 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:gap-3 sm:overflow-visible sm:pb-0 lg:h-full lg:auto-rows-fr lg:grid-cols-1 lg:pl-8">
+      <nav aria-label={text.navigation} className="min-w-0 lg:h-full">
+        <ol className="technology-category-nav flex snap-x snap-proximity gap-2 overflow-x-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 lg:grid lg:h-full lg:auto-rows-fr lg:grid-cols-1 lg:gap-3 lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:pl-8">
           {experiences.map((experience, index) => {
             const isSelected = experience.id === selectedId
             const isReached = index <= selectedIndex
 
             return (
-              <li key={experience.id} className="relative min-w-0 w-[min(70vw,17rem)] shrink-0 snap-start sm:w-auto sm:shrink">
+              <li key={experience.id} className="relative min-w-36 shrink-0 snap-start lg:min-w-0 lg:shrink">
                 {index < experiences.length - 1 && (
                   <span
                     aria-hidden="true"
@@ -50,24 +50,26 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
                 />
                 <button
                   type="button"
+                  aria-label={`${experience.company} — ${experience.role[language]}`}
                   aria-pressed={isSelected}
                   aria-controls={`experience-panel-${experience.id}`}
                   onClick={() => setSelectedId(experience.id)}
-                  className={`nav-hover-lift relative z-10 flex h-full min-h-28 w-full flex-col items-start rounded-2xl border p-4 text-left transition-[transform,border-color,background-color] duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transition-none ${
+                  className={`nav-hover-lift relative z-10 flex min-h-10 w-full items-center justify-center whitespace-nowrap rounded-full border px-4 py-2 text-center text-sm font-medium transition-[transform,border-color,background-color] duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transition-none lg:min-h-28 lg:flex-col lg:items-start lg:justify-start lg:whitespace-normal lg:rounded-2xl lg:p-4 lg:text-left ${
                     isSelected
                       ? 'border-(--color-primary) bg-(--color-background)'
                       : 'border-(--color-border) bg-(--color-surface) hover:border-(--color-primary)'
                   }`}
                 >
-                  <span className="mb-2 text-xs font-medium text-(--color-text-muted)">
+                  <span className="mb-2 hidden text-xs font-medium text-(--color-text-muted) lg:block">
                     {experience.period[language]}
                   </span>
-                  <span className={`font-display text-base font-bold ${
+                  <span className={`font-display text-sm font-semibold lg:text-base lg:font-bold ${
                     isSelected ? 'text-(--color-primary)' : 'text-(--color-text)'
                   }`}>
-                    {experience.company}
+                    <span className="lg:hidden">{experience.id === 'kosei-home' ? 'Kosei Home' : experience.company}</span>
+                    <span className="hidden lg:inline">{experience.company}</span>
                   </span>
-                  <span className="mt-1 line-clamp-2 text-xs leading-5 text-(--color-text-muted)">
+                  <span className="mt-1 hidden text-xs leading-5 text-(--color-text-muted) lg:line-clamp-2">
                     {experience.role[language]}
                   </span>
                 </button>
