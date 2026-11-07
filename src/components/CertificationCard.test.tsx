@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CertificationCard from './CertificationCard'
@@ -15,6 +15,16 @@ const directCertificate = certifications.find(
 const certificateWithoutVerification = certifications.find(
   (certification) => !certification.verification,
 )!
+
+beforeAll(() => {
+  HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement) {
+    this.open = true
+  }
+  HTMLDialogElement.prototype.close = function (this: HTMLDialogElement) {
+    this.open = false
+    this.dispatchEvent(new Event('close'))
+  }
+})
 
 describe('CertificationCard', () => {
   it('displays a certificate in Portuguese with its key information', () => {
@@ -43,7 +53,7 @@ describe('CertificationCard', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('expands and collapses the course topics using an accessible button', async () => {
+  it('opens and closes certification details without expanding the card', async () => {
     const user = userEvent.setup()
     render(
       <CertificationCard
@@ -54,24 +64,21 @@ describe('CertificationCard', () => {
 
     await user.click(screen.getByRole('button', { name: 'Ver detalhes' }))
 
+    const dialog = screen.getByRole('dialog', { name: 'Engenharia de Software' })
+    expect(dialog).toBeVisible()
     expect(
-      screen.getByRole('button', { name: 'Ocultar detalhes' }),
-    ).toHaveAttribute('aria-expanded', 'true')
-    expect(
-      screen.getByRole('region', {
+      within(dialog).getByRole('region', {
         name: /Conteúdos abordados — Engenharia de Software/,
       }),
     ).toBeInTheDocument()
-    expect(screen.getByText(softwareEngineering.topics[0].pt)).toBeInTheDocument()
+    expect(within(dialog).getByText(softwareEngineering.topics[0].pt)).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Ocultar detalhes' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Ocultar detalhes' }))
 
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: 'Ver detalhes' }),
     ).toHaveAttribute('aria-expanded', 'false')
-    expect(
-      screen.queryByText(softwareEngineering.topics[0].pt),
-    ).not.toBeInTheDocument()
   })
 
   it('translates the card and expanded content into English', async () => {
@@ -101,7 +108,7 @@ describe('CertificationCard', () => {
     ).toBeInTheDocument()
   })
 
-  it('expands cards independently', async () => {
+  it('keeps unrelated cards unchanged when opening details', async () => {
     const user = userEvent.setup()
     render(
       <>
@@ -122,21 +129,18 @@ describe('CertificationCard', () => {
 
     await user.click(firstCard.getByRole('button', { name: 'Ver detalhes' }))
 
-    expect(
-      firstCard.getByRole('button', { name: 'Ocultar detalhes' }),
-    ).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByRole('dialog')).toHaveTextContent(softwareEngineering.title.pt)
     expect(
       secondCard.getByRole('button', { name: 'Ver detalhes' }),
     ).toHaveAttribute('aria-expanded', 'false')
 
+    await user.click(screen.getByRole('button', { name: 'Ocultar detalhes' }))
     await user.click(secondCard.getByRole('button', { name: 'Ver detalhes' }))
 
+    expect(screen.getByRole('dialog')).toHaveTextContent(directCertificate.title.pt)
     expect(
-      firstCard.getByRole('button', { name: 'Ocultar detalhes' }),
-    ).toHaveAttribute('aria-expanded', 'true')
-    expect(
-      secondCard.getByRole('button', { name: 'Ocultar detalhes' }),
-    ).toHaveAttribute('aria-expanded', 'true')
+      firstCard.getByRole('button', { name: 'Ver detalhes' }),
+    ).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('displays the official direct verification link safely', async () => {

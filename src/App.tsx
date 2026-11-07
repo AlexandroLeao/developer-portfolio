@@ -1131,7 +1131,7 @@ function App() {
                       {category.title[language]}
                     </h4>
 
-                    <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
                       {categoryCertifications.map((certification) => (
                         <CertificationCard
                           key={certification.id}
