@@ -33,10 +33,11 @@ describe('Developer Portfolio', () => {
   it('balances project and technology grids', () => {
     render(<App />)
 
-    const featuredProject = screen.getByRole('heading', {
+    const projectCard = screen.getByRole('heading', {
       name: 'Adventure Files',
     }).closest('article')
-    expect(featuredProject).toHaveClass('lg:col-span-2', 'lg:grid')
+    expect(projectCard).not.toHaveClass('lg:col-span-2', 'lg:grid')
+    expect(projectCard?.parentElement).toHaveClass('lg:grid-cols-3')
 
     const frontendGrid = screen.getByRole('button', { name: 'HTML5' }).parentElement
     expect(frontendGrid).toHaveClass('sm:grid-cols-4', 'xl:grid-cols-8')
