@@ -501,6 +501,12 @@ const translations = {
   },
 }
 
+// Shared typography hierarchy for portfolio sections.
+const sectionEyebrowClass = 'mb-4 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)'
+const sectionHeadingClass = 'font-display text-4xl font-bold tracking-tight sm:text-5xl'
+const sectionIntroClass = 'text-base leading-8 text-(--color-text-muted) sm:text-lg'
+const subsectionHeadingClass = 'font-display text-xl font-semibold text-(--color-text) sm:text-2xl'
+
 function App() {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
@@ -741,13 +747,13 @@ function App() {
       >
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
           <div className="flex flex-col items-start">
-            <span className="mb-5 text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+            <span className={sectionEyebrowClass}>
               {text.about.eyebrow}
             </span>
 
             <h2
               id="about-title"
-              className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
+              className={sectionHeadingClass}
             >
               {text.about.title}
               <span className="text-(--color-primary)">.</span>
@@ -765,7 +771,7 @@ function App() {
               (paragraph, index) => (
                 <p
                   key={index}
-                  className="text-base leading-8 text-(--color-text-muted) sm:text-lg sm:leading-9"
+                  className={sectionIntroClass}
                 >
                   {paragraph}
                 </p>
@@ -783,17 +789,18 @@ function App() {
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-8 max-w-3xl">
-            <span className="mb-2 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+            <span className={sectionEyebrowClass}>
               {text.skills.eyebrow}
             </span>
             <h2
               id="skills-title"
-              className="font-display text-3xl font-bold tracking-tight sm:text-4xl"
+              className={sectionHeadingClass}
             >
               {text.skills.title}
               <span className="text-(--color-primary)">.</span>
             </h2>
-            <p className="mt-2 text-sm leading-6 text-(--color-text-muted)">
+            <div aria-hidden="true" className="mt-4 h-1 w-16 rounded-full bg-(--color-primary)" />
+            <p className={`${sectionIntroClass} mt-4`}>
               {text.skills.description}
             </p>
           </div>
@@ -828,7 +835,7 @@ function App() {
             </nav>
 
             <div className="min-w-0 rounded-3xl border border-(--color-border) bg-(--color-surface) p-4 sm:p-5">
-              <h3 className="font-display text-lg font-semibold text-(--color-text) sm:text-xl">
+              <h3 className={subsectionHeadingClass}>
                 {activeCategory.title[language]}
               </h3>
 
@@ -902,14 +909,14 @@ function App() {
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12 max-w-2xl">
-            <span className="mb-5 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+            <span className={sectionEyebrowClass}>
               {text.projects.eyebrow}
             </span>
 
             <h2
               id="projects-title"
               data-reveal-on-scroll
-              className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
+              className={sectionHeadingClass}
             >
               {text.projects.title}
               <span className="text-(--color-primary)">.</span>
@@ -920,7 +927,7 @@ function App() {
               className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
             />
 
-            <p className="mt-6 text-base leading-8 text-(--color-text-muted) sm:text-lg">
+            <p className={`${sectionIntroClass} mt-6`}>
               {text.projects.description}
             </p>
           </div>
@@ -945,14 +952,14 @@ function App() {
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12 max-w-2xl">
-            <span className="mb-5 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+            <span className={sectionEyebrowClass}>
               {text.experience.eyebrow}
             </span>
 
             <h2
               id="experience-title"
               data-reveal-on-scroll
-              className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
+              className={sectionHeadingClass}
             >
               {text.experience.title}
               <span className="text-(--color-primary)">.</span>
@@ -963,7 +970,7 @@ function App() {
               className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
             />
 
-            <p className="mt-6 text-base leading-8 text-(--color-text-muted) sm:text-lg">
+            <p className={`${sectionIntroClass} mt-6`}>
               {text.experience.description}
             </p>
           </div>
@@ -980,14 +987,14 @@ function App() {
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12 max-w-2xl">
-            <span className="mb-5 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+            <span className={sectionEyebrowClass}>
               {text.certifications.eyebrow}
             </span>
 
             <h2
               id="certifications-title"
               data-reveal-on-scroll
-              className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
+              className={sectionHeadingClass}
             >
               {text.certifications.title}
               <span className="text-(--color-primary)">.</span>
@@ -998,14 +1005,14 @@ function App() {
               className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
             />
 
-            <p className="mt-6 text-base leading-8 text-(--color-text-muted) sm:text-lg">
+            <p className={`${sectionIntroClass} mt-6`}>
               {text.certifications.description}
             </p>
           </div>
 
           {/* GRADUAÇÃO */}
           <div className="mb-14">
-            <h3 className="font-display mb-5 text-xl font-semibold text-(--color-text) sm:text-2xl">
+            <h3 className={`${subsectionHeadingClass} mb-5`}>
               {text.certifications.degreeLabel}
             </h3>
 
@@ -1163,7 +1170,7 @@ function App() {
 
           {/* FORMAÇÃO EM ANDAMENTO */}
           <div className="mt-16">
-            <h3 className="font-display mb-5 text-xl font-semibold text-(--color-text) sm:text-2xl">
+            <h3 className={`${subsectionHeadingClass} mb-5`}>
               {text.certifications.ongoingLabel}
             </h3>
 
@@ -1202,13 +1209,13 @@ function App() {
         className="scroll-mt-12 border-t border-(--color-border) py-20 sm:py-28"
       >
         <div className="mx-auto flex max-w-7xl flex-col items-center px-6 text-center">
-          <span className="mb-5 text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+          <span className={sectionEyebrowClass}>
             {text.contact.eyebrow}
           </span>
 
           <h2
             id="contact-title"
-            className="font-display max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl"
+            className={`${sectionHeadingClass} max-w-3xl`}
           >
             {text.contact.title}
           </h2>
@@ -1218,7 +1225,7 @@ function App() {
             className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
           />
 
-          <p className="mt-7 max-w-2xl text-base leading-8 text-(--color-text-muted) sm:text-lg">
+          <p className={`${sectionIntroClass} mt-7 max-w-2xl`}>
             {text.contact.description}
           </p>
 
