@@ -94,9 +94,7 @@ describe('ProjectCard', () => {
       name: 'Ocultar detalhes',
     })
 
-    expect(
-      hideDetails.getAttribute('aria-expanded'),
-    ).toBe('true')
+    expect(screen.getByRole('tab', { name: 'Funcionalidades' })).toHaveAttribute('aria-selected', 'true')
 
     fireEvent.click(hideDetails)
 
@@ -104,19 +102,35 @@ describe('ProjectCard', () => {
     expect(screen.getByRole('button', { name: 'Ver detalhes' })).toHaveAttribute('aria-expanded', 'false')
   })
 
-  it('centers the details action and uses a compact two-column dialog', () => {
+  it('centers a subtle pill action and renders tabbed project details', () => {
     render(<ProjectCard project={ideasProject} language="pt" />)
 
     const openDetails = screen.getByRole('button', { name: 'Ver detalhes' })
-    expect(openDetails).toHaveClass('justify-center', 'rounded-xl')
+    expect(openDetails).toHaveClass('justify-center', 'rounded-full')
+    expect(openDetails.parentElement).toHaveClass('justify-center')
     expect(openDetails.querySelector('.lucide-chevron-down')).toBeNull()
 
     fireEvent.click(openDetails)
 
-    const details = screen.getByRole('region', {
-      name: /Funcionalidades — Organizador de Ideias e Projetos/,
-    })
-    expect(details).toHaveClass('md:grid-cols-2')
+    const panel = screen.getByRole('tabpanel', { name: 'Funcionalidades' })
+    expect(panel.querySelector('ul')).toHaveClass('sm:grid-cols-2')
+    expect(screen.getAllByRole('tab')).toHaveLength(4)
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Desafios' }))
+    expect(screen.getByRole('tabpanel', { name: 'Desafios' })).toHaveTextContent(ideasProject.details.challenges.pt)
+    expect(screen.queryByRole('heading', { name: 'Funcionalidades' })).toBeNull()
+  })
+
+  it('supports arrow keys and Home/End within the detail tabs', () => {
+    render(<ProjectCard project={ideasProject} language="pt" />)
+    fireEvent.click(screen.getByRole('button', { name: 'Ver detalhes' }))
+
+    const tabs = screen.getByRole('tablist', { name: 'Estudo de caso' })
+    fireEvent.keyDown(tabs, { key: 'ArrowRight' })
+    expect(screen.getByRole('tab', { name: 'Arquitetura e decisões técnicas' })).toHaveAttribute('aria-selected', 'true')
+
+    fireEvent.keyDown(tabs, { key: 'End' })
+    expect(screen.getByRole('tab', { name: 'Práticas de desenvolvimento' })).toHaveAttribute('aria-selected', 'true')
   })
 
   it('dismisses the detail dialog when the backdrop is clicked', () => {
@@ -159,11 +173,8 @@ describe('ProjectCard', () => {
       }),
     )
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Development practices',
-      }),
-    ).toBeTruthy()
+    fireEvent.click(screen.getByRole('tab', { name: 'Development practices' }))
+    expect(screen.getByRole('tabpanel', { name: 'Development practices' })).toHaveTextContent(ideasProject.details.practices.en)
   })
 
   it('provides repository and live demo links', () => {
