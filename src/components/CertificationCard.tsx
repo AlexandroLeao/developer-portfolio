@@ -1,11 +1,12 @@
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   ArrowUpRight,
   Award,
   Check,
   ChevronDown,
   Copy,
+  X,
 } from 'lucide-react'
 import type {
   Certification,
@@ -73,6 +74,7 @@ export default function CertificationCard({
   language,
 }: CertificationCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const dialogRef = useRef<HTMLDialogElement>(null)
   const [copyStatus, setCopyStatus] = useState<
     'idle' | 'success' | 'error'
   >('idle')
@@ -100,7 +102,7 @@ export default function CertificationCard({
   }
 
   return (
-    <article className="group flex min-w-0 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface) transition-all duration-300 hover:-translate-y-1 hover:border-(--color-primary) hover:shadow-lg focus-within:border-(--color-primary) motion-reduce:transform-none motion-reduce:transition-none">
+    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface) transition-all duration-300 hover:-translate-y-1 hover:border-(--color-primary) hover:shadow-lg focus-within:border-(--color-primary) motion-reduce:transform-none motion-reduce:transition-none">
       <div className="flex flex-1 flex-col p-5 sm:p-7">
         {/* INSTITUIÇÃO E ÍCONE */}
         <div className="mb-5 flex items-start justify-between gap-4">
@@ -175,13 +177,12 @@ export default function CertificationCard({
               aria-expanded={isExpanded}
               aria-controls={detailsId}
               onClick={() => {
-                setIsExpanded((current) => !current)
+                dialogRef.current?.showModal()
+                setIsExpanded(true)
               }}
               className="inline-flex min-h-11 items-center gap-2 rounded-full border border-(--color-border) px-5 py-2.5 text-sm font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
-              {isExpanded
-                ? text.hideDetails
-                : text.showDetails}
+              {text.showDetails}
 
               <ChevronDown
                 size={17}
@@ -193,12 +194,36 @@ export default function CertificationCard({
             </button>
           </div>
 
-          {isExpanded && (
+          <dialog
+            ref={dialogRef}
+            onClose={() => setIsExpanded(false)}
+            aria-modal="true"
+            aria-labelledby={`cert-dialog-title-${certification.id}`}
+            className="fixed inset-0 m-auto max-h-[88dvh] w-[min(92vw,42rem)] overflow-y-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-0 text-(--color-text) shadow-2xl backdrop:bg-black/70"
+          >
+            <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-(--color-border) bg-(--color-surface) p-5 sm:p-7">
+              <h3
+                id={`cert-dialog-title-${certification.id}`}
+                className="font-display text-xl font-bold leading-snug sm:text-2xl"
+              >
+                {certification.title[language]}
+              </h3>
+              <button
+                type="button"
+                onClick={() => dialogRef.current?.close()}
+                aria-label={text.hideDetails}
+                aria-expanded={isExpanded}
+                aria-controls={detailsId}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-(--color-border) text-(--color-text) hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+              >
+                <X size={20} aria-hidden="true" />
+              </button>
+            </div>
             <div
               id={detailsId}
               role="region"
               aria-label={`${text.topics} — ${certification.title[language]}`}
-              className="mt-6 space-y-6"
+              className="space-y-6 p-5 sm:p-7"
             >
               {/* CONTEÚDOS APRENDIDOS */}
               <div>
@@ -320,7 +345,7 @@ export default function CertificationCard({
                 </div>
               )}
             </div>
-          )}
+          </dialog>
         </div>
       </div>
     </article>
