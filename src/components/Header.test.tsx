@@ -51,7 +51,7 @@ describe('Header navigation indicator', () => {
           isIntersecting: true,
           target: section,
           boundingClientRect: { top: 100 },
-        } as IntersectionObserverEntry],
+        } as unknown as IntersectionObserverEntry],
         latestObserver as unknown as IntersectionObserver,
       )
     })
