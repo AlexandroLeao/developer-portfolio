@@ -40,7 +40,7 @@ export const academicEducation = {
 export const ongoingEducation = [
   {
     id: 'java-bootcamp',
-    title: t('Bootcamp de Desenvolvimento Java', 'Java Development Bootcamp'),
+    title: t('Bootcamp Itaú | Java com Inteligência Artificial', 'Bootcamp Itaú | Java com Inteligência Artificial'),
     status: 'in-progress' as const,
     summary: t(
       'Formação em Java em andamento. Os conteúdos concluídos e a certificação serão atualizados ao término do bootcamp.',

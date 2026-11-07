@@ -172,7 +172,7 @@ describe('ProjectCard', () => {
         })
         .getAttribute('href'),
     ).toBe(
-      'https://alexandroleao.github.io/Natsu-Matsuri-Project/',
+      'https://alexandroleao.github.io/natsu-matsuri-project/',
     )
   })
 })

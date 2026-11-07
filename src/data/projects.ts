@@ -171,9 +171,9 @@ export const projects: Project[] = [
       'LocalStorage',
     ],
     githubUrl:
-      'https://github.com/AlexandroLeao/Natsu-Matsuri-Project',
+      'https://github.com/AlexandroLeao/natsu-matsuri-project',
     liveUrl:
-      'https://alexandroleao.github.io/Natsu-Matsuri-Project/',
+      'https://alexandroleao.github.io/natsu-matsuri-project/',
     details: {
       features: [
         {
