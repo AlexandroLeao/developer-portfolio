@@ -10,6 +10,7 @@ import type { Language, Project } from '../data/projects'
 type ProjectCardProps = {
   project: Project
   language: Language
+  featured?: boolean
 }
 
 const translations = {
@@ -40,6 +41,7 @@ const translations = {
 export default function ProjectCard({
   project,
   language,
+  featured = false,
 }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -47,13 +49,13 @@ export default function ProjectCard({
   const detailsId = `project-details-${project.id}`
 
   return (
-    <article className="flex min-w-0 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface)">
+    <article className={`flex min-w-0 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface) ${featured ? "lg:col-span-2 lg:grid lg:grid-cols-[1.08fr_0.92fr]" : ""}`}>
       {/* ILUSTRAÇÃO */}
-      <div className="aspect-video overflow-hidden border-b border-(--color-border) bg-(--color-background)">
+      <div className={`aspect-video overflow-hidden border-b border-(--color-border) bg-(--color-background) ${featured ? "lg:aspect-auto lg:min-h-[360px] lg:border-b-0 lg:border-r" : ""}`}>
         <img
           src={project.image}
           srcSet={project.imageSrcSet}
-          sizes="(min-width: 1024px) 600px, calc(100vw - 3rem)"
+          sizes={featured ? "(min-width: 1024px) 55vw, calc(100vw - 3rem)" : "(min-width: 1024px) 600px, calc(100vw - 3rem)"}
           alt={project.imageAlt[language]}
           loading="lazy"
           decoding="async"
@@ -62,12 +64,12 @@ export default function ProjectCard({
       </div>
 
       {/* CONTEÚDO */}
-      <div className="flex flex-1 flex-col p-5 sm:p-7">
+      <div className={`flex flex-1 flex-col p-5 sm:p-7 ${featured ? "lg:p-10" : ""}`}>
         <span className="mb-3 text-sm font-medium text-(--color-primary)">
           {project.year}
         </span>
 
-        <h3 className="font-display text-2xl font-bold tracking-tight text-(--color-text)">
+        <h3 className={`font-display text-2xl font-bold tracking-tight text-(--color-text) ${featured ? "lg:text-3xl" : ""}`}>
           {project.name}
         </h3>
 
