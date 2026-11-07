@@ -4,6 +4,22 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('Developer Portfolio', () => {
+  it('uses consistent section typography across the portfolio', () => {
+    const { container } = render(<App />)
+    for (const id of ['about', 'skills', 'projects', 'experience', 'certifications', 'contact']) {
+      const heading = container.querySelector('#' + id + '-title')
+      expect(heading).toHaveClass('text-4xl', 'sm:text-5xl')
+      expect(heading?.previousElementSibling).toHaveClass('mb-4', 'text-xs')
+    }
+
+    const skills = container.querySelector('#skills')!
+    const intro = skills.querySelector('h2 + div + p')
+    expect(intro).toHaveClass('text-base', 'sm:text-lg', 'leading-8')
+
+    const categoryHeading = screen.getByRole('heading', { name: 'Front-End' })
+    expect(categoryHeading).toHaveClass('text-xl', 'sm:text-2xl')
+  })
+
   it('shows the About heading without repeated role and education labels', () => {
     render(<App />)
     const about = screen.getByRole('region', { name: 'Sobre mim.' })
