@@ -992,13 +992,12 @@ function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
-            {projects.map((project, index) => (
+          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-8">
+            {projects.map((project) => (
               <ProjectCard
                 key={project.id}
                 project={project}
                 language={language}
-                featured={index === 0}
               />
             ))}
           </div>
