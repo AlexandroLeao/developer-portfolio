@@ -14,6 +14,7 @@ import {
   Workflow,
 } from 'lucide-react'
 import Header from './components/Header'
+import ScrollProgress from './components/ScrollProgress'
 import ContactModal from './components/ContactModal'
 import Footer from './components/Footer'
 import CertificationCard from './components/CertificationCard'
@@ -654,6 +655,7 @@ function App() {
         language={language}
         onLanguageChange={setLanguage}
       />
+      <ScrollProgress language={language} />
 
       {/* HERO */}
       <section
