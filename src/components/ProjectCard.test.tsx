@@ -1,243 +1,99 @@
-
-import { fireEvent, render, screen } from '@testing-library/react'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { fireEvent, render, screen, within } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
 import ProjectCard from './ProjectCard'
 import { projects } from '../data/projects'
 
-const ideasProject = projects.find(
-  (project) => project.id === 'ideas-organizer',
-)
+const ideasProject = projects.find((project) => project.id === 'ideas-organizer')
+const adventureProject = projects.find((project) => project.id === 'adventure-files')
+const natsuProject = projects.find((project) => project.id === 'natsu-matsuri')
 
-const natsuProject = projects.find(
-  (project) => project.id === 'natsu-matsuri',
-)
-
-if (!ideasProject || !natsuProject) {
+if (!ideasProject || !adventureProject || !natsuProject) {
   throw new Error('Required portfolio projects are missing.')
 }
 
-beforeAll(() => {
-  HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement) {
-    this.open = true
-  }
-  HTMLDialogElement.prototype.close = function (this: HTMLDialogElement) {
-    this.open = false
-    this.dispatchEvent(new Event('close'))
-  }
-})
-
 describe('ProjectCard', () => {
-  it('uses the same fixed-ratio card layout for every project', () => {
-    render(<ProjectCard project={ideasProject} language="pt" />)
-
+  it('keeps identical card structure and responsive images', () => {
+    const { unmount } = render(<ProjectCard project={ideasProject} language="pt" />)
     const card = screen.getByRole('article')
+
+    expect(card).toHaveClass('group', 'h-full', 'flex-col')
     expect(card).not.toHaveClass('lg:col-span-2', 'lg:grid')
-    expect(card).toHaveClass('group')
-    expect(card.querySelector('img')).toHaveClass('group-hover:scale-[1.025]', 'motion-reduce:transition-none')
     expect(card).toHaveAttribute('id', 'project-ideas-organizer')
-    expect(card.querySelector('img')).toHaveAttribute('sizes', '(min-width: 1024px) 33vw, calc(100vw - 3rem)')
     expect(card.querySelector('div.aspect-video')).toBeInTheDocument()
+    expect(card.querySelector('img')).toHaveClass('group-hover:scale-[1.025]', 'motion-reduce:transition-none')
+    expect(card.querySelector('img')).toHaveAttribute('sizes', '(min-width: 1024px) 33vw, calc(100vw - 3rem)')
+    expect(card.querySelector('dialog')).not.toBeInTheDocument()
+    unmount()
+
+    for (const project of [adventureProject, natsuProject]) {
+      const rendered = render(<ProjectCard project={project} language="pt" />)
+      expect(screen.getByRole('article')).toHaveClass('group', 'h-full', 'flex-col')
+      rendered.unmount()
+    }
   })
 
-  it('renders the project information in Portuguese', () => {
-    render(
-      <ProjectCard
-        project={ideasProject}
-        language="pt"
-      />,
-    )
-
-    expect(
-      screen.getByRole('heading', {
-        name: 'Organizador de Ideias e Projetos',
-      }),
-    ).toBeTruthy()
-
-    expect(
-      screen.getByText(ideasProject.description.pt),
-    ).toBeTruthy()
-
-    expect(
-      screen.getByRole('img', {
-        name: ideasProject.imageAlt.pt,
-      }),
-    ).toBeTruthy()
-
-    expect(
-      screen.getByText('TypeScript'),
-    ).toBeTruthy()
-  })
-
-  it('opens and closes the project details', () => {
-    render(
-      <ProjectCard
-        project={ideasProject}
-        language="pt"
-      />,
-    )
-
-    const showDetails = screen.getByRole('button', {
-      name: 'Ver detalhes',
-    })
-
-    expect(
-      showDetails.getAttribute('aria-expanded'),
-    ).toBe('false')
-
-    fireEvent.click(showDetails)
-
-    expect(screen.getByRole('dialog', { name: ideasProject.name })).toBeVisible()
-    expect(
-      screen.getByRole('heading', {
-        name: 'Funcionalidades',
-      }),
-    ).toBeTruthy()
-
-    const hideDetails = screen.getByRole('button', {
-      name: 'Ocultar detalhes',
-    })
-
-    expect(screen.getByRole('tab', { name: 'Funcionalidades' })).toHaveAttribute('aria-selected', 'true')
-
-    fireEvent.click(hideDetails)
-
-    expect(screen.queryByRole('dialog')).toBeNull()
-    expect(screen.getByRole('button', { name: 'Ver detalhes' })).toHaveAttribute('aria-expanded', 'false')
-  })
-
-  it('centers a subtle pill action and renders tabbed project details', () => {
+  it('shows the existing project content with an interactive stack chart', () => {
     render(<ProjectCard project={ideasProject} language="pt" />)
 
-    const openDetails = screen.getByRole('button', { name: 'Ver detalhes' })
-    expect(openDetails).toHaveClass('justify-center', 'rounded-full')
-    expect(openDetails.parentElement).toHaveClass('justify-center')
-    const content = screen.getByRole('article').querySelector('.justify-between')
-    expect(content).toHaveClass('gap-5')
-    expect(openDetails.querySelector('.lucide-chevron-down')).toBeNull()
+    expect(screen.getByRole('heading', { name: ideasProject.name })).toBeInTheDocument()
+    expect(screen.getByText(ideasProject.description.pt)).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: ideasProject.imageAlt.pt })).toBeInTheDocument()
 
-    fireEvent.click(openDetails)
-
-    const panel = screen.getByRole('tabpanel', { name: 'Funcionalidades' })
-    expect(panel.querySelector('ul')).toHaveClass('sm:grid-cols-2')
-    expect(screen.getAllByRole('tab')).toHaveLength(4)
-    expect(screen.getByRole('tablist')).toHaveClass('grid-cols-2', 'sm:grid-cols-4')
-
-    fireEvent.click(screen.getByRole('tab', { name: 'Desafios' }))
-    expect(screen.getByRole('tabpanel', { name: 'Desafios' })).toHaveTextContent(ideasProject.details.challenges.pt)
-    expect(screen.queryByRole('heading', { name: 'Funcionalidades' })).toBeNull()
+    const legend = screen.getByRole('group', { name: 'Tecnologias do projeto' })
+    expect(within(legend).getAllByRole('button')).toHaveLength(ideasProject.technologies.length)
+    expect(within(legend).getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(ideasProject.stackUsage.React.pt)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Ver detalhes' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  it('supports arrow keys and Home/End within the detail tabs', () => {
+  it('changes the short usage description from the chart legend', () => {
     render(<ProjectCard project={ideasProject} language="pt" />)
-    fireEvent.click(screen.getByRole('button', { name: 'Ver detalhes' }))
+    const legend = screen.getByRole('group', { name: 'Tecnologias do projeto' })
 
-    const tabs = screen.getByRole('tablist', { name: 'Estudo de caso' })
-    fireEvent.keyDown(tabs, { key: 'ArrowRight' })
-    expect(screen.getByRole('tab', { name: 'Arquitetura' })).toHaveAttribute('aria-selected', 'true')
-
-    fireEvent.keyDown(tabs, { key: 'End' })
-    expect(screen.getByRole('tab', { name: 'Práticas' })).toHaveAttribute('aria-selected', 'true')
+    fireEvent.click(within(legend).getByRole('button', { name: 'Vitest' }))
+    expect(within(legend).getByRole('button', { name: 'Vitest' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(ideasProject.stackUsage.Vitest.pt)).toBeInTheDocument()
+    expect(within(legend).getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'false')
   })
 
-  it('dismisses the detail dialog when the backdrop is clicked', () => {
-    render(<ProjectCard project={ideasProject} language="pt" />)
-    fireEvent.click(screen.getByRole('button', { name: 'Ver detalhes' }))
+  it('supports pointer and keyboard selection on chart segments', () => {
+    render(<ProjectCard project={adventureProject} language="pt" />)
 
-    const dialog = screen.getByRole('dialog', { name: ideasProject.name })
-    dialog.getBoundingClientRect = () => ({
-      left: 100, right: 900, top: 100, bottom: 600,
-    }) as DOMRect
+    const typescriptSegment = screen.getByRole('button', { name: 'Ver uso de TypeScript' })
+    fireEvent.click(typescriptSegment)
+    expect(screen.getByText(adventureProject.stackUsage.TypeScript.pt)).toBeInTheDocument()
 
-    fireEvent.click(dialog, { clientX: 300, clientY: 300 })
-    expect(dialog).toBeVisible()
-
-    fireEvent.click(dialog, { clientX: 50, clientY: 50 })
-    expect(screen.queryByRole('dialog')).toBeNull()
+    const databaseSegment = screen.getByRole('button', { name: 'Ver uso de PostgreSQL' })
+    fireEvent.keyDown(databaseSegment, { key: 'Enter' })
+    expect(screen.getByText(adventureProject.stackUsage.PostgreSQL.pt)).toBeInTheDocument()
+    fireEvent.keyDown(typescriptSegment, { key: ' ' })
+    expect(screen.getByText(adventureProject.stackUsage.TypeScript.pt)).toBeInTheDocument()
   })
 
-  it('displays translated content in English', () => {
-    render(
-      <ProjectCard
-        project={ideasProject}
-        language="en"
-      />,
-    )
+  it('keeps the selected technology when switching languages', () => {
+    const { rerender } = render(<ProjectCard project={ideasProject} language="pt" />)
+    fireEvent.click(within(screen.getByRole('group', { name: 'Tecnologias do projeto' })).getByRole('button', { name: 'Vitest' }))
 
-    expect(
-      screen.getByText(ideasProject.description.en),
-    ).toBeTruthy()
-
-    expect(
-      screen.getByRole('button', {
-        name: 'View details',
-      }),
-    ).toBeTruthy()
-
-    fireEvent.click(
-      screen.getByRole('button', {
-        name: 'View details',
-      }),
-    )
-
-    fireEvent.click(screen.getByRole('tab', { name: 'Practices' }))
-    expect(screen.getByRole('tabpanel', { name: 'Practices' })).toHaveTextContent(ideasProject.details.practices.en)
+    rerender(<ProjectCard project={ideasProject} language="en" />)
+    const legend = screen.getByRole('group', { name: 'Project technologies' })
+    expect(within(legend).getByRole('button', { name: 'Vitest' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText(ideasProject.stackUsage.Vitest.en)).toBeInTheDocument()
   })
 
-  it('provides repository and live demo links', () => {
-    render(
-      <ProjectCard
-        project={ideasProject}
-        language="pt"
-      />,
-    )
+  it('preserves links and technology inventories for every project', () => {
+    for (const project of projects) {
+      const rendered = render(<ProjectCard project={project} language="pt" />)
 
-    const githubLink = screen.getByRole('link', {
-      name: /GitHub/,
-    })
+      expect(Object.keys(project.stackUsage).sort()).toEqual([...project.technologies].sort())
+      const legend = screen.getByRole('group', { name: 'Tecnologias do projeto' })
+      expect(within(legend).getAllByRole('button')).toHaveLength(project.technologies.length)
+      expect(screen.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', project.githubUrl)
 
-    const liveLink = screen.getByRole('link', {
-      name: /Visitar projeto/,
-    })
-
-    expect(
-      githubLink.getAttribute('href'),
-    ).toBe(ideasProject.githubUrl)
-
-    expect(
-      liveLink.getAttribute('href'),
-    ).toBe(ideasProject.liveUrl)
-
-    expect(
-      githubLink.getAttribute('target'),
-    ).toBe('_blank')
-
-    expect(
-      liveLink.getAttribute('rel'),
-    ).toContain('noopener')
-  })
-
-  it('renders the Natsu Matsuri project and its live link', () => {
-    render(
-      <ProjectCard
-        project={natsuProject}
-        language="pt"
-      />,
-    )
-
-    expect(
-      screen.getByRole('heading', {
-        name: 'Natsu Matsuri Project',
-      }),
-    ).toBeTruthy()
-
-    expect(
-      screen
-        .getByRole('link', {
-          name: /Visitar projeto/,
-        })
-        .getAttribute('href'),
-    ).toBe(
-      'https://alexandroleao.github.io/natsu-matsuri-project/',
-    )
+      if (project.liveUrl) {
+        expect(screen.getByRole('link', { name: /Visitar projeto/ })).toHaveAttribute('href', project.liveUrl)
+      }
+      rendered.unmount()
+    }
   })
 })
