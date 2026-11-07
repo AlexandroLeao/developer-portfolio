@@ -15,9 +15,14 @@ describe('ExperienceTimeline', () => {
 
     const panels = container.querySelectorAll('[id^="experience-panel-"]')
     expect(panels).toHaveLength(experiences.length)
-    for (const panel of panels) {
-      expect(panel).toHaveClass('col-start-1', 'row-start-1')
-    }
+    expect(panels[0]).not.toHaveAttribute('hidden')
+    expect(panels[1]).toHaveAttribute('hidden')
+    expect(panels[2]).toHaveAttribute('hidden')
+
+    const connectors = container.querySelectorAll('[data-testid^="timeline-connector-"]')
+    expect(connectors).toHaveLength(experiences.length - 1)
+    expect(connectors[0]).toHaveAttribute('data-reached', 'false')
+    expect(connectors[1]).toHaveAttribute('data-reached', 'false')
   })
 
   it('switches the selected experience without expanding the timeline', () => {
@@ -33,6 +38,11 @@ describe('ExperienceTimeline', () => {
     expect(screen.getByRole('region', { name: /Consultor de Vendas.*realme/ })).toBeInTheDocument()
     expect(screen.queryByRole('region', { name: /AXIA Energia/ })).not.toBeInTheDocument()
     expect(screen.getByText(experiences[1].summary.pt)).toBeInTheDocument()
+    expect(screen.getByTestId('timeline-connector-0')).toHaveAttribute('data-reached', 'true')
+    expect(screen.getByTestId('timeline-connector-1')).toHaveAttribute('data-reached', 'false')
+    expect(screen.getByTestId('timeline-node-0')).toHaveAttribute('data-reached', 'true')
+    expect(screen.getByTestId('timeline-node-1')).toHaveAttribute('data-reached', 'true')
+    expect(screen.getByTestId('timeline-node-2')).toHaveAttribute('data-reached', 'false')
   })
 
   it('keeps the selection when switching to English', () => {
@@ -50,5 +60,8 @@ describe('ExperienceTimeline', () => {
     render(<ExperienceTimeline language="pt" />)
     fireEvent.click(screen.getByRole('button', { name: /Kosei Home/ }))
     expect(screen.getByRole('link', { name: 'Ver projeto relacionado' })).toHaveAttribute('href', '#projects')
+    expect(screen.getByTestId('timeline-connector-0')).toHaveAttribute('data-reached', 'true')
+    expect(screen.getByTestId('timeline-connector-1')).toHaveAttribute('data-reached', 'true')
+    expect(screen.getByTestId('timeline-node-2')).toHaveAttribute('data-reached', 'true')
   })
 })
