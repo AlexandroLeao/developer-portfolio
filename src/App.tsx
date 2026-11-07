@@ -1,6 +1,7 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   ArrowUp,
+  ArrowUpRight,
   BookOpen,
   GraduationCap,
   BrainCircuit,
@@ -11,7 +12,6 @@ import {
   Mail,
   Server,
   Workflow,
-  X,
 } from 'lucide-react'
 import Header from './components/Header'
 import ContactModal from './components/ContactModal'
@@ -26,6 +26,7 @@ import {
 import ExperienceTimeline from './components/ExperienceTimeline'
 import ProjectCard from './components/ProjectCard'
 import { projects } from './data/projects'
+import { findProjectsForTechnology } from './data/technologyProjects'
 
 type Language = 'pt' | 'en'
 
@@ -394,8 +395,12 @@ const translations = {
       title: 'Tecnologias',
       description:
         'Tecnologias, ferramentas e conceitos que utilizo e exploro para transformar ideias em soluções.',
+      browseLabel: 'Explore por área',
+      selectedLabel: 'Selecionado',
       detailsLabel: 'Como utilizo ou pretendo aplicar',
-      close: 'Fechar detalhes',
+      appliedLabel: 'Onde foi aplicado',
+      noProjects: 'Em estudo ou sem projeto público associado.',
+      items: 'tecnologias',
     },
     projects: {
       eyebrow: 'SOLUÇÕES QUE DESENVOLVI',
@@ -459,8 +464,12 @@ const translations = {
       title: 'Technologies',
       description:
         'Technologies, tools, and concepts I use and explore to turn ideas into solutions.',
+      browseLabel: 'Explore by area',
+      selectedLabel: 'Selected',
       detailsLabel: 'How I use it or plan to apply it',
-      close: 'Close details',
+      appliedLabel: 'Where I used it',
+      noProjects: 'In study or not yet linked to a public project.',
+      items: 'technologies',
     },
     projects: {
       eyebrow: 'SOLUTIONS I HAVE BUILT',
@@ -508,53 +517,12 @@ const categoryIcons = {
   engineering: Workflow,
 }
 
-type TechnologyDetailsProps = {
-  technology: Technology
-  language: Language
-  detailsLabel: string
-  closeLabel: string
-  onClose: () => void
-  className?: string
-}
-
-function TechnologyDetails({
-  technology,
-  language,
-  detailsLabel,
-  closeLabel,
-  onClose,
-  className = '',
-}: TechnologyDetailsProps) {
-  return (
-    <div
-      className={`technology-details flex items-start justify-between gap-4 rounded-2xl border border-(--color-border) bg-(--color-surface) p-5 sm:p-6 ${className}`}
-      role="region"
-      aria-label={`${technology.name} — ${detailsLabel}`}
-    >
-      <div className="max-w-3xl">
-        <span className="mb-2 block text-xs font-medium uppercase tracking-wider text-(--color-primary)">
-          {detailsLabel}
-        </span>
-
-        <h4 className="font-display mb-2 text-lg font-semibold">
-          {technology.name}
-        </h4>
-
-        <p className="text-sm leading-7 text-(--color-text-muted) sm:text-base">
-          {technology.description[language]}
-        </p>
-      </div>
-
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label={closeLabel}
-        className="shrink-0 rounded-full p-2 text-(--color-text-muted) transition-colors hover:bg-(--color-background) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-(--color-primary)"
-      >
-        <X size={18} aria-hidden="true" />
-      </button>
-    </div>
-  )
+const initialTechnologySelection: Record<CategoryId, string> = {
+  frontend: 'react',
+  backend: 'nodejs',
+  ai: 'generative-ai',
+  cloud: 'aws',
+  engineering: 'git',
 }
 
 function App() {
@@ -576,9 +544,10 @@ function App() {
   const [showAllCertifications, setShowAllCertifications] = useState(false)
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
-  const [selectedTechnologies, setSelectedTechnologies] = useState<
-    Partial<Record<CategoryId, string>>
-  >({})
+  const [activeTechnologyCategory, setActiveTechnologyCategory] = useState<CategoryId>('frontend')
+  const [selectedTechnologies, setSelectedTechnologies] = useState<Record<CategoryId, string>>(
+    initialTechnologySelection,
+  )
 
   useEffect(() => {
     localStorage.setItem('portfolio-language', language)
@@ -610,18 +579,20 @@ function App() {
 
   const text = translations[language]
 
-  function toggleTechnology(
-    categoryId: CategoryId,
-    technologyId: string,
-  ) {
-    setSelectedTechnologies((current) => ({
-      ...current,
-      [categoryId]:
-        current[categoryId] === technologyId
-          ? undefined
-          : technologyId,
-    }))
-  }
+  const activeCategory =
+    technologyCategories.find((category) => category.id === activeTechnologyCategory) ??
+    technologyCategories[0]
+
+  const selectedTechnology =
+    activeCategory.technologies.find(
+      (technology) => technology.id === selectedTechnologies[activeCategory.id],
+    ) ?? activeCategory.technologies[0]
+
+  const relatedProjects = findProjectsForTechnology(
+    selectedTechnology.id,
+    selectedTechnology.name,
+    projects,
+  )
 
   return (
     <>
@@ -822,141 +793,130 @@ function App() {
             </p>
           </div>
 
-          <div className="space-y-14">
-            {technologyCategories.map((category) => {
-              const CategoryIcon =
-                categoryIcons[category.id]
+          <div className="grid items-start gap-5 lg:grid-cols-[16rem_minmax(0,1fr)]">
+            <nav
+              aria-label={text.skills.browseLabel}
+              className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:rounded-3xl lg:border lg:border-(--color-border) lg:bg-(--color-surface) lg:p-4"
+            >
+              <span className="hidden px-2 pb-2 text-xs font-semibold uppercase tracking-[0.16em] text-(--color-primary) lg:block">
+                {text.skills.browseLabel}
+              </span>
+              {technologyCategories.map((category) => {
+                const CategoryIcon = categoryIcons[category.id]
+                const isActive = category.id === activeTechnologyCategory
 
-              const gridColumns =
-                category.technologies.length === 8
-                  ? 'sm:grid-cols-4 xl:grid-cols-8'
-                  : category.technologies.length === 6
-                    ? 'sm:grid-cols-3 xl:grid-cols-6'
-                    : 'sm:grid-cols-2 md:grid-cols-4'
-
-              const selectedId =
-                selectedTechnologies[category.id]
-
-              const selectedIndex =
-                category.technologies.findIndex(
-                  (technology) =>
-                    technology.id === selectedId,
+                return (
+                  <button
+                    key={category.id}
+                    type="button"
+                    aria-pressed={isActive}
+                    onClick={() => setActiveTechnologyCategory(category.id)}
+                    className={`flex min-h-11 shrink-0 items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) lg:w-full ${
+                      isActive
+                        ? 'border-(--color-primary) bg-(--color-background) text-(--color-text)'
+                        : 'border-(--color-border) bg-(--color-surface) text-(--color-text-muted) hover:border-(--color-primary)'
+                    }`}
+                  >
+                    <CategoryIcon size={18} strokeWidth={1.8} aria-hidden="true" className="shrink-0 text-(--color-primary)" />
+                    <span className="flex-1">{category.title[language]}</span>
+                    <span className="text-xs text-(--color-text-muted)">{category.technologies.length}</span>
+                  </button>
                 )
+              })}
+            </nav>
 
-              const selectedTechnology =
-                selectedIndex >= 0
-                  ? category.technologies[selectedIndex]
-                  : undefined
+            <div className="min-w-0 rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 sm:p-7">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h3 className="font-display text-xl font-semibold text-(--color-text) sm:text-2xl">
+                  {activeCategory.title[language]}
+                </h3>
+                <span className="rounded-full border border-(--color-border) bg-(--color-background) px-3 py-1 text-xs text-(--color-text-muted)">
+                  {activeCategory.technologies.length} {text.skills.items}
+                </span>
+              </div>
 
-              return (
-                <div key={category.id}>
-                  <div className="mb-6 flex items-center gap-3">
-                    <CategoryIcon
-                      size={20}
-                      strokeWidth={1.8}
-                      className="text-(--color-primary)"
-                      aria-hidden="true"
-                    />
+              <div
+                className={`mt-5 grid grid-cols-2 gap-3 sm:gap-4 ${
+                  activeCategory.technologies.length === 8
+                    ? 'sm:grid-cols-4'
+                    : activeCategory.technologies.length === 6
+                      ? 'sm:grid-cols-3'
+                      : 'sm:grid-cols-2 xl:grid-cols-4'
+                }`}
+              >
+                {activeCategory.technologies.map((technology) => {
+                  const isSelected = selectedTechnology.id === technology.id
 
-                    <h3 className="font-display text-xl font-semibold sm:text-2xl">
-                      {category.title[language]}
-                    </h3>
-                  </div>
+                  return (
+                    <button
+                      key={technology.id}
+                      type="button"
+                      aria-pressed={isSelected}
+                      aria-controls="technology-detail-panel"
+                      onClick={() => setSelectedTechnologies((current) => ({
+                        ...current,
+                        [activeCategory.id]: technology.id,
+                      }))}
+                      className={`technology-card group flex min-h-28 flex-col items-center justify-center gap-3 rounded-2xl border bg-(--color-background) px-3 py-4 text-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
+                        isSelected
+                          ? 'technology-card-selected border-(--color-primary)'
+                          : 'border-(--color-border) hover:border-(--color-primary)'
+                      }`}
+                    >
+                      <i aria-hidden="true" className={`${technology.icon} technology-icon text-3xl`} />
+                      <span className="text-xs font-semibold leading-snug text-(--color-text) sm:text-sm">
+                        {technology.name}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
 
-                  <div className={`grid grid-cols-2 gap-3 sm:gap-4 ${gridColumns}`}>
-                    {category.technologies.map(
-                      (technology, index) => {
-                        const isSelected =
-                          selectedId === technology.id
+              <div
+                id="technology-detail-panel"
+                role="region"
+                aria-label={`${selectedTechnology.name} — ${text.skills.detailsLabel}`}
+                aria-live="polite"
+                className="mt-6 grid gap-5 border-t border-(--color-border) pt-5 md:grid-cols-2"
+              >
+                <div className="min-w-0">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-(--color-primary)">
+                    {text.skills.selectedLabel}
+                  </span>
+                  <h4 className="font-display mt-1 text-xl font-semibold text-(--color-text)">
+                    {selectedTechnology.name}
+                  </h4>
+                  <p className="mt-2 text-sm leading-6 text-(--color-text-muted)">
+                    {selectedTechnology.description[language]}
+                  </p>
+                </div>
 
-                        const isEndOfMobileRow =
-                          index % 2 === 1 ||
-                          index ===
-                            category.technologies.length - 1
-
-                        const selectedIsInThisRow =
-                          selectedTechnology &&
-                          Math.floor(selectedIndex / 2) ===
-                            Math.floor(index / 2)
-
-                        return (
-                          <Fragment key={technology.id}>
-                            <button
-                              type="button"
-                              aria-pressed={isSelected}
-                              aria-expanded={isSelected}
-                              onClick={() =>
-                                toggleTechnology(
-                                  category.id,
-                                  technology.id,
-                                )
-                              }
-                              className={`technology-card group flex min-h-32 flex-col items-center justify-center gap-4 rounded-2xl border bg-(--color-surface) px-3 py-5 text-center transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
-                                isSelected
-                                  ? 'technology-card-selected border-(--color-primary)'
-                                  : 'border-(--color-border)'
-                              }`}
-                            >
-                              <i
-                                aria-hidden="true"
-                                className={`${technology.icon} technology-icon text-4xl transition-all duration-300`}
-                              />
-
-                              <span className="text-xs font-semibold leading-snug text-(--color-text) sm:text-sm">
-                                {technology.name}
-                              </span>
-                            </button>
-
-                            {/* DETALHES NO MOBILE */}
-                            {isEndOfMobileRow &&
-                              selectedIsInThisRow && (
-                                <TechnologyDetails
-                                  technology={
-                                    selectedTechnology
-                                  }
-                                  language={language}
-                                  detailsLabel={
-                                    text.skills.detailsLabel
-                                  }
-                                  closeLabel={
-                                    text.skills.close
-                                  }
-                                  onClose={() =>
-                                    toggleTechnology(
-                                      category.id,
-                                      selectedTechnology.id,
-                                    )
-                                  }
-                                  className="col-span-2 sm:hidden"
-                                />
-                              )}
-                          </Fragment>
-                        )
-                      },
-                    )}
-                  </div>
-
-                  {/* DETALHES NO DESKTOP */}
-                  {selectedTechnology && (
-                    <TechnologyDetails
-                      technology={selectedTechnology}
-                      language={language}
-                      detailsLabel={
-                        text.skills.detailsLabel
-                      }
-                      closeLabel={text.skills.close}
-                      onClose={() =>
-                        toggleTechnology(
-                          category.id,
-                          selectedTechnology.id,
-                        )
-                      }
-                      className="mt-5 hidden sm:flex"
-                    />
+                <div className="min-w-0">
+                  <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-(--color-primary)">
+                    {text.skills.appliedLabel}
+                  </h4>
+                  {relatedProjects.length > 0 ? (
+                    <ul className="flex flex-wrap gap-2">
+                      {relatedProjects.map((project) => (
+                        <li key={project.id}>
+                          <a
+                            href={`#project-${project.id}`}
+                            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-(--color-border) bg-(--color-background) px-4 py-2 text-sm font-medium text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+                          >
+                            {project.name}
+                            <ArrowUpRight size={15} aria-hidden="true" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm leading-6 text-(--color-text-muted)">
+                      {text.skills.noProjects}
+                    </p>
                   )}
                 </div>
-              )
-            })}
+              </div>
+            </div>
           </div>
         </div>
       </section>

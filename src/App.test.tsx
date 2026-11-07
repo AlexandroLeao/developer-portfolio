@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 
@@ -30,7 +30,8 @@ describe('Developer Portfolio', () => {
     expect(developmentHeading.nextElementSibling?.lastElementChild).toHaveClass('md:col-span-2', 'md:mx-auto')
   })
 
-  it('balances project and technology grids', () => {
+  it('explores technology categories and links verified projects', async () => {
+    const user = userEvent.setup()
     render(<App />)
 
     const projectCard = screen.getByRole('heading', {
@@ -39,14 +40,27 @@ describe('Developer Portfolio', () => {
     expect(projectCard).not.toHaveClass('lg:col-span-2', 'lg:grid')
     expect(projectCard?.parentElement).toHaveClass('lg:grid-cols-3')
 
+    const navigation = screen.getByRole('navigation', { name: 'Explore por área' })
+    expect(within(navigation).getAllByRole('button')).toHaveLength(5)
+
     const frontendGrid = screen.getByRole('button', { name: 'HTML5' }).parentElement
-    expect(frontendGrid).toHaveClass('sm:grid-cols-4', 'xl:grid-cols-8')
+    expect(frontendGrid).toHaveClass('sm:grid-cols-4')
 
-    const backendGrid = screen.getByRole('button', { name: 'Java' }).parentElement
-    expect(backendGrid).toHaveClass('sm:grid-cols-3', 'xl:grid-cols-6')
+    expect(screen.getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'true')
+    const details = screen.getByRole('region', { name: /React — Como utilizo ou pretendo aplicar/ })
+    expect(within(details).getByRole('link', { name: /Adventure Files/ })).toHaveAttribute(
+      'href', '#project-adventure-files',
+    )
 
-    const aiGrid = screen.getByRole('button', { name: 'IA Generativa' }).parentElement
-    expect(aiGrid).toHaveClass('md:grid-cols-4')
+    await user.click(within(navigation).getByRole('button', { name: /Back-End & Dados/ }))
+    expect(screen.getByRole('button', { name: 'Node.js' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'Java' }).parentElement).toHaveClass('sm:grid-cols-3')
+
+    await user.click(screen.getByRole('button', { name: 'Java' }))
+    expect(screen.getByText('Em estudo ou sem projeto público associado.')).toBeInTheDocument()
+
+    await user.click(within(navigation).getByRole('button', { name: /Front-End/ }))
+    expect(screen.getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'true')
   })
 
   beforeEach(() => {
