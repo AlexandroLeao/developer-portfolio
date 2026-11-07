@@ -60,13 +60,13 @@ export default function ProjectStackChart({ project, language }: ProjectStackCha
     1,
     project.technologies.reduce((sum, technology) => sum + (project.stackFileCounts[technology] ?? 0), 0),
   )
-  let offset = 0
-
-  const slices = project.technologies.map((technology) => {
+  const slices = project.technologies.map((technology, index) => {
     const count = project.stackFileCounts[technology] ?? 0
-    const start = offset
-    const end = offset + count / total
-    offset = end
+    const precedingFiles = project.technologies
+      .slice(0, index)
+      .reduce((sum, previous) => sum + (project.stackFileCounts[previous] ?? 0), 0)
+    const start = precedingFiles / total
+    const end = (precedingFiles + count) / total
 
     return { technology, count, path: slicePath(start, end) }
   })
