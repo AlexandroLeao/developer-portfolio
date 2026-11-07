@@ -110,6 +110,7 @@ body {
   isolation: isolate;
   overflow: hidden;
   cursor: pointer;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
 .technology-card::before {
@@ -120,30 +121,32 @@ body {
   border-radius: 50%;
   background: var(--color-primary);
   opacity: 0;
-  filter: blur(28px);
-  transform: scale(0.7);
+  transform: scale(0.92);
 
   transition:
-    opacity 300ms ease,
-    transform 300ms ease;
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 
 .technology-icon {
   color: var(--color-text-muted);
   filter: grayscale(1);
+  transition: color 180ms ease, filter 180ms ease, transform 180ms ease;
 }
 
 .technology-card:hover,
 .technology-card-selected {
   border-color: var(--color-primary);
-  transform: translateY(-4px);
-  box-shadow:
-    0 8px 24px -14px var(--color-primary);
+  box-shadow: 0 8px 24px -16px var(--color-primary);
+}
+
+.technology-card:hover {
+  transform: translateY(-2px);
 }
 
 .technology-card:hover::before,
 .technology-card-selected::before {
-  opacity: 0.12;
+  opacity: 0.07;
   transform: scale(1);
 }
 
@@ -151,28 +154,19 @@ body {
 .technology-card-selected .technology-icon {
   color: var(--color-primary);
   filter: grayscale(0);
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
-/* PAINEL DE DETALHES */
-@keyframes technology-details-appear {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ENTRADA DISCRETA DE TÍTULOS, APENAS NA PRIMEIRA VISUALIZAÇÃO */
+.reveal-pending {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 420ms ease, transform 420ms ease;
 }
 
-.technology-details {
-  animation:
-    technology-details-appear
-    300ms
-    ease-out
-    both;
+.reveal-pending.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* BOTÃO VOLTAR AO TOPO */
@@ -192,8 +186,7 @@ body {
   }
 
   .scroll-hint-letter,
-  .scroll-hint-arrow,
-  .technology-details {
+  .scroll-hint-arrow {
     animation: none;
     opacity: 1;
     transform: none;
@@ -203,8 +196,14 @@ body {
   .technology-card::before,
   .technology-icon,
   .smart-header,
-  .back-to-top {
+  .back-to-top,
+  .reveal-pending {
     transition: none;
+  }
+
+  .reveal-pending {
+    opacity: 1;
+    transform: none;
   }
 
   .technology-card:hover,
