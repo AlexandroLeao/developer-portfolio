@@ -28,9 +28,9 @@ describe('ProjectCard', () => {
     }
   })
 
-  it('localizes the Ideas Organizer title without changing its description', () => {
+  it('shows Ideas and Projects Organizer in both languages', () => {
     const { rerender } = render(<ProjectCard project={ideasProject} language="pt" />)
-    expect(screen.getByRole('heading', { name: 'Organizador de Ideias e Projetos' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Ideas and Projects Organizer' })).toBeInTheDocument()
     expect(screen.getByText(ideasProject.description.pt)).toBeInTheDocument()
 
     rerender(<ProjectCard project={ideasProject} language="en" />)
@@ -39,33 +39,43 @@ describe('ProjectCard', () => {
     expect(screen.getByRole('link', { name: /Ideas and Projects Organizer.*GitHub/ })).toBeInTheDocument()
   })
 
-  it('renders measured technology bars without equal-sized donut slices or usage descriptions', () => {
+  it('renders a proportional pie with stack names but no visible counts or descriptions', () => {
     render(<ProjectCard project={ideasProject} language="pt" />)
 
-    const graph = screen.getByRole('region', { name: 'Tecnologias por arquivos de código' })
-    const bars = within(graph).getAllByRole('listitem')
-    expect(bars).toHaveLength(ideasProject.technologies.length)
-    expect(within(graph).getByRole('listitem', { name: 'TypeScript: 24 arquivos' })).toBeInTheDocument()
-    expect(within(graph).getByRole('listitem', { name: 'Vitest: 4 arquivos' })).toBeInTheDocument()
-    expect(graph.querySelector('svg')).not.toBeInTheDocument()
-    expect(within(graph).queryByRole('button')).not.toBeInTheDocument()
+    const graph = screen.getByRole('figure', { name: 'Distribuição das tecnologias do projeto' })
+    expect(within(graph).getByRole('img', { name: 'Distribuição das tecnologias do projeto' })).toBeInTheDocument()
+    const slices = graph.querySelectorAll('svg path')
+    expect(slices).toHaveLength(ideasProject.technologies.length)
+    expect(graph.querySelector('svg [tabindex]')).not.toBeInTheDocument()
+    expect(graph.querySelector('button')).not.toBeInTheDocument()
+
+    const legend = within(graph).getByRole('list', { name: 'Distribuição das tecnologias do projeto' })
+    expect(within(legend).getAllByRole('listitem')).toHaveLength(ideasProject.technologies.length)
+    for (const technology of ideasProject.technologies) {
+      expect(within(legend).getByText(technology)).toBeInTheDocument()
+    }
+    expect(slices[1]).toHaveAttribute('data-stack', 'TypeScript')
+    expect(slices[1]).toHaveAttribute('data-files', '24')
+    expect(slices[4]).toHaveAttribute('data-files', '4')
+    expect(within(graph).queryByText('24')).not.toBeInTheDocument()
     expect(screen.queryByText(ideasProject.stackUsage.React.pt)).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Ver detalhes' })).not.toBeInTheDocument()
   })
 
-  it('preserves every technology and its measured source-file count for each project', () => {
+  it('includes every measured stack and preserves project links in PT/EN', () => {
     for (const project of projects) {
       const rendered = render(<ProjectCard project={project} language="en" />)
-      const graph = screen.getByRole('region', { name: 'Technologies by source files' })
+      const graph = screen.getByRole('figure', { name: 'Project technology distribution' })
+      const slices = graph.querySelectorAll('svg path')
 
       expect(Object.keys(project.stackFileCounts).sort()).toEqual([...project.technologies].sort())
-      expect(within(graph).getAllByRole('listitem')).toHaveLength(project.technologies.length)
+      expect(slices).toHaveLength(project.technologies.length)
 
-      for (const technology of project.technologies) {
-        const count = project.stackFileCounts[technology]
-        expect(count).toBeGreaterThan(0)
-        expect(within(graph).getByRole('listitem', { name: technology + ': ' + count + ' files' })).toBeInTheDocument()
-      }
+      project.technologies.forEach((technology, index) => {
+        expect(project.stackFileCounts[technology]).toBeGreaterThan(0)
+        expect(slices[index]).toHaveAttribute('data-stack', technology)
+        expect(slices[index]).toHaveAttribute('data-files', String(project.stackFileCounts[technology]))
+      })
 
       expect(screen.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', project.githubUrl)
       if (project.liveUrl) {
