@@ -1,16 +1,16 @@
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   ArrowUpRight,
   ChevronDown,
   Code2,
+  X,
 } from 'lucide-react'
 import type { Language, Project } from '../data/projects'
 
 type ProjectCardProps = {
   project: Project
   language: Language
-  featured?: boolean
 }
 
 const translations = {
@@ -41,21 +41,21 @@ const translations = {
 export default function ProjectCard({
   project,
   language,
-  featured = false,
 }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const dialogRef = useRef<HTMLDialogElement>(null)
 
   const text = translations[language]
   const detailsId = `project-details-${project.id}`
 
   return (
-    <article className={`flex min-w-0 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface) ${featured ? "lg:col-span-2 lg:grid lg:grid-cols-[1.08fr_0.92fr]" : ""}`}>
+    <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface)">
       {/* ILUSTRAÇÃO */}
-      <div className={`aspect-video overflow-hidden border-b border-(--color-border) bg-(--color-background) ${featured ? "lg:aspect-auto lg:min-h-[360px] lg:border-b-0 lg:border-r" : ""}`}>
+      <div className="aspect-video overflow-hidden border-b border-(--color-border) bg-(--color-background)">
         <img
           src={project.image}
           srcSet={project.imageSrcSet}
-          sizes={featured ? "(min-width: 1024px) 55vw, calc(100vw - 3rem)" : "(min-width: 1024px) 600px, calc(100vw - 3rem)"}
+          sizes="(min-width: 1024px) 33vw, calc(100vw - 3rem)"
           alt={project.imageAlt[language]}
           loading="lazy"
           decoding="async"
@@ -64,12 +64,12 @@ export default function ProjectCard({
       </div>
 
       {/* CONTEÚDO */}
-      <div className={`flex flex-1 flex-col p-5 sm:p-7 ${featured ? "lg:p-10" : ""}`}>
+      <div className="flex flex-1 flex-col p-5 sm:p-7">
         <span className="mb-3 text-sm font-medium text-(--color-primary)">
           {project.year}
         </span>
 
-        <h3 className={`font-display text-2xl font-bold tracking-tight text-(--color-text) ${featured ? "lg:text-3xl" : ""}`}>
+        <h3 className="font-display text-2xl font-bold tracking-tight text-(--color-text)">
           {project.name}
         </h3>
 
@@ -96,35 +96,51 @@ export default function ProjectCard({
           ))}
         </ul>
 
-        {/* DETALHES EXPANSÍVEIS */}
+        {/* DETALHES DO PROJETO */}
         <div className="mt-6">
           <button
             type="button"
             aria-expanded={isExpanded}
             aria-controls={detailsId}
-            onClick={() =>
-              setIsExpanded((current) => !current)
-            }
+            onClick={() => {
+              dialogRef.current?.showModal()
+              setIsExpanded(true)
+            }}
             className="inline-flex min-h-11 items-center gap-2 rounded-full border border-(--color-border) px-4 py-2 text-sm font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
           >
-            {isExpanded
-              ? text.hideDetails
-              : text.showDetails}
+            {text.showDetails}
 
             <ChevronDown
               size={17}
               aria-hidden="true"
-              className={`transition-transform duration-200 ${
-                isExpanded ? 'rotate-180' : ''
-              }`}
+              className="transition-transform duration-200 motion-reduce:transition-none"
             />
           </button>
+        </div>
 
-          {isExpanded && (
-            <div
-              id={detailsId}
-              className="mt-6 space-y-5 border-t border-(--color-border) pt-6"
+        <dialog
+          ref={dialogRef}
+          onClose={() => setIsExpanded(false)}
+          aria-modal="true"
+          aria-labelledby={`project-dialog-title-${project.id}`}
+          className="fixed inset-0 m-auto max-h-[88dvh] w-[min(92vw,42rem)] overflow-y-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-0 text-(--color-text) shadow-2xl backdrop:bg-black/70"
+        >
+          <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-(--color-border) bg-(--color-surface) p-5 sm:p-7">
+            <h3 id={`project-dialog-title-${project.id}`} className="font-display text-xl font-bold leading-snug sm:text-2xl">
+              {project.name}
+            </h3>
+            <button
+              type="button"
+              onClick={() => dialogRef.current?.close()}
+              aria-label={text.hideDetails}
+              aria-expanded={isExpanded}
+              aria-controls={detailsId}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-(--color-border) text-(--color-text) hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
+              <X size={20} aria-hidden="true" />
+            </button>
+          </div>
+          <div id={detailsId} role="region" aria-label={`${text.features} — ${project.name}`} className="space-y-5 p-5 sm:p-7">
               <div>
                 <h4 className="font-display mb-3 text-base font-semibold text-(--color-text)">
                   {text.features}
@@ -170,9 +186,8 @@ export default function ProjectCard({
                   {project.details.practices[language]}
                 </p>
               </div>
-            </div>
-          )}
-        </div>
+          </div>
+        </dialog>
 
         {/* LINKS EXTERNOS */}
         <div className="mt-auto flex flex-wrap gap-3 pt-7">
