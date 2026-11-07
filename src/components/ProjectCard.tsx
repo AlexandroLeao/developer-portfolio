@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react'
 import {
   ArrowUpRight,
-  ChevronDown,
+  FileText,
   Code2,
   X,
 } from 'lucide-react'
@@ -16,6 +16,7 @@ type ProjectCardProps = {
 const translations = {
   pt: {
     showDetails: 'Ver detalhes',
+    caseStudy: 'Estudo de caso',
     hideDetails: 'Ocultar detalhes',
     repository: 'GitHub',
     liveDemo: 'Visitar projeto',
@@ -27,6 +28,7 @@ const translations = {
   },
   en: {
     showDetails: 'View details',
+    caseStudy: 'Case study',
     hideDetails: 'Hide details',
     repository: 'GitHub',
     liveDemo: 'Live Demo',
@@ -97,7 +99,7 @@ export default function ProjectCard({
         </ul>
 
         {/* DETALHES DO PROJETO */}
-        <div className="mt-6">
+        <div className="mt-auto border-t border-(--color-border) pt-5">
           <button
             type="button"
             aria-expanded={isExpanded}
@@ -106,15 +108,10 @@ export default function ProjectCard({
               dialogRef.current?.showModal()
               setIsExpanded(true)
             }}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-(--color-border) px-4 py-2 text-sm font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-(--color-primary) bg-(--color-background) px-4 py-3 text-sm font-semibold text-(--color-primary) transition-colors hover:bg-(--color-surface) hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
           >
+            <FileText size={17} aria-hidden="true" />
             {text.showDetails}
-
-            <ChevronDown
-              size={17}
-              aria-hidden="true"
-              className="transition-transform duration-200 motion-reduce:transition-none"
-            />
           </button>
         </div>
 
@@ -123,12 +120,27 @@ export default function ProjectCard({
           onClose={() => setIsExpanded(false)}
           aria-modal="true"
           aria-labelledby={`project-dialog-title-${project.id}`}
-          className="fixed inset-0 m-auto max-h-[88dvh] w-[min(92vw,42rem)] overflow-y-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-0 text-(--color-text) shadow-2xl backdrop:bg-black/70"
+          onClick={(event) => {
+            if (event.target !== event.currentTarget) return
+            const { left, right, top, bottom } = event.currentTarget.getBoundingClientRect()
+            if (
+              event.clientX < left || event.clientX > right ||
+              event.clientY < top || event.clientY > bottom
+            ) {
+              dialogRef.current?.close()
+            }
+          }}
+          className="fixed inset-0 m-auto max-h-[90dvh] w-[min(94vw,64rem)] overflow-y-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-0 text-(--color-text) shadow-2xl backdrop:bg-black/70"
         >
-          <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-(--color-border) bg-(--color-surface) p-5 sm:p-7">
-            <h3 id={`project-dialog-title-${project.id}`} className="font-display text-xl font-bold leading-snug sm:text-2xl">
-              {project.name}
-            </h3>
+          <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-(--color-border) bg-(--color-surface) px-5 py-4 sm:px-7 sm:py-5">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-widest text-(--color-primary)">
+                {text.caseStudy}
+              </span>
+              <h3 id={`project-dialog-title-${project.id}`} className="font-display mt-1 text-xl font-bold leading-snug sm:text-2xl">
+                {project.name}
+              </h3>
+            </div>
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
@@ -140,57 +152,57 @@ export default function ProjectCard({
               <X size={20} aria-hidden="true" />
             </button>
           </div>
-          <div id={detailsId} role="region" aria-label={`${text.features} — ${project.name}`} className="space-y-5 p-5 sm:p-7">
-              <div>
-                <h4 className="font-display mb-3 text-base font-semibold text-(--color-text)">
-                  {text.features}
-                </h4>
+          <div id={detailsId} role="region" aria-label={`${text.features} — ${project.name}`} className="grid gap-4 p-4 sm:p-6 md:grid-cols-2">
+            <section className="rounded-2xl border border-(--color-border) bg-(--color-background) p-4 sm:p-5">
+              <h4 className="font-display mb-3 text-base font-semibold text-(--color-text)">
+                {text.features}
+              </h4>
 
-                <ul className="list-disc space-y-2 pl-5 text-sm leading-7 text-(--color-text-muted)">
-                  {project.details.features.map(
-                    (feature, index) => (
-                      <li key={index}>
-                        {feature[language]}
-                      </li>
-                    ),
-                  )}
-                </ul>
-              </div>
+              <ul className="list-disc space-y-2 pl-5 text-sm leading-7 text-(--color-text-muted)">
+                {project.details.features.map(
+                  (feature, index) => (
+                    <li key={index}>
+                      {feature[language]}
+                    </li>
+                  ),
+                )}
+              </ul>
+            </section>
 
-              <div>
-                <h4 className="font-display mb-2 text-base font-semibold text-(--color-text)">
-                  {text.architecture}
-                </h4>
+            <section className="rounded-2xl border border-(--color-border) bg-(--color-background) p-4 sm:p-5">
+              <h4 className="font-display mb-2 text-base font-semibold text-(--color-text)">
+                {text.architecture}
+              </h4>
 
-                <p className="text-sm leading-7 text-(--color-text-muted)">
-                  {project.details.architecture[language]}
-                </p>
-              </div>
+              <p className="text-sm leading-7 text-(--color-text-muted)">
+                {project.details.architecture[language]}
+              </p>
+            </section>
 
-              <div>
-                <h4 className="font-display mb-2 text-base font-semibold text-(--color-text)">
-                  {text.challenges}
-                </h4>
+            <section className="rounded-2xl border border-(--color-border) bg-(--color-background) p-4 sm:p-5">
+              <h4 className="font-display mb-2 text-base font-semibold text-(--color-text)">
+                {text.challenges}
+              </h4>
 
-                <p className="text-sm leading-7 text-(--color-text-muted)">
-                  {project.details.challenges[language]}
-                </p>
-              </div>
+              <p className="text-sm leading-7 text-(--color-text-muted)">
+                {project.details.challenges[language]}
+              </p>
+            </section>
 
-              <div>
-                <h4 className="font-display mb-2 text-base font-semibold text-(--color-text)">
-                  {text.practices}
-                </h4>
+            <section className="rounded-2xl border border-(--color-border) bg-(--color-background) p-4 sm:p-5">
+              <h4 className="font-display mb-2 text-base font-semibold text-(--color-text)">
+                {text.practices}
+              </h4>
 
-                <p className="text-sm leading-7 text-(--color-text-muted)">
-                  {project.details.practices[language]}
-                </p>
-              </div>
+              <p className="text-sm leading-7 text-(--color-text-muted)">
+                {project.details.practices[language]}
+              </p>
+            </section>
           </div>
         </dialog>
 
         {/* LINKS EXTERNOS */}
-        <div className="mt-auto flex flex-wrap gap-3 pt-7">
+        <div className="mt-3 flex flex-wrap justify-center gap-3">
           <a
             href={project.githubUrl}
             target="_blank"
