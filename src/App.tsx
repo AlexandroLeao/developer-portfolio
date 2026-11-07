@@ -531,7 +531,10 @@ function App() {
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
-      if (event.target instanceof Node && !technologyGridRef.current?.contains(event.target)) {
+      if (!(event.target instanceof Node)) return
+      if (event.target instanceof Element && event.target.closest('.smart-header')) return
+
+      if (!technologyGridRef.current?.contains(event.target)) {
         setSelectedTechnologyId(null)
       }
     }
@@ -811,7 +814,7 @@ function App() {
           <div className="grid items-stretch gap-3 lg:grid-cols-[13.625rem_minmax(0,1fr)]">
             <nav
               aria-label={text.skills.categoryLabel}
-              className="flex flex-wrap gap-2 rounded-3xl border border-(--color-border) bg-(--color-surface) p-3 lg:flex-col"
+              className="technology-category-nav flex snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 lg:flex-col lg:overflow-visible lg:p-3"
             >
               {technologyCategories.map((category) => {
                 const isActive = category.id === activeTechnologyCategory
@@ -825,10 +828,10 @@ function App() {
                       setActiveTechnologyCategory(category.id)
                       setSelectedTechnologyId(null)
                     }}
-                    className={`min-h-11 flex-1 basis-[42%] rounded-xl border px-2.5 py-2.5 text-center text-sm font-medium leading-snug transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) lg:basis-0 ${
+                    className={`technology-category min-h-10 shrink-0 snap-start whitespace-nowrap rounded-full border px-4 py-2 text-center text-[13px] font-medium leading-snug transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) lg:min-h-11 lg:w-full lg:flex-1 lg:basis-0 lg:whitespace-normal lg:rounded-xl lg:px-2 lg:py-1.5 lg:leading-tight ${
                       isActive
                         ? 'border-(--color-primary) bg-(--color-background) text-(--color-text)'
-                        : 'border-transparent text-(--color-text-muted) hover:border-(--color-border) hover:bg-(--color-background)'
+                        : 'border-transparent text-(--color-text-muted)'
                     }`}
                   >
                     {category.title[language]}
@@ -867,7 +870,7 @@ function App() {
                       className={`technology-card group flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border bg-(--color-background) px-2 py-2.5 text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) sm:min-h-22 ${
                         isSelected
                           ? 'technology-card-selected border-(--color-primary)'
-                          : 'border-(--color-border) hover:border-(--color-primary)'
+                          : 'border-(--color-border)'
                       }`}
                     >
                       <i aria-hidden="true" className={`${technology.icon} technology-icon text-[1.75rem]`} />
@@ -886,9 +889,7 @@ function App() {
                   ? `${selectedTechnology.name} — ${text.skills.detailsLabel}`
                   : text.skills.detailsLabel}
                 aria-live="polite"
-                className={selectedTechnology
-                  ? 'mt-4 flex items-center border-t border-(--color-border) pt-3'
-                  : 'hidden'}
+                className="mt-4 flex min-h-19 items-center border-t border-(--color-border) pt-3"
               >
                 {selectedTechnology && (
                   <div className="min-w-0">
