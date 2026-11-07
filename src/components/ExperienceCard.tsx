@@ -26,10 +26,10 @@ export default function ExperienceCard({
   const text = translations[language]
 
   return (
-    <article className="grid h-full min-w-0 gap-6 rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 sm:p-7 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-7 lg:p-8">
-      <div className="flex min-w-0 flex-col gap-5">
+    <article className="grid min-w-0 gap-5 rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 sm:p-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-6 lg:p-7">
+      <div className="flex min-w-0 flex-col gap-4">
         <header>
-          <div className="mb-4 flex flex-wrap items-center gap-2">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="rounded-full border border-(--color-border) bg-(--color-background) px-3 py-1.5 text-xs font-medium text-(--color-primary)">
               {experience.period[language]}
             </span>
@@ -38,7 +38,7 @@ export default function ExperienceCard({
             </span>
           </div>
 
-          <h3 className="font-display text-xl font-bold leading-snug tracking-tight text-(--color-text) sm:text-2xl">
+          <h3 className="font-display text-xl font-bold leading-snug tracking-tight text-(--color-text)">
             {experience.role[language]}
           </h3>
           <p className="mt-2 text-base font-semibold text-(--color-primary)">
@@ -50,21 +50,22 @@ export default function ExperienceCard({
           </p>
         </header>
 
-        <p className="text-sm leading-7 text-(--color-text-muted) sm:text-base">
+        <p className="text-sm leading-6 text-(--color-text-muted)">
           {experience.summary[language]}
         </p>
 
-        <section>
+        <section className="border-t border-(--color-border) pt-4">
           <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-(--color-text-muted)">
             {text.skills}
           </h4>
-          <ul className="flex flex-wrap gap-2">
+          <ul className="grid grid-cols-2 gap-2">
             {experience.skills.map((skill, index) => (
               <li
                 key={`${experience.id}-skill-${index}`}
-                className="rounded-full border border-(--color-border) bg-(--color-background) px-3 py-1.5 text-xs font-medium text-(--color-text)"
+                className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border border-(--color-border) bg-(--color-background) px-3 py-2 text-xs font-medium leading-5 text-(--color-text)"
               >
-                {skill[language]}
+                <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-(--color-primary)" />
+                <span>{skill[language]}</span>
               </li>
             ))}
           </ul>
@@ -86,21 +87,23 @@ export default function ExperienceCard({
         )}
       </div>
 
-      <section className="min-w-0 border-t border-(--color-border) pt-5 lg:border-l lg:border-t-0 lg:pl-7 lg:pt-0">
-        <h4 className="font-display mb-4 text-base font-semibold text-(--color-text) sm:text-lg">
+      <section className="min-w-0 border-t border-(--color-border) pt-5 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+        <h4 className="font-display mb-4 text-base font-semibold text-(--color-text)">
           {text.contributions}
         </h4>
-        <ul className="space-y-3">
+        <ol className="divide-y divide-(--color-border)">
           {experience.contributions.map((contribution, index) => (
             <li
               key={`${experience.id}-contribution-${index}`}
-              className="flex items-start gap-3 text-sm leading-6 text-(--color-text-muted)"
+              className="flex items-start gap-3 py-3 text-sm leading-6 text-(--color-text-muted) first:pt-0 last:pb-0"
             >
-              <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-(--color-primary)" />
+              <span aria-hidden="true" className="shrink-0 text-xs font-semibold tabular-nums text-(--color-primary)">
+                {String(index + 1).padStart(2, '0')}
+              </span>
               <span>{contribution[language]}</span>
             </li>
           ))}
-        </ul>
+        </ol>
       </section>
     </article>
   )
