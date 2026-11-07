@@ -22,6 +22,7 @@ const translations = {
 
 export default function ProjectCard({ project, language }: ProjectCardProps) {
   const text = translations[language]
+  const projectName = project.nameTranslations?.[language] ?? project.name
 
   return (
     <article
@@ -46,7 +47,7 @@ export default function ProjectCard({ project, language }: ProjectCardProps) {
             {project.year}
           </span>
           <h3 className="font-display text-2xl font-bold tracking-tight text-(--color-text)">
-            {project.name}
+            {projectName}
           </h3>
           <p className="mt-4 text-sm leading-7 text-(--color-text-muted) sm:text-base">
             {project.description[language]}
@@ -60,7 +61,7 @@ export default function ProjectCard({ project, language }: ProjectCardProps) {
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${project.name} — ${text.repository}. ${text.opensNewTab}`}
+            aria-label={`${projectName} — ${text.repository}. ${text.opensNewTab}`}
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-(--color-border) px-3 py-2.5 text-xs font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) xl:px-5 xl:text-sm"
           >
             <Code2 size={17} aria-hidden="true" />
@@ -73,7 +74,7 @@ export default function ProjectCard({ project, language }: ProjectCardProps) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`${project.name} — ${text.liveDemo}. ${text.opensNewTab}`}
+              aria-label={`${projectName} — ${text.liveDemo}. ${text.opensNewTab}`}
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#0b3d3e] px-3 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#082e2f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) xl:px-5 xl:text-sm"
             >
               {text.liveDemo}

@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import { Code2 } from 'lucide-react'
 import type { Language, Project } from '../data/projects'
 
 type ProjectStackChartProps = {
@@ -24,106 +22,95 @@ const stackColors: Record<string, string> = {
 
 const translations = {
   pt: {
-    ariaLabel: 'Tecnologias do projeto',
-    stackRole: 'Ver uso de',
+    ariaLabel: 'Distribuição das tecnologias do projeto',
+    method: 'As fatias representam a proporção de arquivos associados a cada stack. Um mesmo arquivo pode utilizar mais de uma tecnologia.',
   },
   en: {
-    ariaLabel: 'Project technologies',
-    stackRole: 'See how I used',
+    ariaLabel: 'Project technology distribution',
+    method: 'Slices reflect the relative number of files associated with each stack. The same file may use more than one technology.',
   },
 }
 
+function pointOnCircle(fraction: number) {
+  const angle = fraction * Math.PI * 2 - Math.PI / 2
+  return {
+    x: Number((50 + 44 * Math.cos(angle)).toFixed(4)),
+    y: Number((50 + 44 * Math.sin(angle)).toFixed(4)),
+  }
+}
+
+function slicePath(start: number, end: number) {
+  const from = pointOnCircle(start)
+  const to = pointOnCircle(end)
+  const largeArc = end - start > 0.5 ? 1 : 0
+
+  return [
+    'M 50 50',
+    'L ' + from.x + ' ' + from.y,
+    'A 44 44 0 ' + largeArc + ' 1 ' + to.x + ' ' + to.y,
+    'Z',
+  ].join(' ')
+}
+
+// Repository snapshot: 2026-11-07. Proportions use measured source-file
+// associations, not mutually exclusive language percentages.
 export default function ProjectStackChart({ project, language }: ProjectStackChartProps) {
-  const [activeIndex, setActiveIndex] = useState(0)
   const text = translations[language]
-  const activeTechnology = project.technologies[activeIndex] ?? project.technologies[0]
-  const usage = project.stackUsage[activeTechnology]?.[language]
-  const segmentSize = 100 / project.technologies.length
-  const visibleSegment = segmentSize - 1.8
+  const total = Math.max(
+    1,
+    project.technologies.reduce((sum, technology) => sum + (project.stackFileCounts[technology] ?? 0), 0),
+  )
+  const slices = project.technologies.map((technology, index) => {
+    const count = project.stackFileCounts[technology] ?? 0
+    const precedingFiles = project.technologies
+      .slice(0, index)
+      .reduce((sum, previous) => sum + (project.stackFileCounts[previous] ?? 0), 0)
+    const start = precedingFiles / total
+    const end = (precedingFiles + count) / total
+
+    return { technology, count, path: slicePath(start, end) }
+  })
 
   return (
-    <div className="border-t border-(--color-border) pt-3">
-      <div className="flex min-h-24 items-center gap-2.5">
-        <div className="relative h-20 w-20 shrink-0">
-          <svg
-            viewBox="0 0 120 120"
-            aria-label={`${project.name} — ${text.ariaLabel}`}
-            className="h-full w-full overflow-visible"
-          >
-            <circle cx="60" cy="60" r="42" fill="none" stroke="var(--color-border)" strokeWidth="13" />
-            {project.technologies.map((technology, index) => {
-              const isActive = index === activeIndex
-
-              return (
-                <circle
-                  key={technology}
-                  role="button"
-                  tabIndex={0}
-                  aria-pressed={isActive}
-                  aria-label={`${text.stackRole} ${technology}`}
-                  cx="60"
-                  cy="60"
-                  r="42"
-                  pathLength={100}
-                  fill="none"
-                  stroke={stackColors[technology] ?? '#668d83'}
-                  strokeWidth={isActive ? 17 : 13}
-                  strokeDasharray={`${visibleSegment} ${100 - visibleSegment}`}
-                  strokeDashoffset={-index * segmentSize}
-                  transform="rotate(-90 60 60)"
-                  onClick={() => setActiveIndex(index)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault()
-                      setActiveIndex(index)
-                    }
-                  }}
-                  className="cursor-pointer transition-all duration-150 focus-visible:outline-2 focus-visible:outline-(--color-primary) motion-reduce:transition-none"
-                  style={{ filter: isActive ? 'drop-shadow(0 0 3px rgba(19, 154, 136, 0.26))' : undefined }}
-                />
-              )
-            })}
-          </svg>
-          <Code2
-            size={18}
-            strokeWidth={1.8}
-            aria-hidden="true"
-            className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-(--color-primary)"
-          />
-        </div>
-
-        <div role="group" aria-label={text.ariaLabel} className="grid min-w-0 flex-1 grid-cols-2 gap-x-1 gap-y-0.5">
-          {project.technologies.map((technology, index) => (
-            <button
+    <figure className="min-w-0 border-t border-(--color-border) pt-4" aria-label={text.ariaLabel}>
+      <div className="flex min-h-24 items-center gap-3">
+        <svg
+          viewBox="0 0 100 100"
+          role="img"
+          aria-label={text.ariaLabel}
+          className="h-22 w-22 shrink-0 overflow-visible drop-shadow-sm"
+        >
+          {slices.map(({ technology, count, path }) => (
+            <path
               key={technology}
-              type="button"
-              aria-pressed={index === activeIndex}
-              aria-label={`${project.name} — ${technology}`}
-              title={technology}
-              onClick={() => setActiveIndex(index)}
-              className={`flex min-h-6 min-w-0 items-center gap-1 rounded-md border px-1 py-1 text-left text-[10px] font-medium leading-tight transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-(--color-primary) ${
-                index === activeIndex
-                  ? 'border-(--color-border) bg-(--color-background) text-(--color-text)'
-                  : 'border-transparent text-(--color-text-muted)'
-              }`}
+              data-stack={technology}
+              data-files={count}
+              d={path}
+              fill={stackColors[technology] ?? '#668d83'}
+              stroke="var(--color-surface)"
+              strokeWidth="1.4"
+              strokeLinejoin="round"
+              className="transition-opacity duration-200 hover:opacity-80 motion-reduce:transition-none"
             >
+              <title>{technology}</title>
+            </path>
+          ))}
+        </svg>
+
+        <ul aria-label={text.ariaLabel} className="grid min-w-0 flex-1 grid-cols-2 gap-x-2 gap-y-1.5">
+          {project.technologies.map((technology) => (
+            <li key={technology} className="flex min-w-0 items-center gap-1.5 text-[10px] font-medium leading-tight text-(--color-text)">
               <span
                 aria-hidden="true"
-                className="h-2 w-2 shrink-0 rounded-sm"
+                className="h-2 w-2 shrink-0 rounded-full"
                 style={{ backgroundColor: stackColors[technology] ?? '#668d83' }}
               />
               <span className="min-w-0 break-words">{technology}</span>
-            </button>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
-
-      <div aria-live="polite" className="mt-2 flex min-h-12 items-center rounded-xl border border-(--color-border) bg-(--color-background) px-2.5 py-1.5">
-        <p className="text-xs leading-4 text-(--color-text-muted)">
-          <strong className="font-semibold text-(--color-text)">{activeTechnology} — </strong>
-          {usage}
-        </p>
-      </div>
-    </div>
+      <figcaption className="sr-only">{text.method}</figcaption>
+    </figure>
   )
 }
