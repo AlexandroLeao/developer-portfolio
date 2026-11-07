@@ -828,6 +828,13 @@ function App() {
               const CategoryIcon =
                 categoryIcons[category.id]
 
+              const gridColumns =
+                category.technologies.length === 8
+                  ? 'sm:grid-cols-4 xl:grid-cols-8'
+                  : category.technologies.length === 6
+                    ? 'sm:grid-cols-3 xl:grid-cols-6'
+                    : 'sm:grid-cols-2 md:grid-cols-4'
+
               const selectedId =
                 selectedTechnologies[category.id]
 
@@ -857,7 +864,7 @@ function App() {
                     </h3>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+                  <div className={`grid grid-cols-2 gap-3 sm:gap-4 ${gridColumns}`}>
                     {category.technologies.map(
                       (technology, index) => {
                         const isSelected =
@@ -959,7 +966,7 @@ function App() {
       <section
         id="projects"
         aria-labelledby="projects-title"
-        className="scroll-mt-12 border-t border-(--color-border) py-16 sm:py-20 lg:py-24"
+        className="scroll-mt-12 border-t border-(--color-border) pt-16 pb-8 sm:pt-20 sm:pb-10 lg:pt-24"
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12 max-w-2xl">
@@ -985,7 +992,7 @@ function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
+          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-8">
             {projects.map((project) => (
               <ProjectCard
                 key={project.id}
@@ -1001,7 +1008,7 @@ function App() {
       <section
         id="experience"
         aria-labelledby="experience-title"
-        className="scroll-mt-12 border-t border-(--color-border) pt-14 pb-24 sm:pt-16 sm:pb-32"
+        className="scroll-mt-12 border-t border-(--color-border) pt-8 pb-24 sm:pt-10 sm:pb-32"
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12 max-w-2xl">
@@ -1125,20 +1132,43 @@ function App() {
                   return null
                 }
 
+                const count = categoryCertifications.length
+                const gridColumns =
+                  count === 1
+                    ? 'md:mx-auto md:max-w-xl'
+                    : count === 6
+                      ? 'md:grid-cols-2 xl:grid-cols-3'
+                      : 'md:grid-cols-2'
+
                 return (
                   <div key={category.id}>
                     <h4 className="font-display mb-5 text-lg font-semibold text-(--color-text) sm:text-xl">
                       {category.title[language]}
                     </h4>
 
-                    <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
-                      {categoryCertifications.map((certification) => (
-                        <CertificationCard
-                          key={certification.id}
-                          certification={certification}
-                          language={language}
-                        />
-                      ))}
+                    <div className={`grid grid-cols-1 items-stretch gap-6 ${gridColumns}`}>
+                      {categoryCertifications.map((certification, index) => {
+                        const isOrphan =
+                          count > 1 &&
+                          count % 2 === 1 &&
+                          index === count - 1
+
+                        return (
+                          <div
+                            key={certification.id}
+                            className={
+                              isOrphan
+                                ? 'md:col-span-2 md:mx-auto md:w-full md:max-w-xl'
+                                : 'min-w-0'
+                            }
+                          >
+                            <CertificationCard
+                              certification={certification}
+                              language={language}
+                            />
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 )

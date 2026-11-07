@@ -4,6 +4,51 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('Developer Portfolio', () => {
+  it('centers incomplete certification rows without empty grid slots', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    const engineeringHeading = screen.getByRole('heading', {
+      name: 'Engenharia, Cloud e Sistemas',
+    })
+    expect(engineeringHeading.nextElementSibling).toHaveClass('md:grid-cols-2')
+
+    const foundationsHeading = screen.getByRole('heading', {
+      name: 'Suporte e Fundamentos de TI',
+    })
+    expect(foundationsHeading.nextElementSibling).toHaveClass('md:max-w-xl')
+
+    await user.click(screen.getByRole('button', {
+      name: /Mostrar todas as certificações/,
+    }))
+
+    expect(engineeringHeading.nextElementSibling).toHaveClass('xl:grid-cols-3')
+
+    const developmentHeading = screen.getByRole('heading', {
+      name: 'Programação e Desenvolvimento Web',
+    })
+    expect(developmentHeading.nextElementSibling?.lastElementChild).toHaveClass('md:col-span-2', 'md:mx-auto')
+  })
+
+  it('balances project and technology grids', () => {
+    render(<App />)
+
+    const projectCard = screen.getByRole('heading', {
+      name: 'Adventure Files',
+    }).closest('article')
+    expect(projectCard).not.toHaveClass('lg:col-span-2', 'lg:grid')
+    expect(projectCard?.parentElement).toHaveClass('lg:grid-cols-3')
+
+    const frontendGrid = screen.getByRole('button', { name: 'HTML5' }).parentElement
+    expect(frontendGrid).toHaveClass('sm:grid-cols-4', 'xl:grid-cols-8')
+
+    const backendGrid = screen.getByRole('button', { name: 'Java' }).parentElement
+    expect(backendGrid).toHaveClass('sm:grid-cols-3', 'xl:grid-cols-6')
+
+    const aiGrid = screen.getByRole('button', { name: 'IA Generativa' }).parentElement
+    expect(aiGrid).toHaveClass('md:grid-cols-4')
+  })
+
   beforeEach(() => {
     localStorage.clear()
     document.documentElement.classList.remove('dark')
