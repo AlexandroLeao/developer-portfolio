@@ -11,10 +11,10 @@ describe('ExperienceCard', () => {
   it('renders a complete experience overview in Portuguese', () => {
     render(<ExperienceCard experience={axiaExperience} language="pt" />)
 
-    expect(screen.getByRole('heading', { name: axiaExperience.role.pt })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: axiaExperience.role.pt })).toHaveClass('text-xl', 'sm:text-2xl')
     expect(screen.getByText(axiaExperience.company)).toBeInTheDocument()
     expect(screen.getByText(axiaExperience.period.pt)).toBeInTheDocument()
-    expect(screen.getByText(axiaExperience.summary.pt)).toBeInTheDocument()
+    expect(screen.getByText(axiaExperience.summary.pt)).toHaveClass('text-sm', 'sm:text-base')
     const skill = screen.getByText('Suporte de TI').closest('li')
     expect(skill?.parentElement).toHaveClass('grid', 'grid-cols-2')
     expect(skill?.parentElement?.children).toHaveLength(4)
