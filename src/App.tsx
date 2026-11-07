@@ -22,6 +22,7 @@ import {
   certificationCategories,
   certifications,
   ongoingEducation,
+  type CertificationCategory,
 } from './data/certifications'
 import ExperienceTimeline from './components/ExperienceTimeline'
 import ProjectCard from './components/ProjectCard'
@@ -422,8 +423,13 @@ const translations = {
       degreeLabel: 'Formação acadêmica',
       degreeStatus: 'Concluída',
       certificationLabel: 'Cursos e certificações',
-      showAll: 'Mostrar todas as certificações',
-      showLess: 'Mostrar menos certificações',
+      viewLabel: 'Visualizar',
+      featuredLabel: 'Destaques',
+      allLabel: 'Todas',
+      categoryLabel: 'Área de conhecimento',
+      allCategoriesLabel: 'Todas as áreas',
+      ofLabel: 'de',
+      resultsNoun: 'certificações',
       ongoingLabel: 'Em desenvolvimento',
       ongoingStatus: 'Em andamento',
     },
@@ -491,8 +497,13 @@ const translations = {
       degreeLabel: 'Academic education',
       degreeStatus: 'Completed',
       certificationLabel: 'Courses and certifications',
-      showAll: 'Show all certifications',
-      showLess: 'Show fewer certifications',
+      viewLabel: 'View',
+      featuredLabel: 'Highlights',
+      allLabel: 'All',
+      categoryLabel: 'Knowledge area',
+      allCategoriesLabel: 'All areas',
+      ofLabel: 'of',
+      resultsNoun: 'certifications',
       ongoingLabel: 'Currently learning',
       ongoingStatus: 'In progress',
     },
@@ -541,7 +552,8 @@ function App() {
   })
 
   const [showBackToTop, setShowBackToTop] = useState(false)
-  const [showAllCertifications, setShowAllCertifications] = useState(false)
+  const [certificationView, setCertificationView] = useState<'featured' | 'all'>('featured')
+  const [selectedCertificationCategory, setSelectedCertificationCategory] = useState<CertificationCategory | 'all'>('all')
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   const [activeTechnologyCategory, setActiveTechnologyCategory] = useState<CategoryId>('frontend')
@@ -578,6 +590,12 @@ function App() {
   }, [])
 
   const text = translations[language]
+
+  const visibleCertifications = certifications.filter(
+    (certification) =>
+      (certificationView === 'all' || certification.featured) &&
+      (selectedCertificationCategory === 'all' || certification.category === selectedCertificationCategory),
+  )
 
   const activeCategory =
     technologyCategories.find((category) => category.id === activeTechnologyCategory) ??
@@ -1061,16 +1079,79 @@ function App() {
 
           {/* CURSOS E CERTIFICAÇÕES */}
           <div>
-            <h3 className="font-display mb-8 text-xl font-semibold text-(--color-text) sm:text-2xl">
+            <h3 className="font-display mb-6 text-xl font-semibold text-(--color-text) sm:text-2xl">
               {text.certifications.certificationLabel}
             </h3>
 
-            <div className="space-y-12">
+            <div className="mb-6 grid gap-4 rounded-3xl border border-(--color-border) bg-(--color-surface) p-4 sm:p-5 lg:grid-cols-2 lg:items-end">
+              <fieldset>
+                <legend className="mb-3 text-xs font-semibold uppercase tracking-wider text-(--color-text-muted)">
+                  {text.certifications.viewLabel}
+                </legend>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    aria-pressed={certificationView === 'featured'}
+                    aria-controls="certification-results"
+                    onClick={() => setCertificationView('featured')}
+                    className={`min-h-11 rounded-full border px-5 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
+                      certificationView === 'featured'
+                        ? 'border-(--color-primary) bg-(--color-background) text-(--color-primary)'
+                        : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)'
+                    }`}
+                  >
+                    {text.certifications.featuredLabel} ({certifications.filter((item) => item.featured).length})
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={certificationView === 'all'}
+                    aria-controls="certification-results"
+                    onClick={() => setCertificationView('all')}
+                    className={`min-h-11 rounded-full border px-5 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
+                      certificationView === 'all'
+                        ? 'border-(--color-primary) bg-(--color-background) text-(--color-primary)'
+                        : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)'
+                    }`}
+                  >
+                    {text.certifications.allLabel} ({certifications.length})
+                  </button>
+                </div>
+              </fieldset>
+
+              <div>
+                <label
+                  htmlFor="certification-category-filter"
+                  className="mb-3 block text-xs font-semibold uppercase tracking-wider text-(--color-text-muted)"
+                >
+                  {text.certifications.categoryLabel}
+                </label>
+                <select
+                  id="certification-category-filter"
+                  value={selectedCertificationCategory}
+                  onChange={(event) => setSelectedCertificationCategory(
+                    event.target.value as CertificationCategory | 'all',
+                  )}
+                  aria-controls="certification-results"
+                  className="min-h-11 w-full rounded-2xl border border-(--color-border) bg-(--color-background) px-4 py-2 text-sm font-medium text-(--color-text) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+                >
+                  <option value="all">{text.certifications.allCategoriesLabel}</option>
+                  {certificationCategories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.title[language]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <p role="status" className="mb-8 text-sm text-(--color-text-muted)">
+              {visibleCertifications.length} {text.certifications.ofLabel} {certifications.length} {text.certifications.resultsNoun}
+            </p>
+
+            <div id="certification-results" className="space-y-12">
               {certificationCategories.map((category) => {
-                const categoryCertifications = certifications.filter(
-                  (certification) =>
-                    certification.category === category.id &&
-                    (showAllCertifications || certification.featured),
+                const categoryCertifications = visibleCertifications.filter(
+                  (certification) => certification.category === category.id,
                 )
 
                 if (categoryCertifications.length === 0) {
@@ -1120,25 +1201,6 @@ function App() {
               })}
             </div>
 
-            <div className="mt-10 flex justify-center">
-              <button
-                type="button"
-                aria-expanded={showAllCertifications}
-                onClick={() => setShowAllCertifications((current) => !current)}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface) px-6 py-3 text-sm font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
-              >
-                {showAllCertifications
-                  ? text.certifications.showLess
-                  : `${text.certifications.showAll} (${certifications.length})`}
-                <ChevronDown
-                  size={17}
-                  aria-hidden="true"
-                  className={`transition-transform duration-200 motion-reduce:transition-none ${
-                    showAllCertifications ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-            </div>
           </div>
 
           {/* FORMAÇÃO EM ANDAMENTO */}
