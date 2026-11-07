@@ -6,12 +6,14 @@ type TranslatedText = Record<Language, string>
 export type Project = {
   id: string
   name: string
+  nameTranslations?: TranslatedText
   year: number
   image: string
   imageSrcSet: string
   imageAlt: TranslatedText
   description: TranslatedText
   technologies: string[]
+  stackFileCounts: Record<string, number>
   stackUsage: Record<string, TranslatedText>
   githubUrl: string
   liveUrl?: string
@@ -50,6 +52,14 @@ export const projects: Project[] = [
       'PostgreSQL',
       'Supabase',
     ],
+    stackFileCounts: {
+      React: 18,
+      TypeScript: 35,
+      'Node.js': 7,
+      Express: 4,
+      PostgreSQL: 2,
+      Supabase: 12,
+    },
     stackUsage: {
       React: { pt: 'Interface e personalização dos personagens.', en: 'Character creation and customization interface.' },
       TypeScript: { pt: 'Tipos e segurança dos dados no front-end.', en: 'Types and data safety in the frontend.' },
@@ -96,6 +106,7 @@ export const projects: Project[] = [
   {
     id: 'ideas-organizer',
     name: 'Organizador de Ideias e Projetos',
+    nameTranslations: { pt: 'Organizador de Ideias e Projetos', en: 'Ideas and Projects Organizer' },
     year: 2026,
     image: '/images/projects/organizador-ideias-1200.webp',
     imageSrcSet: [
@@ -118,6 +129,13 @@ export const projects: Project[] = [
       'TanStack Router',
       'Vitest',
     ],
+    stackFileCounts: {
+      React: 9,
+      TypeScript: 24,
+      'Tailwind CSS': 7,
+      'TanStack Router': 4,
+      Vitest: 4,
+    },
     stackUsage: {
       React: { pt: 'Interface de ideias, filtros e formulários.', en: 'Ideas, filters, and forms interface.' },
       TypeScript: { pt: 'Tipos dos projetos e dos estados.', en: 'Types for projects and application state.' },
@@ -186,6 +204,12 @@ export const projects: Project[] = [
       'styled-components',
       'LocalStorage',
     ],
+    stackFileCounts: {
+      React: 8,
+      JavaScript: 15,
+      'styled-components': 7,
+      LocalStorage: 2,
+    },
     stackUsage: {
       React: { pt: 'Componentes dos registros financeiros.', en: 'Financial records interface components.' },
       JavaScript: { pt: 'Cálculos de entradas, saídas e saldo.', en: 'Income, expense, and balance calculations.' },
