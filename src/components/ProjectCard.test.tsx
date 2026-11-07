@@ -177,7 +177,7 @@ describe('ProjectCard', () => {
     )
 
     fireEvent.click(screen.getByRole('tab', { name: 'Practices' }))
-    expect(screen.getByRole('tabpanel', { name: 'Development practices' })).toHaveTextContent(ideasProject.details.practices.en)
+    expect(screen.getByRole('tabpanel', { name: 'Practices' })).toHaveTextContent(ideasProject.details.practices.en)
   })
 
   it('provides repository and live demo links', () => {
