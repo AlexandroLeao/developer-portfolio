@@ -376,8 +376,6 @@ const translations = {
     about: {
       eyebrow: 'CONHEÇA UM POUCO SOBRE MIM',
       title: 'Sobre mim',
-      subtitle: 'Desenvolvedor de Software',
-      education: 'Formado em Análise e Desenvolvimento de Sistemas',
       paragraphs: [
         'Sou Desenvolvedor de Software, formado em Análise e Desenvolvimento de Sistemas, e acredito no potencial da tecnologia para transformar problemas reais em soluções eficientes.',
         'Gosto de compreender os desafios por trás de cada necessidade e desenvolver ferramentas que simplifiquem processos e gerem resultados. Essa abordagem já me levou a criar soluções para gestão de vendas, controle de estoque e organização de projetos pessoais.',
@@ -446,8 +444,6 @@ const translations = {
     about: {
       eyebrow: 'GET TO KNOW ME',
       title: 'About me',
-      subtitle: 'Software Developer',
-      education: 'Degree in Systems Analysis and Development',
       paragraphs: [
         "I'm a Software Developer with a degree in Systems Analysis and Development, and I believe in using technology to turn real-world problems into efficient solutions.",
         'I enjoy understanding the challenges behind each need and building tools that simplify processes and deliver meaningful results. This approach has led me to develop solutions for sales management, inventory tracking, and personal project organization.',
@@ -762,15 +758,6 @@ function App() {
               className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
             />
 
-            <div className="mt-8 space-y-3">
-              <p className="text-lg font-semibold text-(--color-text)">
-                {text.about.subtitle}
-              </p>
-
-              <p className="max-w-sm text-sm leading-relaxed text-(--color-text-muted)">
-                {text.about.education}
-              </p>
-            </div>
           </div>
 
           <div className="space-y-6">

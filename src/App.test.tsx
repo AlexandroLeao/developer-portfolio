@@ -4,6 +4,15 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('Developer Portfolio', () => {
+  it('shows the About heading without repeated role and education labels', () => {
+    render(<App />)
+    const about = screen.getByRole('region', { name: 'Sobre mim.' })
+
+    expect(within(about).getByRole('heading', { name: 'Sobre mim.' })).toBeInTheDocument()
+    expect(within(about).queryByText('Desenvolvedor de Software')).not.toBeInTheDocument()
+    expect(within(about).queryByText('Formado em Análise e Desenvolvimento de Sistemas')).not.toBeInTheDocument()
+  })
+
   it('centers incomplete certification rows without empty grid slots', async () => {
     const user = userEvent.setup()
     render(<App />)

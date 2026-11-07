@@ -70,6 +70,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
   useEffect(() => {
     function handleScroll() {
       setIsScrolled(window.scrollY > 24)
+      if (window.scrollY <= 64) setActiveSection('')
     }
 
     handleScroll()
@@ -116,6 +117,11 @@ function Header({ language, onLanguageChange }: HeaderProps) {
 
   function closeMenu() {
     setIsMenuOpen(false)
+  }
+
+  function returnHome() {
+    closeMenu()
+    setActiveSection('')
   }
 
   const translations = {
@@ -185,8 +191,8 @@ function Header({ language, onLanguageChange }: HeaderProps) {
           <a
             href="#home"
             aria-label={text.home}
-            onClick={closeMenu}
-            className="font-display shrink-0 text-2xl font-bold tracking-tight text-(--color-text) transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+            onClick={returnHome}
+            className="nav-hover-lift font-display shrink-0 text-2xl font-bold tracking-tight text-(--color-text) transition-[transform,opacity] duration-200 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
           >
             AL<span className="text-(--color-primary)">.</span>
           </a>
@@ -198,7 +204,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
                 key={link.href}
                 href={link.href}
                 aria-current={activeSection === link.href.slice(1) ? 'location' : undefined}
-                className={`border-b-2 pb-1 text-sm whitespace-nowrap transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
+                className={`nav-hover-lift border-b-2 pb-1 text-sm whitespace-nowrap transition-[color,border-color,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
                   activeSection === link.href.slice(1)
                     ? 'border-(--color-primary) text-(--color-primary)'
                     : 'border-transparent text-(--color-text-muted) hover:text-(--color-primary)'
