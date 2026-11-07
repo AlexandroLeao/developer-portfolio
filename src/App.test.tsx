@@ -42,51 +42,54 @@ describe('Developer Portfolio', () => {
     expect(within(about).queryByText('Formado em Análise e Desenvolvimento de Sistemas')).not.toBeInTheDocument()
   })
 
-  it('centers incomplete certification rows without empty grid slots', async () => {
+  it('shows six featured qualifications in a compact three-column grid', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    const { container } = render(<App />)
+    const grid = container.querySelector<HTMLElement>('#certification-results')!
 
-    const engineeringHeading = screen.getByRole('heading', {
-      name: 'Engenharia, Cloud e Sistemas',
-    })
-    expect(engineeringHeading.nextElementSibling).toHaveClass('md:grid-cols-2')
+    expect(grid).toHaveClass('sm:grid-cols-2', 'lg:grid-cols-3')
+    expect(within(grid).getAllByRole('article')).toHaveLength(6)
+    for (const name of [
+      'Engenharia de Software',
+      'Cloud Fundamentals, Administration and Solution Architect',
+      'SCRUM: Gerenciando Projetos de Software com Agilidade',
+      'The Complete Full-Stack Web Development Bootcamp',
+      'Fundamentos do Suporte Técnico',
+      'Bootcamp Itaú | Java com Inteligência Artificial',
+    ]) {
+      expect(within(grid).getByRole('heading', { name })).toBeInTheDocument()
+    }
+    expect(within(grid).queryByRole('heading', { name: 'UX e UI Design' })).not.toBeInTheDocument()
+    expect(within(grid).getByText('Em andamento')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Destaques' })).toHaveAttribute('aria-pressed', 'true')
 
-    const foundationsHeading = screen.getByRole('heading', {
-      name: 'Suporte e Fundamentos de TI',
-    })
-    expect(foundationsHeading.nextElementSibling).toHaveClass('md:max-w-xl')
+    const degree = screen.getByRole('heading', { name: 'Tecnólogo em Análise e Desenvolvimento de Sistemas' })
+    expect(degree).toBeInTheDocument()
+    expect(within(grid).queryByText('Centro Universitário FAVIP Wyden')).not.toBeInTheDocument()
 
-    expect(screen.getByRole('button', { name: /Destaques \(7\)/ })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('status')).toHaveTextContent('7 de 17 certificações')
-
-    await user.click(screen.getByRole('button', { name: /Todas \(17\)/ }))
-    expect(screen.getByRole('status')).toHaveTextContent('17 de 17 certificações')
-
-    expect(engineeringHeading.nextElementSibling).toHaveClass('xl:grid-cols-3')
-
-    const developmentHeading = screen.getByRole('heading', {
-      name: 'Programação e Desenvolvimento Web',
-    })
-    expect(developmentHeading.nextElementSibling?.lastElementChild).toHaveClass('md:col-span-2', 'md:mx-auto')
+    await user.click(screen.getByRole('button', { name: 'Todas' }))
+    expect(within(grid).getAllByRole('article')).toHaveLength(18)
   })
 
-  it('filters completed certifications by knowledge area', async () => {
+  it('filters certifications and the ongoing Java bootcamp by knowledge area', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    const { container } = render(<App />)
+    const grid = container.querySelector<HTMLElement>('#certification-results')!
+    const filters = screen.getByRole('group', { name: 'Área de conhecimento' })
 
-    const areaFilter = screen.getByRole('combobox', { name: 'Área de conhecimento' })
-    await user.selectOptions(areaFilter, 'development')
-
-    expect(screen.getByRole('status')).toHaveTextContent('2 de 17 certificações')
-    expect(screen.getByRole('heading', { name: 'Programação e Desenvolvimento Web' })).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: 'Engenharia, Cloud e Sistemas' })).not.toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: /Todas \(17\)/ }))
-    expect(screen.getByRole('status')).toHaveTextContent('7 de 17 certificações')
-
-    expect(screen.getByRole('heading', {
+    await user.click(within(filters).getByRole('button', { name: 'Programação e Desenvolvimento Web' }))
+    expect(within(grid).getAllByRole('article')).toHaveLength(2)
+    expect(within(grid).getByRole('heading', {
       name: 'Bootcamp Itaú | Java com Inteligência Artificial',
     })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Todas' }))
+    expect(within(grid).getAllByRole('article')).toHaveLength(8)
+    expect(within(grid).getByRole('heading', { name: 'Legacy JavaScript Algorithms and Data Structures V7' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'EN' }))
+    expect(screen.getByRole('group', { name: 'Knowledge area' })).toBeInTheDocument()
+    expect(within(grid).getAllByRole('article')).toHaveLength(8)
   })
 
   it('keeps all 30 technologies in a compact, deselectable category browser', async () => {

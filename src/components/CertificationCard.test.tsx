@@ -66,11 +66,15 @@ describe('CertificationCard', () => {
 
     const dialog = screen.getByRole('dialog', { name: 'Engenharia de Software' })
     expect(dialog).toBeVisible()
+    expect(dialog).toHaveClass('max-h-[calc(100dvh-1.5rem)]', 'w-[min(94vw,54rem)]')
     expect(
       within(dialog).getByRole('region', {
         name: /Conteúdos abordados — Engenharia de Software/,
       }),
     ).toBeInTheDocument()
+    expect(within(dialog).getByRole('region', {
+      name: /Conteúdos abordados — Engenharia de Software/,
+    })).toHaveClass('md:grid-cols-2')
     expect(within(dialog).getByText(softwareEngineering.topics[0].pt)).toBeInTheDocument()
 
     await user.click(within(dialog).getByRole('button', { name: 'Ocultar detalhes' }))
