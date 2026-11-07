@@ -98,6 +98,7 @@ export default function ProjectStackChart({ project, language }: ProjectStackCha
               key={technology}
               type="button"
               aria-pressed={index === activeIndex}
+              aria-label={`${project.name} — ${technology}`}
               title={technology}
               onClick={() => setActiveIndex(index)}
               className={`flex min-h-6 min-w-0 items-center gap-1 rounded-md border px-1 py-1 text-left text-[10px] font-medium leading-tight transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-(--color-primary) ${
