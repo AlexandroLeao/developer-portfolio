@@ -51,7 +51,7 @@ function ContactLink({
           ? `${contact.ariaLabel[language]}. ${text.externalLink}`
           : contact.ariaLabel[language]
       }
-      className="group flex min-w-0 items-center gap-4 rounded-2xl border border-(--color-border) bg-(--color-background) p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-(--color-primary) hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transform-none motion-reduce:transition-none sm:p-5"
+      className="group flex min-w-0 items-center gap-4 rounded-2xl border border-(--color-border) bg-(--color-background) p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-(--color-primary) hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transform-none motion-reduce:transition-none sm:p-3"
     >
       <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-(--color-border) bg-(--color-surface) text-(--color-primary) transition-colors group-hover:border-(--color-primary)">
         <ContactIcon icon={contact.icon} />
@@ -172,7 +172,7 @@ export default function ContactModal({
 
   return (
     <div
-      className="fixed inset-0 z-100 flex items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-sm sm:px-6"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/70 px-4 py-3 backdrop-blur-sm sm:px-6"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           onClose()
@@ -186,7 +186,7 @@ export default function ContactModal({
         aria-labelledby="contact-modal-title"
         aria-describedby="contact-modal-description"
         tabIndex={-1}
-        className="w-full max-h-full max-w-xl overflow-y-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 shadow-2xl outline-none sm:p-8"
+        className="w-full max-h-[calc(100dvh-1.5rem)] max-w-xl overflow-y-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-4 shadow-2xl outline-none sm:p-6"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
@@ -215,12 +215,12 @@ export default function ContactModal({
 
         <p
           id="contact-modal-description"
-          className="mt-5 text-sm leading-7 text-(--color-text-muted) sm:text-base"
+          className="mt-4 text-sm leading-6 text-(--color-text-muted) sm:text-base"
         >
           {text.description}
         </p>
 
-        <div className="mt-7 grid grid-cols-1 gap-3">
+        <div className="mt-4 grid grid-cols-1 gap-2.5">
           {contacts.map((contact) => (
             <ContactLink
               key={contact.id}
@@ -232,7 +232,7 @@ export default function ContactModal({
 
         <div
           aria-hidden="true"
-          className="mx-auto mt-7 h-1 w-14 rounded-full bg-(--color-primary)"
+          className="mx-auto mt-4 h-1 w-14 rounded-full bg-(--color-primary)"
         />
       </div>
     </div>
