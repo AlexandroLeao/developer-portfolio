@@ -18,9 +18,10 @@ describe('ExperienceCard', () => {
     const skill = screen.getByText('Suporte de TI').closest('li')
     expect(skill?.parentElement).toHaveClass('grid', 'grid-cols-2')
     expect(skill?.parentElement?.children).toHaveLength(4)
+    expect(skill?.querySelector('[aria-hidden="true"]')).not.toBeInTheDocument()
 
     const contributionsHeading = screen.getByRole('heading', { name: 'Principais contribuições' })
-    expect(contributionsHeading.nextElementSibling?.tagName).toBe('OL')
+    expect(contributionsHeading.nextElementSibling?.tagName).toBe('UL')
     expect(contributionsHeading.nextElementSibling?.children).toHaveLength(3)
     expect(screen.getByText(axiaExperience.contributions[0].pt)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Ver detalhes' })).not.toBeInTheDocument()
@@ -43,6 +44,11 @@ describe('ExperienceCard', () => {
 
     expect(screen.getByRole('link', { name: 'Ver projeto relacionado' })).toHaveAttribute('href', '#projects')
     expect(screen.getByText('Natsu Matsuri Project')).toBeInTheDocument()
+    const relatedLink = screen.getByRole('link', { name: 'Ver projeto relacionado' })
+    expect(relatedLink.closest('section')).toContainElement(
+      screen.getByRole('heading', { name: 'Principais contribuições' }),
+    )
+    expect(relatedLink.parentElement).toHaveClass('text-right')
   })
 
   it('omits the project action when no related project exists', () => {
