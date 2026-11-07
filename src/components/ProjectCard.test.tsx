@@ -34,7 +34,8 @@ describe('ProjectCard', () => {
       expect(card.querySelector('div.aspect-video')).toBeInTheDocument()
       expect(card.querySelector('img')).toHaveClass('group-hover:scale-[1.025]', 'motion-reduce:transition-none')
       expect(card.querySelector('img')).toHaveAttribute('sizes', '(min-width: 1024px) 33vw, calc(100vw - 3rem)')
-      expect(card.querySelector('dialog')).toBeInTheDocument()
+      expect(card.querySelector('dialog')).not.toBeInTheDocument()
+      expect(document.getElementById('project-details-' + project.id)?.closest('dialog')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Detalhes' })).toBeInTheDocument()
       rendered.unmount()
     }
@@ -104,6 +105,8 @@ describe('ProjectCard', () => {
 
     const dialog = screen.getByRole('dialog', { name: 'Adventure Files' })
     expect(dialog).toHaveClass('max-h-[calc(100dvh-1rem)]')
+    expect(dialog).toHaveClass('top-1/2', 'left-1/2', '-translate-x-1/2', '-translate-y-1/2', 'max-w-3xl')
+    expect(dialog.parentElement).toBe(document.body)
     expect(within(dialog).getByText(adventureProject.details.features[0].pt)).toBeInTheDocument()
     expect(within(dialog).getByText('Referências visuais')).toBeInTheDocument()
     expect(within(dialog).getByText(/Zelda · Pokémon/)).toBeInTheDocument()
@@ -113,6 +116,16 @@ describe('ProjectCard', () => {
     expect(within(dialog).getByText(adventureProject.details.architecture.en)).toBeInTheDocument()
     await user.click(within(dialog).getByRole('button', { name: 'Close details' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('anchors the stack chart to the bottom of each project card', () => {
+    for (const project of projects) {
+      const rendered = render(<ProjectCard project={project} language="en" />)
+      const chart = screen.getByRole('figure', { name: 'Project technology distribution' })
+      expect(chart.parentElement).toHaveClass('mt-auto')
+      expect(chart.parentElement?.nextElementSibling).toHaveClass('flex', 'items-center')
+      rendered.unmount()
+    }
   })
 
   it('dismisses project details on a backdrop click but not on content clicks', async () => {

@@ -121,6 +121,13 @@ body {
   display: none;
 }
 
+/* Em celulares baixos, prioriza o conteúdo essencial dos detalhes dos projetos. */
+@media (max-width: 639px) and (max-height: 620px) {
+  .project-dialog-secondary {
+    display: none;
+  }
+}
+
 .technology-card {
   cursor: pointer;
   transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
