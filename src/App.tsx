@@ -1,17 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowUp,
-  ArrowUpRight,
   BookOpen,
   GraduationCap,
-  BrainCircuit,
   ChevronDown,
-  Cloud,
-  Code2,
   Download,
   Mail,
-  Server,
-  Workflow,
 } from 'lucide-react'
 import Header from './components/Header'
 import ContactModal from './components/ContactModal'
@@ -27,7 +21,6 @@ import {
 import ExperienceTimeline from './components/ExperienceTimeline'
 import ProjectCard from './components/ProjectCard'
 import { projects } from './data/projects'
-import { findProjectsForTechnology } from './data/technologyProjects'
 
 type Language = 'pt' | 'en'
 
@@ -396,12 +389,8 @@ const translations = {
       title: 'Tecnologias',
       description:
         'Tecnologias, ferramentas e conceitos que utilizo e exploro para transformar ideias em soluções.',
-      browseLabel: 'Explore por área',
-      selectedLabel: 'Selecionado',
-      detailsLabel: 'Como utilizo ou pretendo aplicar',
-      appliedLabel: 'Onde foi aplicado',
-      noProjects: 'Em estudo ou sem projeto público associado.',
-      items: 'tecnologias',
+      categoryLabel: 'Áreas de tecnologia',
+      detailsLabel: 'Detalhes da tecnologia',
     },
     projects: {
       eyebrow: 'SOLUÇÕES QUE DESENVOLVI',
@@ -470,12 +459,8 @@ const translations = {
       title: 'Technologies',
       description:
         'Technologies, tools, and concepts I use and explore to turn ideas into solutions.',
-      browseLabel: 'Explore by area',
-      selectedLabel: 'Selected',
-      detailsLabel: 'How I use it or plan to apply it',
-      appliedLabel: 'Where I used it',
-      noProjects: 'In study or not yet linked to a public project.',
-      items: 'technologies',
+      categoryLabel: 'Technology areas',
+      detailsLabel: 'Technology details',
     },
     projects: {
       eyebrow: 'SOLUTIONS I HAVE BUILT',
@@ -520,22 +505,6 @@ const translations = {
   },
 }
 
-const categoryIcons = {
-  frontend: Code2,
-  backend: Server,
-  ai: BrainCircuit,
-  cloud: Cloud,
-  engineering: Workflow,
-}
-
-const initialTechnologySelection: Record<CategoryId, string> = {
-  frontend: 'react',
-  backend: 'nodejs',
-  ai: 'generative-ai',
-  cloud: 'aws',
-  engineering: 'git',
-}
-
 function App() {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
@@ -557,9 +526,22 @@ function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   const [activeTechnologyCategory, setActiveTechnologyCategory] = useState<CategoryId>('frontend')
-  const [selectedTechnologies, setSelectedTechnologies] = useState<Record<CategoryId, string>>(
-    initialTechnologySelection,
-  )
+  const [selectedTechnologyId, setSelectedTechnologyId] = useState<string | null>(null)
+  const technologyGridRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!(event.target instanceof Node)) return
+      if (event.target instanceof Element && event.target.closest('.smart-header')) return
+
+      if (!technologyGridRef.current?.contains(event.target)) {
+        setSelectedTechnologyId(null)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [])
 
   useEffect(() => {
     localStorage.setItem('portfolio-language', language)
@@ -633,15 +615,8 @@ function App() {
     technologyCategories.find((category) => category.id === activeTechnologyCategory) ??
     technologyCategories[0]
 
-  const selectedTechnology =
-    activeCategory.technologies.find(
-      (technology) => technology.id === selectedTechnologies[activeCategory.id],
-    ) ?? activeCategory.technologies[0]
-
-  const relatedProjects = findProjectsForTechnology(
-    selectedTechnology.id,
-    selectedTechnology.name,
-    projects,
+  const selectedTechnology = activeCategory.technologies.find(
+    (technology) => technology.id === selectedTechnologyId,
   )
 
   return (
@@ -817,42 +792,31 @@ function App() {
       <section
         id="skills"
         aria-labelledby="skills-title"
-        className="scroll-mt-12 border-t border-(--color-border) pt-14 pb-24 sm:pt-16 sm:pb-32"
+        className="scroll-mt-12 border-t border-(--color-border) py-12 sm:py-14"
       >
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-14 max-w-2xl">
-            <span className="mb-5 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
+          <div className="mb-8 max-w-3xl">
+            <span className="mb-2 block text-xs font-semibold tracking-[0.2em] text-(--color-primary)">
               {text.skills.eyebrow}
             </span>
-
             <h2
               id="skills-title"
-              className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
+              className="font-display text-3xl font-bold tracking-tight sm:text-4xl"
             >
               {text.skills.title}
               <span className="text-(--color-primary)">.</span>
             </h2>
-
-            <div
-              aria-hidden="true"
-              className="mt-6 h-1 w-16 rounded-full bg-(--color-primary)"
-            />
-
-            <p className="mt-6 text-base leading-8 text-(--color-text-muted) sm:text-lg">
+            <p className="mt-2 text-sm leading-6 text-(--color-text-muted)">
               {text.skills.description}
             </p>
           </div>
 
-          <div className="grid items-start gap-5 lg:grid-cols-[16rem_minmax(0,1fr)]">
+          <div className="grid items-stretch gap-3 lg:grid-cols-[13.625rem_minmax(0,1fr)]">
             <nav
-              aria-label={text.skills.browseLabel}
-              className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:rounded-3xl lg:border lg:border-(--color-border) lg:bg-(--color-surface) lg:p-4"
+              aria-label={text.skills.categoryLabel}
+              className="technology-category-nav flex snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 lg:flex-col lg:overflow-visible lg:p-3"
             >
-              <span className="hidden px-2 pb-2 text-xs font-semibold uppercase tracking-[0.16em] text-(--color-primary) lg:block">
-                {text.skills.browseLabel}
-              </span>
               {technologyCategories.map((category) => {
-                const CategoryIcon = categoryIcons[category.id]
                 const isActive = category.id === activeTechnologyCategory
 
                 return (
@@ -860,42 +824,39 @@ function App() {
                     key={category.id}
                     type="button"
                     aria-pressed={isActive}
-                    onClick={() => setActiveTechnologyCategory(category.id)}
-                    className={`flex min-h-11 shrink-0 items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) lg:w-full ${
+                    onClick={() => {
+                      setActiveTechnologyCategory(category.id)
+                      setSelectedTechnologyId(null)
+                    }}
+                    className={`technology-category min-h-10 shrink-0 snap-start whitespace-nowrap rounded-full border px-4 py-2 text-center text-[13px] font-medium leading-snug transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) lg:min-h-11 lg:w-full lg:flex-1 lg:basis-0 lg:whitespace-normal lg:rounded-xl lg:px-2 lg:py-1.5 lg:leading-tight ${
                       isActive
                         ? 'border-(--color-primary) bg-(--color-background) text-(--color-text)'
-                        : 'border-(--color-border) bg-(--color-surface) text-(--color-text-muted) hover:border-(--color-primary)'
+                        : 'border-transparent text-(--color-text-muted)'
                     }`}
                   >
-                    <CategoryIcon size={18} strokeWidth={1.8} aria-hidden="true" className="shrink-0 text-(--color-primary)" />
-                    <span className="flex-1">{category.title[language]}</span>
-                    <span className="text-xs text-(--color-text-muted)">{category.technologies.length}</span>
+                    {category.title[language]}
                   </button>
                 )
               })}
             </nav>
 
-            <div className="min-w-0 rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 sm:p-7">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h3 className="font-display text-xl font-semibold text-(--color-text) sm:text-2xl">
-                  {activeCategory.title[language]}
-                </h3>
-                <span className="rounded-full border border-(--color-border) bg-(--color-background) px-3 py-1 text-xs text-(--color-text-muted)">
-                  {activeCategory.technologies.length} {text.skills.items}
-                </span>
-              </div>
+            <div className="min-w-0 rounded-3xl border border-(--color-border) bg-(--color-surface) p-4 sm:p-5">
+              <h3 className="font-display text-lg font-semibold text-(--color-text) sm:text-xl">
+                {activeCategory.title[language]}
+              </h3>
 
               <div
-                className={`mt-5 grid grid-cols-2 gap-3 sm:gap-4 ${
+                ref={technologyGridRef}
+                className={`mt-3 grid grid-cols-2 gap-2.5 ${
                   activeCategory.technologies.length === 8
                     ? 'sm:grid-cols-4'
                     : activeCategory.technologies.length === 6
                       ? 'sm:grid-cols-3'
-                      : 'sm:grid-cols-2 xl:grid-cols-4'
+                      : 'sm:grid-cols-2'
                 }`}
               >
                 {activeCategory.technologies.map((technology) => {
-                  const isSelected = selectedTechnology.id === technology.id
+                  const isSelected = selectedTechnologyId === technology.id
 
                   return (
                     <button
@@ -903,18 +864,17 @@ function App() {
                       type="button"
                       aria-pressed={isSelected}
                       aria-controls="technology-detail-panel"
-                      onClick={() => setSelectedTechnologies((current) => ({
-                        ...current,
-                        [activeCategory.id]: technology.id,
-                      }))}
-                      className={`technology-card group flex min-h-28 flex-col items-center justify-center gap-3 rounded-2xl border bg-(--color-background) px-3 py-4 text-center transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
+                      onClick={() => setSelectedTechnologyId((current) =>
+                        current === technology.id ? null : technology.id
+                      )}
+                      className={`technology-card group flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border bg-(--color-background) px-2 py-2.5 text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) sm:min-h-22 ${
                         isSelected
                           ? 'technology-card-selected border-(--color-primary)'
-                          : 'border-(--color-border) hover:border-(--color-primary)'
+                          : 'border-(--color-border)'
                       }`}
                     >
-                      <i aria-hidden="true" className={`${technology.icon} technology-icon text-3xl`} />
-                      <span className="text-xs font-semibold leading-snug text-(--color-text) sm:text-sm">
+                      <i aria-hidden="true" className={`${technology.icon} technology-icon text-[1.75rem]`} />
+                      <span className="text-xs font-semibold leading-snug text-(--color-text)">
                         {technology.name}
                       </span>
                     </button>
@@ -925,46 +885,22 @@ function App() {
               <div
                 id="technology-detail-panel"
                 role="region"
-                aria-label={`${selectedTechnology.name} — ${text.skills.detailsLabel}`}
+                aria-label={selectedTechnology
+                  ? `${selectedTechnology.name} — ${text.skills.detailsLabel}`
+                  : text.skills.detailsLabel}
                 aria-live="polite"
-                className="mt-6 grid gap-5 border-t border-(--color-border) pt-5 md:grid-cols-2"
+                className="mt-4 flex min-h-19 items-center border-t border-(--color-border) pt-3"
               >
-                <div className="min-w-0">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-(--color-primary)">
-                    {text.skills.selectedLabel}
-                  </span>
-                  <h4 className="font-display mt-1 text-xl font-semibold text-(--color-text)">
-                    {selectedTechnology.name}
-                  </h4>
-                  <p className="mt-2 text-sm leading-6 text-(--color-text-muted)">
-                    {selectedTechnology.description[language]}
-                  </p>
-                </div>
-
-                <div className="min-w-0">
-                  <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-(--color-primary)">
-                    {text.skills.appliedLabel}
-                  </h4>
-                  {relatedProjects.length > 0 ? (
-                    <ul className="flex flex-wrap gap-2">
-                      {relatedProjects.map((project) => (
-                        <li key={project.id}>
-                          <a
-                            href={`#project-${project.id}`}
-                            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-(--color-border) bg-(--color-background) px-4 py-2 text-sm font-medium text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
-                          >
-                            {project.name}
-                            <ArrowUpRight size={15} aria-hidden="true" />
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm leading-6 text-(--color-text-muted)">
-                      {text.skills.noProjects}
+                {selectedTechnology && (
+                  <div className="min-w-0">
+                    <h4 className="font-display text-lg font-semibold text-(--color-text)">
+                      {selectedTechnology.name}
+                    </h4>
+                    <p className="mt-1 text-sm leading-6 text-(--color-text-muted)">
+                      {selectedTechnology.description[language]}
                     </p>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
