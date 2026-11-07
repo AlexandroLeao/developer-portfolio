@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import ProjectCard from './ProjectCard'
 import { projects } from '../data/projects'
@@ -12,86 +12,64 @@ if (!ideasProject || !adventureProject || !natsuProject) {
 }
 
 describe('ProjectCard', () => {
-  it('keeps identical card structure and responsive images', () => {
-    const { unmount } = render(<ProjectCard project={ideasProject} language="pt" />)
-    const card = screen.getByRole('article')
-
-    expect(card).toHaveClass('group', 'h-full', 'flex-col')
-    expect(card).not.toHaveClass('lg:col-span-2', 'lg:grid')
-    expect(card).toHaveAttribute('id', 'project-ideas-organizer')
-    expect(card.querySelector('div.aspect-video')).toBeInTheDocument()
-    expect(card.querySelector('img')).toHaveClass('group-hover:scale-[1.025]', 'motion-reduce:transition-none')
-    expect(card.querySelector('img')).toHaveAttribute('sizes', '(min-width: 1024px) 33vw, calc(100vw - 3rem)')
-    expect(card.querySelector('dialog')).not.toBeInTheDocument()
-    unmount()
-
-    for (const project of [adventureProject, natsuProject]) {
+  it('keeps equal-size cards and responsive project images', () => {
+    for (const project of projects) {
       const rendered = render(<ProjectCard project={project} language="pt" />)
-      expect(screen.getByRole('article')).toHaveClass('group', 'h-full', 'flex-col')
+      const card = screen.getByRole('article')
+
+      expect(card).toHaveClass('group', 'h-full', 'flex-col')
+      expect(card).not.toHaveClass('lg:col-span-2', 'lg:grid')
+      expect(card).toHaveAttribute('id', 'project-' + project.id)
+      expect(card.querySelector('div.aspect-video')).toBeInTheDocument()
+      expect(card.querySelector('img')).toHaveClass('group-hover:scale-[1.025]', 'motion-reduce:transition-none')
+      expect(card.querySelector('img')).toHaveAttribute('sizes', '(min-width: 1024px) 33vw, calc(100vw - 3rem)')
+      expect(card.querySelector('dialog')).not.toBeInTheDocument()
       rendered.unmount()
     }
   })
 
-  it('shows the existing project content with an interactive stack chart', () => {
-    render(<ProjectCard project={ideasProject} language="pt" />)
-
-    expect(screen.getByRole('heading', { name: ideasProject.name })).toBeInTheDocument()
-    expect(screen.getByText(ideasProject.description.pt)).toBeInTheDocument()
-    expect(screen.getByRole('img', { name: ideasProject.imageAlt.pt })).toBeInTheDocument()
-
-    const legend = screen.getByRole('group', { name: 'Tecnologias do projeto' })
-    expect(within(legend).getAllByRole('button')).toHaveLength(ideasProject.technologies.length)
-    expect(within(legend).getByRole('button', { name: `${ideasProject.name} — React` })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText(ideasProject.stackUsage.React.pt)).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Ver detalhes' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  })
-
-  it('changes the short usage description from the chart legend', () => {
-    render(<ProjectCard project={ideasProject} language="pt" />)
-    const legend = screen.getByRole('group', { name: 'Tecnologias do projeto' })
-
-    fireEvent.click(within(legend).getByRole('button', { name: `${ideasProject.name} — Vitest` }))
-    expect(within(legend).getByRole('button', { name: `${ideasProject.name} — Vitest` })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText(ideasProject.stackUsage.Vitest.pt)).toBeInTheDocument()
-    expect(within(legend).getByRole('button', { name: `${ideasProject.name} — React` })).toHaveAttribute('aria-pressed', 'false')
-  })
-
-  it('supports pointer and keyboard selection on chart segments', () => {
-    render(<ProjectCard project={adventureProject} language="pt" />)
-
-    const typescriptSegment = screen.getByRole('button', { name: 'Ver uso de TypeScript' })
-    fireEvent.click(typescriptSegment)
-    expect(screen.getByText(adventureProject.stackUsage.TypeScript.pt)).toBeInTheDocument()
-
-    const databaseSegment = screen.getByRole('button', { name: 'Ver uso de PostgreSQL' })
-    fireEvent.keyDown(databaseSegment, { key: 'Enter' })
-    expect(screen.getByText(adventureProject.stackUsage.PostgreSQL.pt)).toBeInTheDocument()
-    fireEvent.keyDown(typescriptSegment, { key: ' ' })
-    expect(screen.getByText(adventureProject.stackUsage.TypeScript.pt)).toBeInTheDocument()
-  })
-
-  it('keeps the selected technology when switching languages', () => {
+  it('localizes the Ideas Organizer title without changing its description', () => {
     const { rerender } = render(<ProjectCard project={ideasProject} language="pt" />)
-    fireEvent.click(within(screen.getByRole('group', { name: 'Tecnologias do projeto' })).getByRole('button', { name: `${ideasProject.name} — Vitest` }))
+    expect(screen.getByRole('heading', { name: 'Organizador de Ideias e Projetos' })).toBeInTheDocument()
+    expect(screen.getByText(ideasProject.description.pt)).toBeInTheDocument()
 
     rerender(<ProjectCard project={ideasProject} language="en" />)
-    const legend = screen.getByRole('group', { name: 'Project technologies' })
-    expect(within(legend).getByRole('button', { name: `${ideasProject.name} — Vitest` })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText(ideasProject.stackUsage.Vitest.en)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Ideas and Projects Organizer' })).toBeInTheDocument()
+    expect(screen.getByText(ideasProject.description.en)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Ideas and Projects Organizer.*GitHub/ })).toBeInTheDocument()
   })
 
-  it('preserves links and technology inventories for every project', () => {
+  it('renders measured technology bars without equal-sized donut slices or usage descriptions', () => {
+    render(<ProjectCard project={ideasProject} language="pt" />)
+
+    const graph = screen.getByRole('region', { name: 'Tecnologias por arquivos de código' })
+    const bars = within(graph).getAllByRole('listitem')
+    expect(bars).toHaveLength(ideasProject.technologies.length)
+    expect(within(graph).getByRole('listitem', { name: 'TypeScript: 24 arquivos' })).toBeInTheDocument()
+    expect(within(graph).getByRole('listitem', { name: 'Vitest: 4 arquivos' })).toBeInTheDocument()
+    expect(graph.querySelector('svg')).not.toBeInTheDocument()
+    expect(within(graph).queryByRole('button')).not.toBeInTheDocument()
+    expect(screen.queryByText(ideasProject.stackUsage.React.pt)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Ver detalhes' })).not.toBeInTheDocument()
+  })
+
+  it('preserves every technology and its measured source-file count for each project', () => {
     for (const project of projects) {
-      const rendered = render(<ProjectCard project={project} language="pt" />)
+      const rendered = render(<ProjectCard project={project} language="en" />)
+      const graph = screen.getByRole('region', { name: 'Technologies by source files' })
 
-      expect(Object.keys(project.stackUsage).sort()).toEqual([...project.technologies].sort())
-      const legend = screen.getByRole('group', { name: 'Tecnologias do projeto' })
-      expect(within(legend).getAllByRole('button')).toHaveLength(project.technologies.length)
+      expect(Object.keys(project.stackFileCounts).sort()).toEqual([...project.technologies].sort())
+      expect(within(graph).getAllByRole('listitem')).toHaveLength(project.technologies.length)
+
+      for (const technology of project.technologies) {
+        const count = project.stackFileCounts[technology]
+        expect(count).toBeGreaterThan(0)
+        expect(within(graph).getByRole('listitem', { name: technology + ': ' + count + ' files' })).toBeInTheDocument()
+      }
+
       expect(screen.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', project.githubUrl)
-
       if (project.liveUrl) {
-        expect(screen.getByRole('link', { name: /Visitar projeto/ })).toHaveAttribute('href', project.liveUrl)
+        expect(screen.getByRole('link', { name: /Live Demo/ })).toHaveAttribute('href', project.liveUrl)
       }
       rendered.unmount()
     }
