@@ -38,7 +38,7 @@ export default function ExperienceCard({
             </span>
           </div>
 
-          <h3 className="font-display text-xl font-bold leading-snug tracking-tight text-(--color-text)">
+          <h3 className="font-display text-xl font-bold leading-snug tracking-tight text-(--color-text) sm:text-2xl">
             {experience.role[language]}
           </h3>
           <p className="mt-2 text-base font-semibold text-(--color-primary)">
@@ -50,7 +50,7 @@ export default function ExperienceCard({
           </p>
         </header>
 
-        <p className="text-sm leading-6 text-(--color-text-muted)">
+        <p className="text-sm leading-7 text-(--color-text-muted) sm:text-base">
           {experience.summary[language]}
         </p>
 
