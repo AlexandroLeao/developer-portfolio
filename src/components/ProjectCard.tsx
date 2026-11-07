@@ -46,7 +46,7 @@ export default function ProjectCard({ project, language }: ProjectCardProps) {
           <span className="mb-3 block text-sm font-medium text-(--color-primary)">
             {project.year}
           </span>
-          <h3 className="font-display text-2xl font-bold tracking-tight text-(--color-text)">
+          <h3 className="font-display text-xl font-bold tracking-tight text-(--color-text) sm:text-2xl">
             {projectName}
           </h3>
           <p className="mt-4 text-sm leading-7 text-(--color-text-muted) sm:text-base">
