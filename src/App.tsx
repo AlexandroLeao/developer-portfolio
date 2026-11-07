@@ -391,7 +391,6 @@ const translations = {
         'Tecnologias, ferramentas e conceitos que utilizo e exploro para transformar ideias em soluções.',
       categoryLabel: 'Áreas de tecnologia',
       detailsLabel: 'Detalhes da tecnologia',
-      emptySelection: 'Selecione uma tecnologia para ver um resumo.',
     },
     projects: {
       eyebrow: 'SOLUÇÕES QUE DESENVOLVI',
@@ -462,7 +461,6 @@ const translations = {
         'Technologies, tools, and concepts I use and explore to turn ideas into solutions.',
       categoryLabel: 'Technology areas',
       detailsLabel: 'Technology details',
-      emptySelection: 'Select a technology to view a short summary.',
     },
     projects: {
       eyebrow: 'SOLUTIONS I HAVE BUILT',
@@ -888,9 +886,11 @@ function App() {
                   ? `${selectedTechnology.name} — ${text.skills.detailsLabel}`
                   : text.skills.detailsLabel}
                 aria-live="polite"
-                className="mt-4 flex min-h-19 items-center border-t border-(--color-border) pt-3"
+                className={selectedTechnology
+                  ? 'mt-4 flex items-center border-t border-(--color-border) pt-3'
+                  : 'hidden'}
               >
-                {selectedTechnology ? (
+                {selectedTechnology && (
                   <div className="min-w-0">
                     <h4 className="font-display text-lg font-semibold text-(--color-text)">
                       {selectedTechnology.name}
@@ -899,10 +899,6 @@ function App() {
                       {selectedTechnology.description[language]}
                     </p>
                   </div>
-                ) : (
-                  <p className="text-xs leading-5 text-(--color-text-muted)">
-                    {text.skills.emptySelection}
-                  </p>
                 )}
               </div>
             </div>
