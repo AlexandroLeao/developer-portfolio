@@ -22,6 +22,7 @@ export type Project = {
     architecture: TranslatedText
     challenges: TranslatedText
     practices: TranslatedText
+    visualReferences?: TranslatedText[]
   }
 }
 
@@ -73,34 +74,48 @@ export const projects: Project[] = [
     details: {
       features: [
         {
-          pt: 'Cadastro, login, recuperação de senha e gerenciamento da conta.',
-          en: 'Registration, sign-in, password recovery, and account management.',
+          pt: 'Login, recuperação e acesso seguro.',
+          en: 'Secure login and account recovery.',
         },
         {
-          pt: 'Criação guiada em seis etapas, com oito classes e personalização de personagens.',
-          en: 'Guided six-stage creator with eight character classes and customization options.',
+          pt: 'Criador em 6 etapas e 8 classes.',
+          en: 'Six stages and eight character classes.',
         },
         {
-          pt: 'Persistência, edição e exclusão de um personagem por conta.',
-          en: 'Persistent storage, editing, and deletion of one character per account.',
+          pt: 'Personagem salvo, edição e exclusão.',
+          en: 'Save, edit, and delete one character.',
         },
         {
-          pt: 'Exportação de fichas de personagem em PNG nos formatos Story/Status e Portrait.',
-          en: 'PNG character-sheet exports in Story/Status and Portrait formats.',
+          pt: 'Fichas PNG Story/Status e Portrait.',
+          en: 'Story/Status and Portrait PNG sheets.',
         },
       ],
       architecture: {
-        pt: 'Front-end React e TypeScript, API REST com Node.js e Express, autenticação pelo Supabase Auth e armazenamento PostgreSQL com políticas de Row Level Security (RLS).',
-        en: 'React and TypeScript frontend, Node.js and Express REST API, Supabase Auth, and PostgreSQL persistence with Row Level Security (RLS) policies.',
+        pt: 'React/TypeScript, API REST Node.js/Express, Supabase Auth e PostgreSQL com RLS.',
+        en: 'React/TypeScript, Node.js/Express REST API, Supabase Auth, and PostgreSQL with RLS.',
       },
       challenges: {
-        pt: 'Integrar autenticação, autorização e persistência segura de dados por usuário a uma experiência de criação responsiva, bilíngue e inspirada em jogos retrô.',
-        en: 'Integrating authentication, authorization, and secure user-scoped persistence into a responsive, bilingual character creator inspired by retro games.',
+        pt: 'Unir segurança por usuário a uma experiência retrô, responsiva e bilíngue.',
+        en: 'Combine user-scoped security with a retro, responsive, bilingual experience.',
       },
       practices: {
-        pt: 'Desenvolvimento com auxílio de IA, documentação técnica, testes automatizados de front-end, API e segurança do banco, controle de versão e integração contínua com GitHub Actions.',
-        en: 'AI-assisted development with technical documentation, automated frontend, API, and database-security tests, version control, and continuous integration with GitHub Actions.',
+        pt: 'Testes automatizados de front-end, API e banco; integração contínua no GitHub Actions.',
+        en: 'Automated frontend, API, and database tests; GitHub Actions CI.',
       },
+      visualReferences: [
+        {
+          pt: 'Pixel art original e RPGs',
+          en: 'Original pixel art and RPGs',
+        },
+        {
+          pt: 'Computadores retrô 80/90',
+          en: 'Retro 80s/90s computers',
+        },
+        {
+          pt: 'D&D · Zelda · Pokémon · Mario · Fallout · Adventure Time',
+          en: 'D&D · Zelda · Pokémon · Mario · Fallout · Adventure Time',
+        },
+      ],
     },
   },
   {
@@ -150,33 +165,33 @@ export const projects: Project[] = [
     details: {
       features: [
         {
-          pt: 'Cadastro, edição e exclusão de ideias e projetos.',
-          en: 'Create, edit, and delete ideas and projects.',
+          pt: 'Criar, editar e acompanhar ideias e projetos.',
+          en: 'Create, edit, and track ideas and projects.',
         },
         {
-          pt: 'Organização por categorias, prioridades e status.',
-          en: 'Organize items by categories, priorities, and status.',
+          pt: 'Categorias, prioridades, status e prazos.',
+          en: 'Categories, priorities, status, and deadlines.',
         },
         {
-          pt: 'Pesquisa, filtros e marcação de favoritos.',
-          en: 'Search, filters, and favorites.',
+          pt: 'Busca, filtros e favoritos em uma visão prática.',
+          en: 'Search, filters, and favorites in one clear view.',
         },
         {
-          pt: 'Gerenciamento de datas, prazos e anotações.',
-          en: 'Manage dates, deadlines, and notes.',
+          pt: 'Anexos privados com validação de arquivos e links temporários.',
+          en: 'Private attachments with file validation and expiring links.',
         },
       ],
       architecture: {
-        pt: 'Interface desenvolvida com React e TypeScript, navegação com TanStack Router e persistência local dos dados por meio do LocalStorage.',
-        en: 'Built with React and TypeScript, using TanStack Router for navigation and LocalStorage for local data persistence.',
+        pt: 'React/TypeScript e TanStack; dados no LocalStorage e anexos no Lovable Cloud.',
+        en: 'React/TypeScript and TanStack; LocalStorage data and Lovable Cloud attachments.',
       },
       challenges: {
-        pt: 'Estruturar uma aplicação que permita acompanhar diferentes ideias e projetos de maneira simples, mantendo a organização dos dados e da interface.',
-        en: 'Designing an application that makes it easy to track multiple ideas and projects while keeping data and interface organization consistent.',
+        pt: 'Organizar muitos planos sem sobrecarregar a interface.',
+        en: 'Organize many plans without overwhelming the interface.',
       },
       practices: {
-        pt: 'Projeto desenvolvido com auxílio de IA, utilizando documentação técnica, testes automatizados, controle de versão e integração contínua.',
-        en: 'AI-assisted development supported by technical documentation, automated tests, version control, and continuous integration.',
+        pt: 'Zod, validação de anexos, testes automatizados e integração contínua.',
+        en: 'Zod, attachment validation, automated tests, and continuous integration.',
       },
     },
   },
@@ -223,33 +238,33 @@ export const projects: Project[] = [
     details: {
       features: [
         {
-          pt: 'Registro de entradas e saídas financeiras.',
-          en: 'Record income and expense transactions.',
+          pt: 'Registro de entradas, saídas e vendas do festival.',
+          en: 'Track festival income, expenses, and sales.',
         },
         {
-          pt: 'Seleção de produtos e quantidades.',
-          en: 'Select products and quantities.',
+          pt: 'Seleção de produtos, quantidades e valores.',
+          en: 'Select products, quantities, and prices.',
         },
         {
-          pt: 'Cálculo de entradas, saídas e saldo total.',
-          en: 'Calculate income, expenses, and total balance.',
+          pt: 'Cálculo automático de totais e saldo.',
+          en: 'Automatic totals and balance calculations.',
         },
         {
-          pt: 'Visualização e exclusão de transações registradas.',
-          en: 'View and delete recorded transactions.',
+          pt: 'Histórico com edição e exclusão de transações.',
+          en: 'Transaction history with editing and deletion.',
         },
       ],
       architecture: {
-        pt: 'Aplicação React com componentes estilizados utilizando styled-components, gerenciamento de estado com hooks e persistência em LocalStorage.',
-        en: 'React application using styled-components, hook-based state management, and LocalStorage persistence.',
+        pt: 'React, styled-components, hooks e persistência no LocalStorage.',
+        en: 'React, styled-components, hooks, and LocalStorage persistence.',
       },
       challenges: {
-        pt: 'Transformar uma necessidade operacional de um evento em uma interface simples para registrar vendas e acompanhar movimentações financeiras.',
-        en: 'Turning an event management need into a simple interface for recording sales and monitoring financial transactions.',
+        pt: 'Transformar o controle financeiro de um evento em uma tela simples.',
+        en: 'Turn event finances into one simple management screen.',
       },
       practices: {
-        pt: 'Desenvolvimento baseado em componentes React, organização de transações e controle de versão com Git.',
-        en: 'Development using React components, transaction management, and Git version control.',
+        pt: 'Componentes reutilizáveis, cálculos reativos e versionamento Git.',
+        en: 'Reusable components, reactive calculations, and Git versioning.',
       },
     },
   },

@@ -19,13 +19,13 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
   return (
     <div className="grid items-start gap-6 lg:items-stretch lg:grid-cols-[17rem_minmax(0,1fr)] xl:gap-8">
       <nav aria-label={text.navigation} className="lg:h-full">
-        <ol className="grid gap-3 sm:grid-cols-3 lg:h-full lg:auto-rows-fr lg:grid-cols-1 lg:pl-8">
+        <ol className="technology-category-nav flex snap-x snap-proximity gap-2.5 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:gap-3 sm:overflow-visible sm:pb-0 lg:h-full lg:auto-rows-fr lg:grid-cols-1 lg:pl-8">
           {experiences.map((experience, index) => {
             const isSelected = experience.id === selectedId
             const isReached = index <= selectedIndex
 
             return (
-              <li key={experience.id} className="relative min-w-0">
+              <li key={experience.id} className="relative min-w-0 w-[min(70vw,17rem)] shrink-0 snap-start sm:w-auto sm:shrink">
                 {index < experiences.length - 1 && (
                   <span
                     aria-hidden="true"
