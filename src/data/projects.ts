@@ -105,8 +105,8 @@ export const projects: Project[] = [
   },
   {
     id: 'ideas-organizer',
-    name: 'Organizador de Ideias e Projetos',
-    nameTranslations: { pt: 'Organizador de Ideias e Projetos', en: 'Ideas and Projects Organizer' },
+    name: 'Ideas and Projects Organizer',
+    nameTranslations: { pt: 'Ideas and Projects Organizer', en: 'Ideas and Projects Organizer' },
     year: 2026,
     image: '/images/projects/organizador-ideias-1200.webp',
     imageSrcSet: [
