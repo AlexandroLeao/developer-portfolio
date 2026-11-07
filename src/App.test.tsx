@@ -64,7 +64,7 @@ describe('Developer Portfolio', () => {
     expect(frontendGrid?.children).toHaveLength(8)
 
     expect(screen.getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'false')
-    expect(screen.getByText('Selecione uma tecnologia para ver um resumo.')).toBeInTheDocument()
+    expect(document.getElementById('technology-detail-panel')).toHaveClass('hidden')
 
     await user.click(screen.getByRole('button', { name: 'CSS3' }))
     expect(screen.getByRole('button', { name: 'CSS3' })).toHaveAttribute('aria-pressed', 'true')
@@ -74,7 +74,7 @@ describe('Developer Portfolio', () => {
 
     await user.click(screen.getByRole('heading', { level: 2, name: /^Tecnologias/ }))
     expect(screen.getByRole('button', { name: 'CSS3' })).toHaveAttribute('aria-pressed', 'false')
-    expect(screen.getByText('Selecione uma tecnologia para ver um resumo.')).toBeInTheDocument()
+    expect(document.getElementById('technology-detail-panel')).toHaveClass('hidden')
 
     await user.click(within(navigation).getByRole('button', { name: /Cloud & DevOps/ }))
     const cloudGrid = screen.getByRole('button', { name: 'Azure' }).parentElement
