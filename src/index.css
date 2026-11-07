@@ -48,7 +48,8 @@ html {
 
 /* Animação sutil apenas em dispositivos com hover e movimento permitido. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .nav-hover-lift:hover {
+  .nav-hover-lift:hover,
+  .cta-hover-lift:hover {
     transform: translateY(-3px);
   }
 }
