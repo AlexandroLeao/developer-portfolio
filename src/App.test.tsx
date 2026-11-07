@@ -20,6 +20,19 @@ describe('Developer Portfolio', () => {
     expect(categoryHeading).toHaveClass('text-xl', 'sm:text-2xl')
   })
 
+  it('uses a concise About eyebrow and hover lift on hero actions', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    const about = screen.getByRole('region', { name: 'Sobre mim.' })
+    expect(within(about).getByText('O QUE ME MOVE')).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: 'Entrar em contato' })[0]).toHaveClass('cta-hover-lift')
+    expect(screen.getByRole('link', { name: 'Baixar currículo em PDF' })).toHaveClass('cta-hover-lift')
+
+    await user.click(screen.getByRole('button', { name: 'EN' }))
+    expect(screen.getByText('WHAT DRIVES ME')).toBeInTheDocument()
+  })
+
   it('shows the About heading without repeated role and education labels', () => {
     render(<App />)
     const about = screen.getByRole('region', { name: 'Sobre mim.' })
