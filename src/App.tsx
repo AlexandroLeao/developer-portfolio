@@ -374,7 +374,7 @@ const translations = {
       scrollHint: 'Role para explorar',
     },
     about: {
-      eyebrow: 'CONHEÇA UM POUCO SOBRE MIM',
+      eyebrow: 'O QUE ME MOVE',
       title: 'Sobre mim',
       paragraphs: [
         'Sou Desenvolvedor de Software, formado em Análise e Desenvolvimento de Sistemas, e acredito no potencial da tecnologia para transformar problemas reais em soluções eficientes.',
@@ -442,7 +442,7 @@ const translations = {
       scrollHint: 'Scroll to explore',
     },
     about: {
-      eyebrow: 'GET TO KNOW ME',
+      eyebrow: 'WHAT DRIVES ME',
       title: 'About me',
       paragraphs: [
         "I'm a Software Developer with a degree in Systems Analysis and Development, and I believe in using technology to turn real-world problems into efficient solutions.",
@@ -651,7 +651,7 @@ function App() {
             <button
               type="button"
               onClick={() => setIsContactModalOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0b3d3e] px-8 py-3 font-semibold text-white transition-colors duration-300 hover:bg-[#082e2f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+              className="cta-hover-lift inline-flex items-center justify-center gap-2 rounded-full bg-[#0b3d3e] px-8 py-3 font-semibold text-white transition-[background-color,transform] duration-200 hover:bg-[#082e2f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
               <Mail size={18} aria-hidden="true" />
               {text.hero.contact}
@@ -665,7 +665,7 @@ function App() {
               }
               download
               aria-label={text.hero.resumeLabel}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface) px-8 py-3 font-semibold text-(--color-text-muted) transition-colors hover:text-(--color-text) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+              className="cta-hover-lift inline-flex items-center justify-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface) px-8 py-3 font-semibold text-(--color-text-muted) transition-[color,transform] duration-200 hover:text-(--color-text) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
               <Download size={18} aria-hidden="true" />
               {text.hero.resume}
