@@ -161,7 +161,7 @@ export default function ProjectCard({
             aria-label={text.caseStudy}
             onKeyDown={(event) => {
               const currentIndex = detailTabs.indexOf(activeTab)
-              let nextIndex = currentIndex
+              let nextIndex: number
               if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % detailTabs.length
               else if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + detailTabs.length) % detailTabs.length
               else if (event.key === 'Home') nextIndex = 0
