@@ -17,9 +17,9 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
   const selectedIndex = experiences.findIndex((experience) => experience.id === selectedId)
 
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] xl:gap-8">
-      <nav aria-label={text.navigation}>
-        <ol className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 lg:pl-8">
+    <div className="grid items-start gap-6 lg:items-stretch lg:grid-cols-[17rem_minmax(0,1fr)] xl:gap-8">
+      <nav aria-label={text.navigation} className="lg:h-full">
+        <ol className="grid gap-3 sm:grid-cols-3 lg:h-full lg:auto-rows-fr lg:grid-cols-1 lg:pl-8">
           {experiences.map((experience, index) => {
             const isSelected = experience.id === selectedId
             const isReached = index <= selectedIndex
@@ -53,7 +53,7 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
                   aria-pressed={isSelected}
                   aria-controls={`experience-panel-${experience.id}`}
                   onClick={() => setSelectedId(experience.id)}
-                  className={`relative z-10 flex h-full min-h-28 w-full flex-col items-start rounded-2xl border p-4 text-left transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transition-none ${
+                  className={`nav-hover-lift relative z-10 flex h-full min-h-28 w-full flex-col items-start rounded-2xl border p-4 text-left transition-[transform,border-color,background-color] duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transition-none ${
                     isSelected
                       ? 'border-(--color-primary) bg-(--color-background)'
                       : 'border-(--color-border) bg-(--color-surface) hover:border-(--color-primary)'
@@ -77,7 +77,7 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
         </ol>
       </nav>
 
-      <div className="min-w-0">
+      <div className="min-w-0 lg:h-full">
         {experiences.map((experience) => {
           const isSelected = experience.id === selectedId
 
@@ -90,7 +90,7 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
               aria-hidden={!isSelected}
               inert={!isSelected}
               hidden={!isSelected}
-              className={`min-w-0 ${isSelected ? 'block' : 'hidden'}`}
+              className={`min-w-0 lg:h-full ${isSelected ? 'block' : 'hidden'}`}
             >
               <ExperienceCard experience={experience} language={language} />
             </div>
