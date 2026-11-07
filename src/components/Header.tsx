@@ -23,6 +23,9 @@ function Header({ language, onLanguageChange }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isHeaderVisible, setIsHeaderVisible] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState(() =>
+    typeof window !== 'undefined' ? window.location.hash.slice(1) : '',
+  )
 
   const headerRef = useRef<HTMLElement>(null)
   const lastScrollY = useRef(0)
@@ -118,6 +121,33 @@ function Header({ language, onLanguageChange }: HeaderProps) {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [isMenuOpen])
+
+  // Observa a seção em foco sem calcular posições a cada evento de rolagem.
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return
+
+    const sectionIds = ['about', 'skills', 'projects', 'experience', 'certifications', 'contact']
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const activeEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((first, second) => first.boundingClientRect.top - second.boundingClientRect.top)
+
+        if (activeEntries[0]) {
+          setActiveSection(activeEntries[0].target.id)
+        }
+      },
+      { rootMargin: '-20% 0px -60% 0px', threshold: 0 },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+
+    return () => observer.disconnect()
+  }, [])
 
   function toggleTheme() {
     setTheme((current) =>
@@ -219,7 +249,12 @@ function Header({ language, onLanguageChange }: HeaderProps) {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm whitespace-nowrap text-(--color-text-muted) transition hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+                aria-current={activeSection === link.href.slice(1) ? 'location' : undefined}
+                className={`border-b-2 pb-1 text-sm whitespace-nowrap transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
+                  activeSection === link.href.slice(1)
+                    ? 'border-(--color-primary) text-(--color-primary)'
+                    : 'border-transparent text-(--color-text-muted) hover:text-(--color-primary)'
+                }`}
               >
                 {link.label}
               </a>
@@ -340,7 +375,12 @@ function Header({ language, onLanguageChange }: HeaderProps) {
                 key={link.href}
                 href={link.href}
                 onClick={closeMenu}
-                className="rounded-xl px-4 py-3 text-sm font-medium text-(--color-text) transition-colors hover:bg-(--color-background) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
+                aria-current={activeSection === link.href.slice(1) ? 'location' : undefined}
+                className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors hover:bg-(--color-background) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ${
+                  activeSection === link.href.slice(1)
+                    ? 'bg-(--color-background) text-(--color-primary)'
+                    : 'text-(--color-text)'
+                }`}
               >
                 {link.label}
               </a>
