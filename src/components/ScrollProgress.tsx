@@ -1,20 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 type Language = 'pt' | 'en'
-
-const sections = [
-  { id: 'about', pt: 'Sobre', en: 'About' },
-  { id: 'skills', pt: 'Tecnologias', en: 'Technologies' },
-  { id: 'projects', pt: 'Projetos', en: 'Projects' },
-  { id: 'experience', pt: 'Experiência', en: 'Experience' },
-  { id: 'certifications', pt: 'Certificações', en: 'Certifications' },
-  { id: 'contact', pt: 'Contato', en: 'Contact' },
-] as const
-
-type SectionStop = {
-  id: string
-  position: number
-}
 
 function getScrollableHeight() {
   const documentHeight = Math.max(
@@ -28,10 +14,10 @@ function getScrollableHeight() {
 function ScrollProgress({ language }: { language: Language }) {
   const barRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
-  const [stops, setStops] = useState<SectionStop[]>([])
 
   useEffect(() => {
     let frameId: number | null = null
+    const useAnimationFrame = typeof window.requestAnimationFrame === 'function'
 
     function updateProgress() {
       frameId = null
@@ -48,54 +34,27 @@ function ScrollProgress({ language }: { language: Language }) {
     function scheduleUpdate() {
       if (frameId !== null) return
 
-      frameId = window.requestAnimationFrame
+      frameId = useAnimationFrame
         ? window.requestAnimationFrame(updateProgress)
         : window.setTimeout(updateProgress, 16)
     }
 
-    function measureSections() {
-      const scrollableHeight = getScrollableHeight()
-
-      const nextStops = sections.flatMap(({ id }) => {
-        const section = document.getElementById(id)
-        if (!section || scrollableHeight === 0) return []
-
-        const documentTop = section.getBoundingClientRect().top + window.scrollY
-        return [{
-          id,
-          position: Math.min(0.99, Math.max(0.01, documentTop / scrollableHeight)),
-        }]
-      })
-
-      setStops((current) =>
-        current.length === nextStops.length &&
-        current.every((stop, index) =>
-          stop.id === nextStops[index].id &&
-          Math.abs(stop.position - nextStops[index].position) < 0.001,
-        )
-          ? current
-          : nextStops,
-      )
-
-      scheduleUpdate()
-    }
-
     const resizeObserver = typeof ResizeObserver !== 'undefined'
-      ? new ResizeObserver(measureSections)
+      ? new ResizeObserver(scheduleUpdate)
       : null
 
     resizeObserver?.observe(document.body)
     window.addEventListener('scroll', scheduleUpdate, { passive: true })
-    window.addEventListener('resize', measureSections)
-    measureSections()
+    window.addEventListener('resize', scheduleUpdate)
+    scheduleUpdate()
 
     return () => {
       window.removeEventListener('scroll', scheduleUpdate)
-      window.removeEventListener('resize', measureSections)
+      window.removeEventListener('resize', scheduleUpdate)
       resizeObserver?.disconnect()
 
       if (frameId !== null) {
-        if (typeof window.requestAnimationFrame === 'function') window.cancelAnimationFrame(frameId)
+        if (useAnimationFrame) window.cancelAnimationFrame(frameId)
         else window.clearTimeout(frameId)
       }
     }
@@ -109,7 +68,7 @@ function ScrollProgress({ language }: { language: Language }) {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={0}
-      className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-1 bg-(--color-border)"
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[3px] bg-(--color-border)"
     >
       <div
         ref={fillRef}
@@ -117,18 +76,6 @@ function ScrollProgress({ language }: { language: Language }) {
         className="absolute inset-0 origin-left bg-(--color-primary)"
         style={{ transform: 'scaleX(0)' }}
       />
-      {stops.map(({ id, position }) => {
-        const section = sections.find((item) => item.id === id)!
-        return (
-          <span
-            key={id}
-            aria-hidden="true"
-            title={section[language]}
-            className="absolute top-1/2 z-10 h-1.5 w-px -translate-x-1/2 -translate-y-1/2 bg-(--color-text-muted)"
-            style={{ left: `${position * 100}%` }}
-          />
-        )
-      })}
     </div>
   )
 }
