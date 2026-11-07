@@ -42,6 +42,8 @@ export const ongoingEducation = [
     id: 'java-bootcamp',
     title: t('Bootcamp Itaú | Java com Inteligência Artificial', 'Bootcamp Itaú | Java com Inteligência Artificial'),
     status: 'in-progress' as const,
+    category: 'development' as const,
+    skills: [t('Java', 'Java'), t('Inteligência Artificial', 'Artificial Intelligence')],
     summary: t(
       'Formação em Java em andamento. Os conteúdos concluídos e a certificação serão atualizados ao término do bootcamp.',
       'Java training in progress. Completed topics and certification details will be updated after the bootcamp ends.',
@@ -106,7 +108,7 @@ export const certifications: Certification[] = [
     id: 'javascript-algorithms',
     title: t('Legacy JavaScript Algorithms and Data Structures V7', 'Legacy JavaScript Algorithms and Data Structures V7'),
     issuer: 'freeCodeCamp', completedAt: '2023-06-06', duration: t('aprox. 300h', 'approx. 300h'),
-    category: 'development', featured: true,
+    category: 'development', featured: false,
     summary: t('Fundamentos de JavaScript aplicados a algoritmos, estruturas de dados e resolução de problemas.', 'JavaScript fundamentals applied to algorithms, data structures, and problem-solving.'),
     topics: [
       t('ES6+, programação orientada a objetos e programação funcional.', 'ES6+, object-oriented programming, and functional programming.'),
@@ -145,7 +147,7 @@ export const certifications: Certification[] = [
     id: 'ux-ui-design',
     title: t('UX e UI Design', 'UX and UI Design'),
     issuer: 'TIM Tec', completedAt: '2023-02-28', duration: t('40h', '40h'),
-    category: 'engineering', featured: true,
+    category: 'engineering', featured: false,
     summary: t('Princípios de experiência do usuário e construção de interfaces intuitivas.', 'User experience principles and the design of intuitive interfaces.'),
     topics: [
       t('Pesquisa de usuários e organização da experiência digital.', 'User research and organization of digital experiences.'),

@@ -415,8 +415,6 @@ const translations = {
       allLabel: 'Todas',
       categoryLabel: 'Área de conhecimento',
       allCategoriesLabel: 'Todas as áreas',
-      ofLabel: 'de',
-      resultsNoun: 'certificações',
       ongoingLabel: 'Em desenvolvimento',
       ongoingStatus: 'Em andamento',
     },
@@ -483,8 +481,6 @@ const translations = {
       allLabel: 'All',
       categoryLabel: 'Knowledge area',
       allCategoriesLabel: 'All areas',
-      ofLabel: 'of',
-      resultsNoun: 'certifications',
       ongoingLabel: 'Currently learning',
       ongoingStatus: 'In progress',
     },
@@ -612,6 +608,20 @@ function App() {
       (certificationView === 'all' || certification.featured) &&
       (selectedCertificationCategory === 'all' || certification.category === selectedCertificationCategory),
   )
+
+  const completedCards = (category: CertificationCategory) =>
+    visibleCertifications
+      .filter((certification) => certification.category === category)
+      .map((certification) => ({ kind: 'completed' as const, certification }))
+
+  const certificationCards = [
+    ...completedCards('engineering'),
+    ...completedCards('development'),
+    ...(selectedCertificationCategory === 'all' || selectedCertificationCategory === 'development'
+      ? ongoingEducation.map((course) => ({ kind: 'ongoing' as const, course }))
+      : []),
+    ...completedCards('foundations'),
+  ]
 
   const activeCategory =
     technologyCategories.find((category) => category.id === activeTechnologyCategory) ??
@@ -986,7 +996,7 @@ function App() {
         className="scroll-mt-12 border-t border-(--color-border) pt-14 pb-24 sm:pt-16 sm:pb-32"
       >
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-12 max-w-2xl">
+          <div className="mb-8 max-w-2xl">
             <span className={sectionEyebrowClass}>
               {text.certifications.eyebrow}
             </span>
@@ -1011,31 +1021,31 @@ function App() {
           </div>
 
           {/* GRADUAÇÃO */}
-          <div className="mb-14">
-            <h3 className={`${subsectionHeadingClass} mb-5`}>
+          <div className="mb-8">
+            <h3 className={`${subsectionHeadingClass} mb-3`}>
               {text.certifications.degreeLabel}
             </h3>
 
-            <article className="flex flex-col gap-5 rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 sm:flex-row sm:items-start sm:p-8">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-(--color-border) bg-(--color-background) text-(--color-primary)">
-                <GraduationCap size={27} strokeWidth={1.7} aria-hidden="true" />
+            <article className="flex items-start gap-3 rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 sm:items-center sm:gap-4 sm:p-5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-(--color-border) bg-(--color-background) text-(--color-primary)">
+                <GraduationCap size={23} strokeWidth={1.7} aria-hidden="true" />
               </div>
 
               <div className="min-w-0 flex-1">
-                <div className="mb-3 flex flex-wrap items-center gap-3">
-                  <span className="text-sm font-semibold text-(--color-primary)">
+                <div className="mb-1 flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-semibold text-(--color-primary)">
                     {academicEducation.institution}
                   </span>
-                  <span className="rounded-full border border-(--color-border) bg-(--color-background) px-3 py-1 text-xs font-medium text-(--color-text-muted)">
+                  <span className="rounded-full border border-(--color-border) bg-(--color-background) px-2.5 py-0.5 text-xs font-medium text-(--color-text-muted)">
                     {text.certifications.degreeStatus} · {academicEducation.completionYear}
                   </span>
                 </div>
 
-                <h4 className="font-display text-xl font-bold tracking-tight text-(--color-text) sm:text-2xl">
+                <h4 className="font-display text-base font-bold tracking-tight text-(--color-text) sm:text-lg">
                   {academicEducation.degree[language]}
                 </h4>
 
-                <p className="mt-4 max-w-3xl text-sm leading-7 text-(--color-text-muted) sm:text-base">
+                <p className="mt-1 max-w-3xl text-xs leading-5 text-(--color-text-muted) sm:text-sm">
                   {academicEducation.summary[language]}
                 </p>
               </div>
@@ -1044,159 +1054,125 @@ function App() {
 
           {/* CURSOS E CERTIFICAÇÕES */}
           <div>
-            <h3 className="font-display mb-6 text-xl font-semibold text-(--color-text) sm:text-2xl">
-              {text.certifications.certificationLabel}
-            </h3>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <h3 className={subsectionHeadingClass}>
+                {text.certifications.certificationLabel}
+              </h3>
 
-            <div className="mb-6 grid gap-4 rounded-3xl border border-(--color-border) bg-(--color-surface) p-4 sm:p-5 lg:grid-cols-2 lg:items-end">
-              <fieldset>
-                <legend className="mb-3 text-xs font-semibold uppercase tracking-wider text-(--color-text-muted)">
-                  {text.certifications.viewLabel}
-                </legend>
-                <div className="flex flex-wrap gap-2">
+              <div
+                role="group"
+                aria-label={text.certifications.viewLabel}
+                className="flex gap-1 rounded-full border border-(--color-border) bg-(--color-surface) p-1"
+              >
+                {(['featured', 'all'] as const).map((view) => (
                   <button
+                    key={view}
                     type="button"
-                    aria-pressed={certificationView === 'featured'}
+                    aria-pressed={certificationView === view}
                     aria-controls="certification-results"
-                    onClick={() => setCertificationView('featured')}
-                    className={`min-h-11 rounded-full border px-5 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
-                      certificationView === 'featured'
-                        ? 'border-(--color-primary) bg-(--color-background) text-(--color-primary)'
-                        : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)'
-                    }`}
+                    onClick={() => setCertificationView(view)}
+                    className={
+                      'min-h-9 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
+                      (certificationView === view
+                        ? 'bg-(--color-background) text-(--color-primary)'
+                        : 'text-(--color-text-muted) hover:text-(--color-text)')
+                    }
                   >
-                    {text.certifications.featuredLabel} ({certifications.filter((item) => item.featured).length})
+                    {view === 'featured'
+                      ? text.certifications.featuredLabel
+                      : text.certifications.allLabel}
                   </button>
-                  <button
-                    type="button"
-                    aria-pressed={certificationView === 'all'}
-                    aria-controls="certification-results"
-                    onClick={() => setCertificationView('all')}
-                    className={`min-h-11 rounded-full border px-5 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) ${
-                      certificationView === 'all'
-                        ? 'border-(--color-primary) bg-(--color-background) text-(--color-primary)'
-                        : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)'
-                    }`}
-                  >
-                    {text.certifications.allLabel} ({certifications.length})
-                  </button>
-                </div>
-              </fieldset>
-
-              <div>
-                <label
-                  htmlFor="certification-category-filter"
-                  className="mb-3 block text-xs font-semibold uppercase tracking-wider text-(--color-text-muted)"
-                >
-                  {text.certifications.categoryLabel}
-                </label>
-                <select
-                  id="certification-category-filter"
-                  value={selectedCertificationCategory}
-                  onChange={(event) => setSelectedCertificationCategory(
-                    event.target.value as CertificationCategory | 'all',
-                  )}
-                  aria-controls="certification-results"
-                  className="min-h-11 w-full rounded-2xl border border-(--color-border) bg-(--color-background) px-4 py-2 text-sm font-medium text-(--color-text) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
-                >
-                  <option value="all">{text.certifications.allCategoriesLabel}</option>
-                  {certificationCategories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.title[language]}
-                    </option>
-                  ))}
-                </select>
+                ))}
               </div>
             </div>
 
-            <p role="status" className="mb-8 text-sm text-(--color-text-muted)">
-              {visibleCertifications.length} {text.certifications.ofLabel} {certifications.length} {text.certifications.resultsNoun}
-            </p>
-
-            <div id="certification-results" className="space-y-12">
-              {certificationCategories.map((category) => {
-                const categoryCertifications = visibleCertifications.filter(
-                  (certification) => certification.category === category.id,
-                )
-
-                if (categoryCertifications.length === 0) {
-                  return null
+            <div
+              role="group"
+              aria-label={text.certifications.categoryLabel}
+              className="mb-4 flex flex-wrap gap-2"
+            >
+              <button
+                type="button"
+                aria-pressed={selectedCertificationCategory === 'all'}
+                aria-controls="certification-results"
+                onClick={() => setSelectedCertificationCategory('all')}
+                className={
+                  'min-h-9 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
+                  (selectedCertificationCategory === 'all'
+                    ? 'border-(--color-primary) bg-(--color-surface) text-(--color-primary)'
+                    : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)')
                 }
-
-                const count = categoryCertifications.length
-                const gridColumns =
-                  count === 1
-                    ? 'md:mx-auto md:max-w-xl'
-                    : count === 6
-                      ? 'md:grid-cols-2 xl:grid-cols-3'
-                      : 'md:grid-cols-2'
-
-                return (
-                  <div key={category.id}>
-                    <h4 className="font-display mb-5 text-lg font-semibold text-(--color-text) sm:text-xl">
-                      {category.title[language]}
-                    </h4>
-
-                    <div className={`grid grid-cols-1 items-stretch gap-6 ${gridColumns}`}>
-                      {categoryCertifications.map((certification, index) => {
-                        const isOrphan =
-                          count > 1 &&
-                          count % 2 === 1 &&
-                          index === count - 1
-
-                        return (
-                          <div
-                            key={certification.id}
-                            className={
-                              isOrphan
-                                ? 'md:col-span-2 md:mx-auto md:w-full md:max-w-xl'
-                                : 'min-w-0'
-                            }
-                          >
-                            <CertificationCard
-                              certification={certification}
-                              language={language}
-                            />
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
+              >
+                {text.certifications.allCategoriesLabel}
+              </button>
+              {certificationCategories.map((category) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  aria-pressed={selectedCertificationCategory === category.id}
+                  aria-controls="certification-results"
+                  onClick={() => setSelectedCertificationCategory(category.id)}
+                  className={
+                    'min-h-9 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
+                    (selectedCertificationCategory === category.id
+                      ? 'border-(--color-primary) bg-(--color-surface) text-(--color-primary)'
+                      : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)')
+                  }
+                >
+                  {category.title[language]}
+                </button>
+              ))}
             </div>
 
-          </div>
-
-          {/* FORMAÇÃO EM ANDAMENTO */}
-          <div className="mt-16">
-            <h3 className={`${subsectionHeadingClass} mb-5`}>
-              {text.certifications.ongoingLabel}
-            </h3>
-
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {ongoingEducation.map((course) => (
-                <article
-                  key={course.id}
-                  className="flex min-w-0 gap-4 rounded-3xl border border-(--color-border) bg-(--color-surface) p-5 sm:p-7"
-                >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-(--color-border) bg-(--color-background) text-(--color-primary)">
-                    <BookOpen size={23} strokeWidth={1.7} aria-hidden="true" />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <span className="inline-block rounded-full border border-(--color-border) bg-(--color-background) px-3 py-1 text-xs font-semibold text-(--color-primary)">
-                      {text.certifications.ongoingStatus}
-                    </span>
-                    <h4 className="font-display mt-3 text-xl font-bold text-(--color-text)">
-                      {course.title[language]}
+            <div
+              id="certification-results"
+              aria-live="polite"
+              className="grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {certificationCards.map((card) =>
+                card.kind === 'completed' ? (
+                  <CertificationCard
+                    key={card.certification.id}
+                    certification={card.certification}
+                    language={language}
+                  />
+                ) : (
+                  <article
+                    key={card.course.id}
+                    className="group flex h-full min-w-0 flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 transition-[transform,border-color] duration-200 hover:border-(--color-primary) motion-safe:hover:-translate-y-0.5"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="text-xs font-semibold text-(--color-primary)">
+                        {text.certifications.ongoingLabel}
+                      </span>
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-(--color-border) bg-(--color-background) text-(--color-primary)">
+                        <BookOpen size={17} aria-hidden="true" />
+                      </div>
+                    </div>
+                    <h4 className="font-display mt-2 text-base font-bold leading-snug tracking-tight text-(--color-text) sm:text-lg">
+                      {card.course.title[language]}
                     </h4>
-                    <p className="mt-3 text-sm leading-7 text-(--color-text-muted)">
-                      {course.summary[language]}
+                    <p className="mt-2 line-clamp-2 text-xs leading-5 text-(--color-text-muted)">
+                      {card.course.summary[language]}
                     </p>
-                  </div>
-                </article>
-              ))}
+                    <ul className="mt-3 flex flex-wrap gap-1.5">
+                      {card.course.skills.map((skill) => (
+                        <li
+                          key={skill.pt}
+                          className="rounded-full border border-(--color-border) bg-(--color-background) px-2 py-1 text-[11px] text-(--color-text)"
+                        >
+                          {skill[language]}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-auto border-t border-(--color-border) pt-3">
+                      <span className="inline-flex rounded-full border border-(--color-border) px-3 py-1 text-xs font-semibold text-(--color-primary)">
+                        {text.certifications.ongoingStatus}
+                      </span>
+                    </div>
+                  </article>
+                ),
+              )}
             </div>
           </div>
         </div>
