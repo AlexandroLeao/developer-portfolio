@@ -108,6 +108,8 @@ describe('ProjectCard', () => {
     const openDetails = screen.getByRole('button', { name: 'Ver detalhes' })
     expect(openDetails).toHaveClass('justify-center', 'rounded-full')
     expect(openDetails.parentElement).toHaveClass('justify-center')
+    const content = screen.getByRole('article').querySelector('.justify-between')
+    expect(content).toHaveClass('gap-5')
     expect(openDetails.querySelector('.lucide-chevron-down')).toBeNull()
 
     fireEvent.click(openDetails)
@@ -115,6 +117,7 @@ describe('ProjectCard', () => {
     const panel = screen.getByRole('tabpanel', { name: 'Funcionalidades' })
     expect(panel.querySelector('ul')).toHaveClass('sm:grid-cols-2')
     expect(screen.getAllByRole('tab')).toHaveLength(4)
+    expect(screen.getByRole('tablist')).toHaveClass('grid-cols-2', 'sm:grid-cols-4')
 
     fireEvent.click(screen.getByRole('tab', { name: 'Desafios' }))
     expect(screen.getByRole('tabpanel', { name: 'Desafios' })).toHaveTextContent(ideasProject.details.challenges.pt)
@@ -127,10 +130,10 @@ describe('ProjectCard', () => {
 
     const tabs = screen.getByRole('tablist', { name: 'Estudo de caso' })
     fireEvent.keyDown(tabs, { key: 'ArrowRight' })
-    expect(screen.getByRole('tab', { name: 'Arquitetura e decisões técnicas' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('tab', { name: 'Arquitetura' })).toHaveAttribute('aria-selected', 'true')
 
     fireEvent.keyDown(tabs, { key: 'End' })
-    expect(screen.getByRole('tab', { name: 'Práticas de desenvolvimento' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('tab', { name: 'Práticas' })).toHaveAttribute('aria-selected', 'true')
   })
 
   it('dismisses the detail dialog when the backdrop is clicked', () => {
@@ -173,7 +176,7 @@ describe('ProjectCard', () => {
       }),
     )
 
-    fireEvent.click(screen.getByRole('tab', { name: 'Development practices' }))
+    fireEvent.click(screen.getByRole('tab', { name: 'Practices' }))
     expect(screen.getByRole('tabpanel', { name: 'Development practices' })).toHaveTextContent(ideasProject.details.practices.en)
   })
 
