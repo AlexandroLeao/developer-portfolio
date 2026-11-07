@@ -966,7 +966,7 @@ function App() {
       <section
         id="projects"
         aria-labelledby="projects-title"
-        className="scroll-mt-12 border-t border-(--color-border) py-16 sm:py-20 lg:py-24"
+        className="scroll-mt-12 border-t border-(--color-border) pt-16 pb-8 sm:pt-20 sm:pb-10 lg:pt-24"
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12 max-w-2xl">
@@ -1008,7 +1008,7 @@ function App() {
       <section
         id="experience"
         aria-labelledby="experience-title"
-        className="scroll-mt-12 border-t border-(--color-border) pt-14 pb-24 sm:pt-16 sm:pb-32"
+        className="scroll-mt-12 border-t border-(--color-border) pt-8 pb-24 sm:pt-10 sm:pb-32"
       >
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-12 max-w-2xl">
