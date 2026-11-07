@@ -14,20 +14,38 @@ const translations = {
 export default function ExperienceTimeline({ language }: ExperienceTimelineProps) {
   const [selectedId, setSelectedId] = useState(experiences[0].id)
   const text = translations[language]
+  const selectedIndex = experiences.findIndex((experience) => experience.id === selectedId)
 
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] xl:gap-8">
       <nav aria-label={text.navigation}>
-        <ol className="grid gap-3 sm:grid-cols-3 lg:relative lg:grid-cols-1 lg:border-l-2 lg:border-(--color-border) lg:pl-5">
-          {experiences.map((experience) => {
+        <ol className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 lg:pl-8">
+          {experiences.map((experience, index) => {
             const isSelected = experience.id === selectedId
+            const isReached = index <= selectedIndex
 
             return (
               <li key={experience.id} className="relative min-w-0">
+                {index < experiences.length - 1 && (
+                  <span
+                    aria-hidden="true"
+                    data-testid={`timeline-connector-${index}`}
+                    data-reached={index < selectedIndex}
+                    className="pointer-events-none absolute -left-[2.0625rem] -bottom-[2.625rem] top-[1.875rem] hidden w-0.5 bg-(--color-border) lg:block"
+                  >
+                    <span
+                      className={`absolute inset-0 origin-top bg-(--color-primary) transition-transform duration-500 ease-out motion-reduce:transition-none ${
+                        index < selectedIndex ? 'scale-y-100' : 'scale-y-0'
+                      }`}
+                    />
+                  </span>
+                )}
                 <span
                   aria-hidden="true"
-                  className={`absolute -left-[1.7rem] top-6 hidden h-3 w-3 rounded-full border-2 border-(--color-background) lg:block ${
-                    isSelected ? 'bg-(--color-primary)' : 'bg-(--color-border)'
+                  data-testid={`timeline-node-${index}`}
+                  data-reached={isReached}
+                  className={`absolute -left-[2.375rem] top-6 z-10 hidden h-3 w-3 rounded-full border-2 border-(--color-background) transition-colors duration-300 lg:block ${
+                    isReached ? 'bg-(--color-primary)' : 'bg-(--color-border)'
                   }`}
                 />
                 <button
@@ -35,7 +53,7 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
                   aria-pressed={isSelected}
                   aria-controls={`experience-panel-${experience.id}`}
                   onClick={() => setSelectedId(experience.id)}
-                  className={`flex h-full min-h-28 w-full flex-col items-start rounded-2xl border p-4 text-left transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transition-none ${
+                  className={`relative z-10 flex h-full min-h-28 w-full flex-col items-start rounded-2xl border p-4 text-left transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transition-none ${
                     isSelected
                       ? 'border-(--color-primary) bg-(--color-background)'
                       : 'border-(--color-border) bg-(--color-surface) hover:border-(--color-primary)'
@@ -59,7 +77,7 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
         </ol>
       </nav>
 
-      <div className="grid min-w-0">
+      <div className="min-w-0">
         {experiences.map((experience) => {
           const isSelected = experience.id === selectedId
 
@@ -71,9 +89,8 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
               aria-label={`${experience.role[language]} — ${experience.company}`}
               aria-hidden={!isSelected}
               inert={!isSelected}
-              className={`col-start-1 row-start-1 min-w-0 transition-opacity duration-200 motion-reduce:transition-none ${
-                isSelected ? 'visible opacity-100' : 'invisible pointer-events-none opacity-0'
-              }`}
+              hidden={!isSelected}
+              className={`min-w-0 ${isSelected ? 'block' : 'hidden'}`}
             >
               <ExperienceCard experience={experience} language={language} />
             </div>
