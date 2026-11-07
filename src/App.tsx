@@ -1317,14 +1317,14 @@ function App() {
         title={text.navigation.backToTop}
         aria-hidden={!showBackToTop}
         tabIndex={showBackToTop ? 0 : -1}
-        className={`back-to-top fixed right-5 bottom-6 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-primary) shadow-lg transition-all duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) sm:right-8 sm:bottom-8 ${
+        className={`back-to-top fixed right-5 bottom-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-primary) shadow-lg transition-all duration-300 hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) sm:right-8 sm:bottom-8 ${
           showBackToTop
             ? 'translate-y-0 opacity-100'
             : 'pointer-events-none translate-y-4 opacity-0'
         }`}
       >
         <ArrowUp
-          size={20}
+          size={18}
           strokeWidth={1.8}
           aria-hidden="true"
         />
