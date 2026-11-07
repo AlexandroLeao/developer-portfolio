@@ -12,6 +12,7 @@ export type Project = {
   imageAlt: TranslatedText
   description: TranslatedText
   technologies: string[]
+  stackUsage: Record<string, TranslatedText>
   githubUrl: string
   liveUrl?: string
   details: {
@@ -49,6 +50,14 @@ export const projects: Project[] = [
       'PostgreSQL',
       'Supabase',
     ],
+    stackUsage: {
+      React: { pt: 'Interface e personalização dos personagens.', en: 'Character creation and customization interface.' },
+      TypeScript: { pt: 'Tipos e segurança dos dados no front-end.', en: 'Types and data safety in the frontend.' },
+      'Node.js': { pt: 'Serviços de back-end da aplicação.', en: 'Application backend services.' },
+      Express: { pt: 'Rotas e endpoints da API REST.', en: 'REST API routes and endpoints.' },
+      PostgreSQL: { pt: 'Armazenamento dos dados dos personagens.', en: 'Storage for character data.' },
+      Supabase: { pt: 'Autenticação e controle de acesso.', en: 'Authentication and access control.' },
+    },
     githubUrl: 'https://github.com/AlexandroLeao/rpg-character-creator',
     liveUrl: 'https://adventure-files-staging.vercel.app/',
     details: {
@@ -109,6 +118,13 @@ export const projects: Project[] = [
       'TanStack Router',
       'Vitest',
     ],
+    stackUsage: {
+      React: { pt: 'Interface de ideias, filtros e formulários.', en: 'Ideas, filters, and forms interface.' },
+      TypeScript: { pt: 'Tipos dos projetos e dos estados.', en: 'Types for projects and application state.' },
+      'Tailwind CSS': { pt: 'Estilos e responsividade da interface.', en: 'Interface styling and responsiveness.' },
+      'TanStack Router': { pt: 'Navegação entre as telas.', en: 'Navigation between application screens.' },
+      Vitest: { pt: 'Testes automatizados da aplicação.', en: 'Automated application tests.' },
+    },
     githubUrl:
       'https://github.com/AlexandroLeao/app-project-ideias',
     liveUrl:
@@ -170,6 +186,12 @@ export const projects: Project[] = [
       'styled-components',
       'LocalStorage',
     ],
+    stackUsage: {
+      React: { pt: 'Componentes dos registros financeiros.', en: 'Financial records interface components.' },
+      JavaScript: { pt: 'Cálculos de entradas, saídas e saldo.', en: 'Income, expense, and balance calculations.' },
+      'styled-components': { pt: 'Estilos dos componentes da interface.', en: 'Styles for interface components.' },
+      LocalStorage: { pt: 'Persistência das transações no navegador.', en: 'Transaction persistence in the browser.' },
+    },
     githubUrl:
       'https://github.com/AlexandroLeao/natsu-matsuri-project',
     liveUrl:
