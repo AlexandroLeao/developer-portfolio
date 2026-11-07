@@ -51,37 +51,57 @@ describe('Developer Portfolio', () => {
     })).toBeInTheDocument()
   })
 
-  it('explores technology categories and links verified projects', async () => {
+  it('keeps all 30 technologies in a compact, deselectable category browser', async () => {
     const user = userEvent.setup()
     render(<App />)
 
-    const projectCard = screen.getByRole('heading', {
-      name: 'Adventure Files',
-    }).closest('article')
-    expect(projectCard).not.toHaveClass('lg:col-span-2', 'lg:grid')
-    expect(projectCard?.parentElement).toHaveClass('lg:grid-cols-3')
-
-    const navigation = screen.getByRole('navigation', { name: 'Explore por área' })
+    const navigation = screen.getByRole('navigation', { name: 'Áreas de tecnologia' })
     expect(within(navigation).getAllByRole('button')).toHaveLength(5)
+    expect(within(navigation).queryByText('Explore por área')).not.toBeInTheDocument()
 
     const frontendGrid = screen.getByRole('button', { name: 'HTML5' }).parentElement
     expect(frontendGrid).toHaveClass('sm:grid-cols-4')
+    expect(frontendGrid?.children).toHaveLength(8)
 
-    expect(screen.getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'true')
-    const details = screen.getByRole('region', { name: /React — Como utilizo ou pretendo aplicar/ })
-    expect(within(details).getByRole('link', { name: /Adventure Files/ })).toHaveAttribute(
-      'href', '#project-adventure-files',
-    )
+    expect(screen.getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByText('Selecione uma tecnologia para ver um resumo.')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'CSS3' }))
+    expect(screen.getByRole('button', { name: 'CSS3' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('region', { name: /CSS3 — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Utilizo CSS3 para criar layouts responsivos')
+    expect(screen.queryByText('Onde foi aplicado')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('heading', { level: 2, name: /^Tecnologias/ }))
+    expect(screen.getByRole('button', { name: 'CSS3' })).toHaveAttribute('aria-pressed', 'false')
+    expect(screen.getByText('Selecione uma tecnologia para ver um resumo.')).toBeInTheDocument()
+
+    await user.click(within(navigation).getByRole('button', { name: /Cloud & DevOps/ }))
+    const cloudGrid = screen.getByRole('button', { name: 'Azure' }).parentElement
+    expect(cloudGrid).toHaveClass('sm:grid-cols-3')
+    expect(cloudGrid?.children).toHaveLength(6)
+
+    await user.click(screen.getByRole('button', { name: 'Azure' }))
+    expect(screen.getByRole('region', { name: /Azure — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Estudei fundamentos de infraestrutura e serviços do Microsoft Azure')
+    await user.click(screen.getByRole('button', { name: 'Azure' }))
+    expect(screen.getByRole('button', { name: 'Azure' })).toHaveAttribute('aria-pressed', 'false')
+
+    await user.click(within(navigation).getByRole('button', { name: /Inteligência Artificial/ }))
+    expect(screen.getByRole('button', { name: 'IA Generativa' }).parentElement?.children).toHaveLength(4)
+
+    await user.click(within(navigation).getByRole('button', { name: /Engenharia & Ferramentas/ }))
+    expect(screen.getByRole('button', { name: 'Git' }).parentElement?.children).toHaveLength(6)
 
     await user.click(within(navigation).getByRole('button', { name: /Back-End & Dados/ }))
-    expect(screen.getByRole('button', { name: 'Node.js' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('button', { name: 'Java' }).parentElement).toHaveClass('sm:grid-cols-3')
+    expect(screen.getByRole('button', { name: 'Node.js' }).parentElement?.children).toHaveLength(6)
 
-    await user.click(screen.getByRole('button', { name: 'Java' }))
-    expect(screen.getByText('Em estudo ou sem projeto público associado.')).toBeInTheDocument()
-
-    await user.click(within(navigation).getByRole('button', { name: /Front-End/ }))
-    expect(screen.getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'true')
+    await user.click(screen.getByRole('button', { name: 'EN' }))
+    const englishNavigation = screen.getByRole('navigation', { name: 'Technology areas' })
+    await user.click(within(englishNavigation).getByRole('button', { name: /Cloud & DevOps/ }))
+    await user.click(screen.getByRole('button', { name: 'Azure' }))
+    expect(screen.getByRole('region', { name: /Azure — Technology details/ }))
+      .toHaveTextContent('I studied Microsoft Azure infrastructure and service fundamentals')
   })
 
   beforeEach(() => {
