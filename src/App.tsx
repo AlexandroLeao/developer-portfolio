@@ -23,8 +23,7 @@ import {
   certifications,
   ongoingEducation,
 } from './data/certifications'
-import ExperienceCard from './components/ExperienceCard'
-import { experiences } from './data/experiences'
+import ExperienceTimeline from './components/ExperienceTimeline'
 import ProjectCard from './components/ProjectCard'
 import { projects } from './data/projects'
 
@@ -1034,21 +1033,7 @@ function App() {
             </p>
           </div>
 
-          <ol className="relative ml-2 max-w-5xl space-y-7 border-l-2 border-(--color-border) pl-8 sm:ml-3 sm:space-y-8 sm:pl-10">
-            {experiences.map((experience) => (
-              <li key={experience.id} className="relative">
-                <span
-                  aria-hidden="true"
-                  className="absolute -left-9.5 top-8 h-3 w-3 rounded-full border-2 border-(--color-background) bg-(--color-primary) sm:-left-11.5"
-                />
-
-                <ExperienceCard
-                  experience={experience}
-                  language={language}
-                />
-              </li>
-            ))}
-          </ol>
+          <ExperienceTimeline language={language} />
         </div>
       </section>
 
