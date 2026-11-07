@@ -589,6 +589,38 @@ function App() {
     }
   }, [])
 
+  // Revela apenas os títulos selecionados, uma vez, sem listeners de scroll.
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+
+    const headings = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-reveal-on-scroll]'),
+    )
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue
+          entry.target.classList.add('reveal-visible')
+          observer.unobserve(entry.target)
+        }
+      },
+      { threshold: 0.15 },
+    )
+
+    headings.forEach((heading) => {
+      heading.classList.add('reveal-pending')
+      observer.observe(heading)
+    })
+
+    return () => {
+      observer.disconnect()
+      headings.forEach((heading) =>
+        heading.classList.remove('reveal-pending', 'reveal-visible'),
+      )
+    }
+  }, [])
+
   const text = translations[language]
 
   const visibleCertifications = certifications.filter(
@@ -953,6 +985,7 @@ function App() {
 
             <h2
               id="projects-title"
+              data-reveal-on-scroll
               className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
             >
               {text.projects.title}
@@ -995,6 +1028,7 @@ function App() {
 
             <h2
               id="experience-title"
+              data-reveal-on-scroll
               className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
             >
               {text.experience.title}
@@ -1029,6 +1063,7 @@ function App() {
 
             <h2
               id="certifications-title"
+              data-reveal-on-scroll
               className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
             >
               {text.certifications.title}
