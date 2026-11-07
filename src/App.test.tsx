@@ -18,9 +18,11 @@ describe('Developer Portfolio', () => {
     })
     expect(foundationsHeading.nextElementSibling).toHaveClass('md:max-w-xl')
 
-    await user.click(screen.getByRole('button', {
-      name: /Mostrar todas as certificações/,
-    }))
+    expect(screen.getByRole('button', { name: /Destaques \(7\)/ })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('status')).toHaveTextContent('7 de 17 certificações')
+
+    await user.click(screen.getByRole('button', { name: /Todas \(17\)/ }))
+    expect(screen.getByRole('status')).toHaveTextContent('17 de 17 certificações')
 
     expect(engineeringHeading.nextElementSibling).toHaveClass('xl:grid-cols-3')
 
@@ -28,6 +30,25 @@ describe('Developer Portfolio', () => {
       name: 'Programação e Desenvolvimento Web',
     })
     expect(developmentHeading.nextElementSibling?.lastElementChild).toHaveClass('md:col-span-2', 'md:mx-auto')
+  })
+
+  it('filters completed certifications by knowledge area', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    const areaFilter = screen.getByRole('combobox', { name: 'Área de conhecimento' })
+    await user.selectOptions(areaFilter, 'development')
+
+    expect(screen.getByRole('status')).toHaveTextContent('2 de 17 certificações')
+    expect(screen.getByRole('heading', { name: 'Programação e Desenvolvimento Web' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Engenharia, Cloud e Sistemas' })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /Todas \(17\)/ }))
+    expect(screen.getByRole('status')).toHaveTextContent('7 de 17 certificações')
+
+    expect(screen.getByRole('heading', {
+      name: 'Bootcamp Itaú | Java com Inteligência Artificial',
+    })).toBeInTheDocument()
   })
 
   it('explores technology categories and links verified projects', async () => {
