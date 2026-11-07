@@ -22,70 +22,95 @@ const stackColors: Record<string, string> = {
 
 const translations = {
   pt: {
-    heading: 'Uso das tecnologias',
-    unit: 'arquivos',
-    ariaLabel: 'Tecnologias por arquivos de código',
-    method: 'Arquivos associados a cada tecnologia nos repositórios. Uma mesma origem pode contar para mais de uma tecnologia; os valores não são porcentagens.',
+    ariaLabel: 'Distribuição das tecnologias do projeto',
+    method: 'As fatias representam a proporção de arquivos associados a cada stack. Um mesmo arquivo pode utilizar mais de uma tecnologia.',
   },
   en: {
-    heading: 'Technology usage',
-    unit: 'files',
-    ariaLabel: 'Technologies by source files',
-    method: 'Source files associated with each technology in the repositories. A file may count toward multiple technologies; these values are not percentages.',
+    ariaLabel: 'Project technology distribution',
+    method: 'Slices reflect the relative number of files associated with each stack. The same file may use more than one technology.',
   },
 }
 
-// Repository snapshot: 2026-11-07. Values are code-file counts, not estimated percentages.
-// Each technology is counted by its applicable code files (language, imports,
-// backend modules, routing, style usage, tests, storage calls, or SQL migrations).
+function pointOnCircle(fraction: number) {
+  const angle = fraction * Math.PI * 2 - Math.PI / 2
+  return {
+    x: Number((50 + 44 * Math.cos(angle)).toFixed(4)),
+    y: Number((50 + 44 * Math.sin(angle)).toFixed(4)),
+  }
+}
+
+function slicePath(start: number, end: number) {
+  const from = pointOnCircle(start)
+  const to = pointOnCircle(end)
+  const largeArc = end - start > 0.5 ? 1 : 0
+
+  return [
+    'M 50 50',
+    'L ' + from.x + ' ' + from.y,
+    'A 44 44 0 ' + largeArc + ' 1 ' + to.x + ' ' + to.y,
+    'Z',
+  ].join(' ')
+}
+
+// Repository snapshot: 2026-11-07. Proportions use measured source-file
+// associations, not mutually exclusive language percentages.
 export default function ProjectStackChart({ project, language }: ProjectStackChartProps) {
   const text = translations[language]
-  const maxCount = Math.max(1, ...project.technologies.map((technology) => project.stackFileCounts[technology] ?? 0))
+  const total = Math.max(
+    1,
+    project.technologies.reduce((sum, technology) => sum + (project.stackFileCounts[technology] ?? 0), 0),
+  )
+  let offset = 0
+
+  const slices = project.technologies.map((technology) => {
+    const count = project.stackFileCounts[technology] ?? 0
+    const start = offset
+    const end = offset + count / total
+    offset = end
+
+    return { technology, count, path: slicePath(start, end) }
+  })
 
   return (
-    <section className="min-w-0 border-t border-(--color-border) pt-3" aria-label={text.ariaLabel}>
-      <div className="mb-3 flex items-baseline justify-between gap-2">
-        <h4 className="text-[11px] font-semibold tracking-wide text-(--color-text)">
-          {text.heading}
-        </h4>
-        <span className="shrink-0 text-[10px] text-(--color-text-muted)" title={text.method}>
-          {text.unit}
-        </span>
-      </div>
-
-      <ul className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-3" title={text.method}>
-        {project.technologies.map((technology) => {
-          const count = project.stackFileCounts[technology] ?? 0
-          const width = (count / maxCount) * 100
-
-          return (
-            <li
+    <figure className="min-w-0 border-t border-(--color-border) pt-4" aria-label={text.ariaLabel}>
+      <div className="flex min-h-24 items-center gap-3">
+        <svg
+          viewBox="0 0 100 100"
+          role="img"
+          aria-label={text.ariaLabel}
+          className="h-22 w-22 shrink-0 overflow-visible drop-shadow-sm"
+        >
+          {slices.map(({ technology, count, path }) => (
+            <path
               key={technology}
-              className="group min-w-0"
-              aria-label={technology + ': ' + count + ' ' + text.unit}
-              title={technology + ' · ' + count + ' ' + text.unit}
+              data-stack={technology}
+              data-files={count}
+              d={path}
+              fill={stackColors[technology] ?? '#668d83'}
+              stroke="var(--color-surface)"
+              strokeWidth="1.4"
+              strokeLinejoin="round"
+              className="transition-opacity duration-200 hover:opacity-80 motion-reduce:transition-none"
             >
-              <div className="mb-1 flex min-w-0 items-baseline justify-between gap-1">
-                <span className="min-w-0 break-words text-[10px] font-medium leading-tight text-(--color-text)">
-                  {technology}
-                </span>
-                <span className="shrink-0 text-[10px] tabular-nums text-(--color-text-muted)">
-                  {count}
-                </span>
-              </div>
-              <div aria-hidden="true" className="h-2 overflow-hidden rounded-full bg-(--color-border)">
-                <div
-                  className="h-full rounded-full transition-[filter] duration-200 group-hover:brightness-125 motion-reduce:transition-none"
-                  style={{
-                    width: String(width) + '%',
-                    backgroundColor: stackColors[technology] ?? '#668d83',
-                  }}
-                />
-              </div>
+              <title>{technology}</title>
+            </path>
+          ))}
+        </svg>
+
+        <ul aria-label={text.ariaLabel} className="grid min-w-0 flex-1 grid-cols-2 gap-x-2 gap-y-1.5">
+          {project.technologies.map((technology) => (
+            <li key={technology} className="flex min-w-0 items-center gap-1.5 text-[10px] font-medium leading-tight text-(--color-text)">
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: stackColors[technology] ?? '#668d83' }}
+              />
+              <span className="min-w-0 break-words">{technology}</span>
             </li>
-          )
-        })}
-      </ul>
-    </section>
+          ))}
+        </ul>
+      </div>
+      <figcaption className="sr-only">{text.method}</figcaption>
+    </figure>
   )
 }
