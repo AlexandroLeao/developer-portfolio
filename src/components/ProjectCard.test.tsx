@@ -32,6 +32,8 @@ describe('ProjectCard', () => {
 
     const card = screen.getByRole('article')
     expect(card).not.toHaveClass('lg:col-span-2', 'lg:grid')
+    expect(card).toHaveClass('group')
+    expect(card.querySelector('img')).toHaveClass('group-hover:scale-[1.025]', 'motion-reduce:transition-none')
     expect(card).toHaveAttribute('id', 'project-ideas-organizer')
     expect(card.querySelector('img')).toHaveAttribute('sizes', '(min-width: 1024px) 33vw, calc(100vw - 3rem)')
     expect(card.querySelector('div.aspect-video')).toBeInTheDocument()

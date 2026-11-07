@@ -90,6 +90,18 @@ describe('Developer Portfolio', () => {
     document.documentElement.lang = 'pt-BR'
   })
 
+  it('marks only selected section titles for lightweight entrance feedback', () => {
+    render(<App />)
+
+    for (const name of [/^Projetos/, /^Experiência/, /^Formação e certificações/]) {
+      const heading = screen.getByRole('heading', { level: 2, name })
+      expect(heading).toHaveAttribute('data-reveal-on-scroll')
+    }
+
+    expect(screen.getByRole('heading', { level: 2, name: /^Sobre mim/ }))
+      .not.toHaveAttribute('data-reveal-on-scroll')
+  })
+
   it('renders the main portfolio sections', () => {
     render(<App />)
 
