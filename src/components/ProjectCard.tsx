@@ -67,7 +67,7 @@ export default function ProjectCard({
   const detailsId = `project-details-${project.id}`
 
   return (
-    <article id={`project-${project.id}`} className="flex h-full min-w-0 scroll-mt-24 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface)">
+    <article id={`project-${project.id}`} className="group flex h-full min-w-0 scroll-mt-24 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface)">
       {/* ILUSTRAÇÃO */}
       <div className="aspect-video overflow-hidden border-b border-(--color-border) bg-(--color-background)">
         <img
@@ -77,7 +77,7 @@ export default function ProjectCard({
           alt={project.imageAlt[language]}
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:transform-none"
         />
       </div>
 
