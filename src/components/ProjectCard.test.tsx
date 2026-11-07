@@ -104,6 +104,37 @@ describe('ProjectCard', () => {
     expect(screen.getByRole('button', { name: 'Ver detalhes' })).toHaveAttribute('aria-expanded', 'false')
   })
 
+  it('centers the details action and uses a compact two-column dialog', () => {
+    render(<ProjectCard project={ideasProject} language="pt" />)
+
+    const openDetails = screen.getByRole('button', { name: 'Ver detalhes' })
+    expect(openDetails).toHaveClass('justify-center', 'rounded-xl')
+    expect(openDetails.querySelector('.lucide-chevron-down')).toBeNull()
+
+    fireEvent.click(openDetails)
+
+    const details = screen.getByRole('region', {
+      name: /Funcionalidades — Organizador de Ideias e Projetos/,
+    })
+    expect(details).toHaveClass('md:grid-cols-2')
+  })
+
+  it('dismisses the detail dialog when the backdrop is clicked', () => {
+    render(<ProjectCard project={ideasProject} language="pt" />)
+    fireEvent.click(screen.getByRole('button', { name: 'Ver detalhes' }))
+
+    const dialog = screen.getByRole('dialog', { name: ideasProject.name })
+    dialog.getBoundingClientRect = () => ({
+      left: 100, right: 900, top: 100, bottom: 600,
+    }) as DOMRect
+
+    fireEvent.click(dialog, { clientX: 300, clientY: 300 })
+    expect(dialog).toBeVisible()
+
+    fireEvent.click(dialog, { clientX: 50, clientY: 50 })
+    expect(screen.queryByRole('dialog')).toBeNull()
+  })
+
   it('displays translated content in English', () => {
     render(
       <ProjectCard
