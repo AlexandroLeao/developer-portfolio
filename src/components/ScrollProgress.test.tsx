@@ -14,11 +14,10 @@ afterEach(() => {
   } else {
     Reflect.deleteProperty(document.documentElement, 'scrollHeight')
   }
-  document.getElementById('projects')?.remove()
 })
 
 describe('ScrollProgress', () => {
-  it('tracks scroll position and exposes a marker for each available section', () => {
+  it('tracks scroll position without section markers', () => {
     const frames: FrameRequestCallback[] = []
     vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
       frames.push(callback)
@@ -33,17 +32,14 @@ describe('ScrollProgress', () => {
       value: 2000,
     })
 
-    const section = document.createElement('section')
-    section.id = 'projects'
-    document.body.append(section)
-
     const { getByRole } = render(<ScrollProgress language="pt" />)
     const progress = getByRole('progressbar', {
       name: 'Progresso de leitura da página',
     })
 
     expect(progress).toHaveAttribute('aria-valuenow', '0')
-    expect(progress.querySelectorAll('span')).toHaveLength(1)
+    expect(progress.querySelectorAll('span')).toHaveLength(0)
+    expect(progress).toHaveClass('absolute', 'bottom-0')
 
     vi.stubGlobal('scrollY', 500)
     fireEvent.scroll(window)
