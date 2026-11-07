@@ -2,7 +2,7 @@ import { act, render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Header from './Header'
 
-let latestObserver: MockIntersectionObserver | undefined
+const observerInstances: MockIntersectionObserver[] = []
 
 class MockIntersectionObserver {
   callback: IntersectionObserverCallback
@@ -12,13 +12,13 @@ class MockIntersectionObserver {
 
   constructor(callback: IntersectionObserverCallback) {
     this.callback = callback
-    latestObserver = this
+    observerInstances.push(this)
   }
 }
 
 beforeEach(() => {
   vi.stubGlobal('IntersectionObserver', MockIntersectionObserver)
-  latestObserver = undefined
+  observerInstances.length = 0
   const section = document.createElement('section')
   section.id = 'projects'
   document.body.append(section)
@@ -37,6 +37,7 @@ describe('Header navigation indicator', () => {
       <Header language="pt" onLanguageChange={vi.fn()} />,
     )
 
+    const latestObserver = observerInstances.at(-1)
     const projectLinks = container.querySelectorAll('a[href="#projects"]')
     expect(projectLinks).toHaveLength(2)
     expect(projectLinks[0]).not.toHaveAttribute('aria-current')
