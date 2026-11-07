@@ -1,6 +1,6 @@
 
 import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 import ProjectCard from './ProjectCard'
 import { projects } from '../data/projects'
 
@@ -16,19 +16,24 @@ if (!ideasProject || !natsuProject) {
   throw new Error('Required portfolio projects are missing.')
 }
 
+beforeAll(() => {
+  HTMLDialogElement.prototype.showModal = function (this: HTMLDialogElement) {
+    this.open = true
+  }
+  HTMLDialogElement.prototype.close = function (this: HTMLDialogElement) {
+    this.open = false
+    this.dispatchEvent(new Event('close'))
+  }
+})
+
 describe('ProjectCard', () => {
-  it('supports the featured editorial layout', () => {
-    render(
-      <ProjectCard
-        project={ideasProject}
-        language="pt"
-        featured
-      />,
-    )
+  it('uses the same fixed-ratio card layout for every project', () => {
+    render(<ProjectCard project={ideasProject} language="pt" />)
 
     const card = screen.getByRole('article')
-    expect(card).toHaveClass('lg:col-span-2', 'lg:grid')
-    expect(card.querySelector('img')).toHaveAttribute('sizes', '(min-width: 1024px) 55vw, calc(100vw - 3rem)')
+    expect(card).not.toHaveClass('lg:col-span-2', 'lg:grid')
+    expect(card.querySelector('img')).toHaveAttribute('sizes', '(min-width: 1024px) 33vw, calc(100vw - 3rem)')
+    expect(card.querySelector('div.aspect-video')).toBeInTheDocument()
   })
 
   it('renders the project information in Portuguese', () => {
@@ -78,6 +83,7 @@ describe('ProjectCard', () => {
 
     fireEvent.click(showDetails)
 
+    expect(screen.getByRole('dialog', { name: ideasProject.name })).toBeVisible()
     expect(
       screen.getByRole('heading', {
         name: 'Funcionalidades',
@@ -94,11 +100,8 @@ describe('ProjectCard', () => {
 
     fireEvent.click(hideDetails)
 
-    expect(
-      screen.queryByRole('heading', {
-        name: 'Funcionalidades',
-      }),
-    ).toBeNull()
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(screen.getByRole('button', { name: 'Ver detalhes' })).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('displays translated content in English', () => {
