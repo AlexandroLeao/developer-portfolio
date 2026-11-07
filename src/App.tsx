@@ -828,6 +828,13 @@ function App() {
               const CategoryIcon =
                 categoryIcons[category.id]
 
+              const gridColumns =
+                category.technologies.length === 8
+                  ? 'sm:grid-cols-4 xl:grid-cols-8'
+                  : category.technologies.length === 6
+                    ? 'sm:grid-cols-3 xl:grid-cols-6'
+                    : 'sm:grid-cols-2 md:grid-cols-4'
+
               const selectedId =
                 selectedTechnologies[category.id]
 
@@ -857,7 +864,7 @@ function App() {
                     </h3>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+                  <div className={`grid grid-cols-2 gap-3 sm:gap-4 ${gridColumns}`}>
                     {category.technologies.map(
                       (technology, index) => {
                         const isSelected =
@@ -985,12 +992,13 @@ function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
-            {projects.map((project) => (
+          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
+            {projects.map((project, index) => (
               <ProjectCard
                 key={project.id}
                 project={project}
                 language={language}
+                featured={index === 0}
               />
             ))}
           </div>
@@ -1125,20 +1133,43 @@ function App() {
                   return null
                 }
 
+                const count = categoryCertifications.length
+                const gridColumns =
+                  count === 1
+                    ? 'md:mx-auto md:max-w-xl'
+                    : count === 6
+                      ? 'md:grid-cols-2 xl:grid-cols-3'
+                      : 'md:grid-cols-2'
+
                 return (
                   <div key={category.id}>
                     <h4 className="font-display mb-5 text-lg font-semibold text-(--color-text) sm:text-xl">
                       {category.title[language]}
                     </h4>
 
-                    <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 xl:grid-cols-3">
-                      {categoryCertifications.map((certification) => (
-                        <CertificationCard
-                          key={certification.id}
-                          certification={certification}
-                          language={language}
-                        />
-                      ))}
+                    <div className={`grid grid-cols-1 items-stretch gap-6 ${gridColumns}`}>
+                      {categoryCertifications.map((certification, index) => {
+                        const isOrphan =
+                          count > 1 &&
+                          count % 2 === 1 &&
+                          index === count - 1
+
+                        return (
+                          <div
+                            key={certification.id}
+                            className={
+                              isOrphan
+                                ? 'md:col-span-2 md:mx-auto md:w-full md:max-w-xl'
+                                : 'min-w-0'
+                            }
+                          >
+                            <CertificationCard
+                              certification={certification}
+                              language={language}
+                            />
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 )
