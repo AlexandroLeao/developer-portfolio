@@ -8,6 +8,9 @@ import {
 } from 'lucide-react'
 import type { Language, Project } from '../data/projects'
 
+const detailTabs = ['features', 'architecture', 'challenges', 'practices'] as const
+type DetailTab = (typeof detailTabs)[number]
+
 type ProjectCardProps = {
   project: Project
   language: Language
@@ -45,6 +48,7 @@ export default function ProjectCard({
   language,
 }: ProjectCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [activeTab, setActiveTab] = useState<DetailTab>('features')
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   const text = translations[language]
@@ -99,16 +103,17 @@ export default function ProjectCard({
         </ul>
 
         {/* DETALHES DO PROJETO */}
-        <div className="mt-auto border-t border-(--color-border) pt-5">
+        <div className="mt-auto flex justify-center pt-6">
           <button
             type="button"
             aria-expanded={isExpanded}
             aria-controls={detailsId}
             onClick={() => {
+              setActiveTab('features')
               dialogRef.current?.showModal()
               setIsExpanded(true)
             }}
-            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-(--color-primary) bg-(--color-background) px-4 py-3 text-sm font-semibold text-(--color-primary) transition-colors hover:bg-(--color-surface) hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-(--color-border) bg-(--color-background) px-5 py-2.5 text-sm font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
           >
             <FileText size={17} aria-hidden="true" />
             {text.showDetails}
@@ -130,9 +135,9 @@ export default function ProjectCard({
               dialogRef.current?.close()
             }
           }}
-          className="fixed inset-0 m-auto max-h-[90dvh] w-[min(94vw,64rem)] overflow-y-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-0 text-(--color-text) shadow-2xl backdrop:bg-black/70"
+          className="fixed inset-0 m-auto max-h-[90dvh] w-[min(92vw,48rem)] overflow-y-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-0 text-(--color-text) shadow-2xl backdrop:bg-black/70"
         >
-          <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-(--color-border) bg-(--color-surface) px-5 py-4 sm:px-7 sm:py-5">
+          <div className="flex items-center justify-between gap-4 border-b border-(--color-border) px-5 py-4 sm:px-7 sm:py-5">
             <div>
               <span className="text-xs font-semibold uppercase tracking-widest text-(--color-primary)">
                 {text.caseStudy}
@@ -145,59 +150,78 @@ export default function ProjectCard({
               type="button"
               onClick={() => dialogRef.current?.close()}
               aria-label={text.hideDetails}
-              aria-expanded={isExpanded}
-              aria-controls={detailsId}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-(--color-border) text-(--color-text) hover:border-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
               <X size={20} aria-hidden="true" />
             </button>
           </div>
-          <div id={detailsId} role="region" aria-label={`${text.features} — ${project.name}`} className="grid gap-4 p-4 sm:p-6 md:grid-cols-2">
-            <section className="rounded-2xl border border-(--color-border) bg-(--color-background) p-4 sm:p-5">
-              <h4 className="font-display mb-3 text-base font-semibold text-(--color-text)">
-                {text.features}
-              </h4>
 
-              <ul className="list-disc space-y-2 pl-5 text-sm leading-7 text-(--color-text-muted)">
-                {project.details.features.map(
-                  (feature, index) => (
-                    <li key={index}>
-                      {feature[language]}
-                    </li>
-                  ),
-                )}
+          <div
+            role="tablist"
+            aria-label={text.caseStudy}
+            onKeyDown={(event) => {
+              const currentIndex = detailTabs.indexOf(activeTab)
+              let nextIndex = currentIndex
+              if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % detailTabs.length
+              else if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + detailTabs.length) % detailTabs.length
+              else if (event.key === 'Home') nextIndex = 0
+              else if (event.key === 'End') nextIndex = detailTabs.length - 1
+              else return
+              event.preventDefault()
+              setActiveTab(detailTabs[nextIndex])
+              event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')[nextIndex]?.focus()
+            }}
+            className="flex flex-wrap gap-2 border-b border-(--color-border) px-5 py-3 sm:px-7"
+          >
+            {detailTabs.map((tab) => (
+              <button
+                key={tab}
+                id={`project-tab-${project.id}-${tab}`}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === tab}
+                aria-controls={detailsId}
+                tabIndex={activeTab === tab ? 0 : -1}
+                onClick={() => setActiveTab(tab)}
+                className={`min-h-10 rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ${
+                  activeTab === tab
+                    ? 'border-(--color-primary) bg-(--color-background) text-(--color-primary)'
+                    : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary) hover:text-(--color-primary)'
+                }`}
+              >
+                {text[tab]}
+              </button>
+            ))}
+          </div>
+
+          <div
+            id={detailsId}
+            role="tabpanel"
+            aria-labelledby={`project-tab-${project.id}-${activeTab}`}
+            tabIndex={0}
+            className="p-5 sm:p-7"
+          >
+            <h4 className="font-display mb-4 text-lg font-semibold text-(--color-text)">
+              {text[activeTab]}
+            </h4>
+
+            {activeTab === 'features' ? (
+              <ul className="grid gap-3 sm:grid-cols-2">
+                {project.details.features.map((feature, index) => (
+                  <li
+                    key={index}
+                    className="flex items-start gap-3 rounded-xl border border-(--color-border) bg-(--color-background) p-3 text-sm leading-6 text-(--color-text-muted)"
+                  >
+                    <span aria-hidden="true" className="mt-2 h-2 w-2 shrink-0 rounded-full bg-(--color-primary)" />
+                    <span>{feature[language]}</span>
+                  </li>
+                ))}
               </ul>
-            </section>
-
-            <section className="rounded-2xl border border-(--color-border) bg-(--color-background) p-4 sm:p-5">
-              <h4 className="font-display mb-2 text-base font-semibold text-(--color-text)">
-                {text.architecture}
-              </h4>
-
-              <p className="text-sm leading-7 text-(--color-text-muted)">
-                {project.details.architecture[language]}
+            ) : (
+              <p className="border-l-2 border-(--color-primary) bg-(--color-background) px-5 py-4 text-base leading-7 text-(--color-text-muted)">
+                {project.details[activeTab][language]}
               </p>
-            </section>
-
-            <section className="rounded-2xl border border-(--color-border) bg-(--color-background) p-4 sm:p-5">
-              <h4 className="font-display mb-2 text-base font-semibold text-(--color-text)">
-                {text.challenges}
-              </h4>
-
-              <p className="text-sm leading-7 text-(--color-text-muted)">
-                {project.details.challenges[language]}
-              </p>
-            </section>
-
-            <section className="rounded-2xl border border-(--color-border) bg-(--color-background) p-4 sm:p-5">
-              <h4 className="font-display mb-2 text-base font-semibold text-(--color-text)">
-                {text.practices}
-              </h4>
-
-              <p className="text-sm leading-7 text-(--color-text-muted)">
-                {project.details.practices[language]}
-              </p>
-            </section>
+            )}
           </div>
         </dialog>
 
