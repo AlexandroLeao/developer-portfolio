@@ -1,6 +1,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Menu, Moon, Sun, X } from 'lucide-react'
+import ScrollProgress from './ScrollProgress'
 
 type Language = 'pt' | 'en'
 
@@ -21,15 +22,12 @@ function Header({ language, onLanguageChange }: HeaderProps) {
   })
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isHeaderVisible, setIsHeaderVisible] = useState(true)
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState(() =>
     typeof window !== 'undefined' ? window.location.hash.slice(1) : '',
   )
 
   const headerRef = useRef<HTMLElement>(null)
-  const lastScrollY = useRef(0)
-  const upwardDistance = useRef(0)
 
   // Aplica e salva o tema escolhido.
   useEffect(() => {
@@ -68,59 +66,16 @@ function Header({ language, onLanguageChange }: HeaderProps) {
     }
   }, [isMenuOpen])
 
-  // Header inteligente:
-  // - visível no topo;
-  // - escondido durante a descida;
-  // - reaparece ao subir, depois de passar pela Hero;
-  // - permanece visível com o menu mobile aberto.
+  // Mantém o cabeçalho sempre visível e ajusta o fundo após o início da página.
   useEffect(() => {
-    lastScrollY.current = Math.max(0, window.scrollY)
-
     function handleScroll() {
-      const currentY = Math.max(0, window.scrollY)
-      const difference = currentY - lastScrollY.current
-
-      const topLimit = 80
-      const heroLimit = Math.max(window.innerHeight * 0.85, 500)
-
-      setIsScrolled(currentY > 24)
-
-      if (isMenuOpen) {
-        setIsHeaderVisible(true)
-        upwardDistance.current = 0
-      } else if (currentY <= topLimit) {
-        setIsHeaderVisible(true)
-        upwardDistance.current = 0
-      } else if (currentY < heroLimit) {
-        // Não deixa o Header acompanhar a parte inicial da Hero.
-        setIsHeaderVisible(false)
-        upwardDistance.current = 0
-      } else if (difference > 0) {
-        // Qualquer movimento real de descida esconde o Header.
-        setIsHeaderVisible(false)
-        upwardDistance.current = 0
-      } else if (difference < 0) {
-        // Pequenas oscilações não fazem o Header reaparecer.
-        upwardDistance.current += Math.abs(difference)
-
-        if (upwardDistance.current >= 32) {
-          setIsHeaderVisible(true)
-        }
-      }
-
-      lastScrollY.current = currentY
+      setIsScrolled(window.scrollY > 24)
     }
 
     handleScroll()
-
-    window.addEventListener('scroll', handleScroll, {
-      passive: true,
-    })
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [isMenuOpen])
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Observa a seção em foco sem calcular posições a cada evento de rolagem.
   useEffect(() => {
@@ -207,17 +162,10 @@ function Header({ language, onLanguageChange }: HeaderProps) {
     { href: '#contact', label: text.contact },
   ]
 
-  const shouldShowHeader = isHeaderVisible || isMenuOpen
-
   return (
     <header
       ref={headerRef}
-      onFocusCapture={() => setIsHeaderVisible(true)}
-      className={`smart-header fixed inset-x-0 top-0 z-50 border-b transition-all duration-500 ease-in-out ${
-        shouldShowHeader
-          ? 'translate-y-0 opacity-100'
-          : 'pointer-events-none -translate-y-full opacity-0'
-      } ${
+      className={`smart-header fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
         isScrolled
           ? 'border-(--color-border) shadow-sm backdrop-blur-md'
           : 'border-transparent'
@@ -388,6 +336,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
           </div>
         </div>
       </nav>
+      <ScrollProgress language={language} />
     </header>
   )
 }
