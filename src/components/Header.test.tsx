@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react'
+import { act, fireEvent, render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Header from './Header'
 
@@ -60,4 +60,22 @@ describe('Header navigation indicator', () => {
       expect(link).toHaveAttribute('aria-current', 'location')
     }
   })
+  it('keeps the navigation and progress track visible after scrolling down', () => {
+    vi.stubGlobal('scrollY', 950)
+
+    const { container } = render(
+      <Header language="pt" onLanguageChange={vi.fn()} />,
+    )
+
+    fireEvent.scroll(window)
+
+    const header = container.querySelector('header')!
+    const progress = header.querySelector('[role="progressbar"]')
+
+    expect(header).not.toHaveClass('-translate-y-full', 'opacity-0')
+    expect(header.querySelector('nav')).toBeInTheDocument()
+    expect(progress).toHaveClass('absolute', 'bottom-0')
+    expect(progress?.parentElement).toBe(header)
+  })
+
 })
