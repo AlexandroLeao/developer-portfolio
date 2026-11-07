@@ -30,8 +30,8 @@ describe('ProjectCard', () => {
 
   it('shows Ideas and Projects Organizer in both languages', () => {
     const { rerender } = render(<ProjectCard project={ideasProject} language="pt" />)
-    expect(screen.getByRole('heading', { name: 'Ideas and Projects Organizer' })).toBeInTheDocument()
-    expect(screen.getByText(ideasProject.description.pt)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Ideas and Projects Organizer' })).toHaveClass('text-xl', 'sm:text-2xl')
+    expect(screen.getByText(ideasProject.description.pt)).toHaveClass('text-sm', 'sm:text-base')
 
     rerender(<ProjectCard project={ideasProject} language="en" />)
     expect(screen.getByRole('heading', { name: 'Ideas and Projects Organizer' })).toBeInTheDocument()
