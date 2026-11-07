@@ -41,7 +41,7 @@ describe('ProjectCard', () => {
 
     const legend = screen.getByRole('group', { name: 'Tecnologias do projeto' })
     expect(within(legend).getAllByRole('button')).toHaveLength(ideasProject.technologies.length)
-    expect(within(legend).getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'true')
+    expect(within(legend).getByRole('button', { name: `${ideasProject.name} — React` })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText(ideasProject.stackUsage.React.pt)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Ver detalhes' })).not.toBeInTheDocument()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -51,10 +51,10 @@ describe('ProjectCard', () => {
     render(<ProjectCard project={ideasProject} language="pt" />)
     const legend = screen.getByRole('group', { name: 'Tecnologias do projeto' })
 
-    fireEvent.click(within(legend).getByRole('button', { name: 'Vitest' }))
-    expect(within(legend).getByRole('button', { name: 'Vitest' })).toHaveAttribute('aria-pressed', 'true')
+    fireEvent.click(within(legend).getByRole('button', { name: `${ideasProject.name} — Vitest` }))
+    expect(within(legend).getByRole('button', { name: `${ideasProject.name} — Vitest` })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText(ideasProject.stackUsage.Vitest.pt)).toBeInTheDocument()
-    expect(within(legend).getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'false')
+    expect(within(legend).getByRole('button', { name: `${ideasProject.name} — React` })).toHaveAttribute('aria-pressed', 'false')
   })
 
   it('supports pointer and keyboard selection on chart segments', () => {
@@ -73,11 +73,11 @@ describe('ProjectCard', () => {
 
   it('keeps the selected technology when switching languages', () => {
     const { rerender } = render(<ProjectCard project={ideasProject} language="pt" />)
-    fireEvent.click(within(screen.getByRole('group', { name: 'Tecnologias do projeto' })).getByRole('button', { name: 'Vitest' }))
+    fireEvent.click(within(screen.getByRole('group', { name: 'Tecnologias do projeto' })).getByRole('button', { name: `${ideasProject.name} — Vitest` }))
 
     rerender(<ProjectCard project={ideasProject} language="en" />)
     const legend = screen.getByRole('group', { name: 'Project technologies' })
-    expect(within(legend).getByRole('button', { name: 'Vitest' })).toHaveAttribute('aria-pressed', 'true')
+    expect(within(legend).getByRole('button', { name: `${ideasProject.name} — Vitest` })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText(ideasProject.stackUsage.Vitest.en)).toBeInTheDocument()
   })
 
