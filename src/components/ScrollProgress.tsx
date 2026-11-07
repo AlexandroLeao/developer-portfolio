@@ -95,7 +95,7 @@ function ScrollProgress({ language }: { language: Language }) {
       resizeObserver?.disconnect()
 
       if (frameId !== null) {
-        if (window.requestAnimationFrame) window.cancelAnimationFrame(frameId)
+        if (typeof window.requestAnimationFrame === 'function') window.cancelAnimationFrame(frameId)
         else window.clearTimeout(frameId)
       }
     }
