@@ -17,6 +17,20 @@ if (!ideasProject || !natsuProject) {
 }
 
 describe('ProjectCard', () => {
+  it('supports the featured editorial layout', () => {
+    render(
+      <ProjectCard
+        project={ideasProject}
+        language="pt"
+        featured
+      />,
+    )
+
+    const card = screen.getByRole('article')
+    expect(card).toHaveClass('lg:col-span-2', 'lg:grid')
+    expect(card.querySelector('img')).toHaveAttribute('sizes', '(min-width: 1024px) 55vw, calc(100vw - 3rem)')
+  })
+
   it('renders the project information in Portuguese', () => {
     render(
       <ProjectCard
