@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import ExperienceCard from './ExperienceCard'
 import { experiences, type ExperienceLanguage } from '../data/experiences'
+import { centerMobileSelection } from '../utils/centerMobileSelection'
 
 type ExperienceTimelineProps = {
   language: ExperienceLanguage
@@ -19,13 +20,13 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
   return (
     <div className="grid w-full min-w-0 max-w-full grid-cols-[minmax(0,1fr)] items-start gap-6 lg:items-stretch lg:grid-cols-[17rem_minmax(0,1fr)] xl:gap-8">
       <nav aria-label={text.navigation} className="w-full min-w-0 max-w-full lg:h-full">
-        <ol className="technology-category-nav flex w-full min-w-0 max-w-full snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto overscroll-x-contain rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 touch-pan-x lg:grid lg:h-full lg:auto-rows-fr lg:grid-cols-1 lg:gap-3 lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:pl-8">
+        <ol data-mobile-selection-track className="technology-category-nav flex w-full min-w-0 max-w-full snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto overscroll-x-contain rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 touch-pan-x lg:grid lg:h-full lg:auto-rows-fr lg:grid-cols-1 lg:gap-3 lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:pl-8">
           {experiences.map((experience, index) => {
             const isSelected = experience.id === selectedId
             const isReached = index <= selectedIndex
 
             return (
-              <li key={experience.id} className="relative min-w-36 shrink-0 snap-start lg:min-w-0 lg:shrink">
+              <li key={experience.id} className="relative min-w-36 shrink-0 snap-center lg:min-w-0 lg:shrink">
                 {index < experiences.length - 1 && (
                   <span
                     aria-hidden="true"
@@ -53,7 +54,10 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
                   aria-label={`${experience.company} — ${experience.role[language]}`}
                   aria-pressed={isSelected}
                   aria-controls={`experience-panel-${experience.id}`}
-                  onClick={() => setSelectedId(experience.id)}
+                  onClick={(event) => {
+                    setSelectedId(experience.id)
+                    centerMobileSelection(event.currentTarget, 1024)
+                  }}
                   className={`nav-hover-lift relative z-10 flex min-h-10 w-full items-center justify-center whitespace-nowrap rounded-full border px-4 py-2 text-center text-sm font-medium transition-[transform,border-color,background-color] duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transition-none lg:min-h-28 lg:flex-col lg:items-start lg:justify-start lg:whitespace-normal lg:rounded-2xl lg:p-4 lg:text-left ${
                     isSelected
                       ? 'border-(--color-primary) bg-(--color-background)'

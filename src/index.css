@@ -121,7 +121,7 @@ body {
   display: none;
 }
 
-/* Mascote stop-motion: dois quadros inteiros, sem deslocar partes da figura. */
+/* Stop-motion: exactly one complete, transparent frame is painted at a time. */
 .hero-mascot-frame {
   position: absolute;
   inset: 0;
@@ -131,23 +131,35 @@ body {
   pointer-events: none;
 }
 
+.hero-mascot-base {
+  animation: hero-mascot-base-frame 540ms steps(1, end) infinite;
+}
+
 .hero-mascot-wave {
-  animation: hero-mascot-aceno 540ms steps(1, end) infinite;
+  opacity: 0;
+  animation: hero-mascot-wave-frame 540ms steps(1, end) infinite;
 }
 
 .hero-mascot-poke {
   visibility: hidden;
 }
 
+.hero-mascot[data-poked="true"] .hero-mascot-base,
 .hero-mascot[data-poked="true"] .hero-mascot-wave {
-  animation-play-state: paused;
+  animation: none;
+  opacity: 0;
 }
 
 .hero-mascot[data-poked="true"] .hero-mascot-poke {
   visibility: visible;
 }
 
-@keyframes hero-mascot-aceno {
+@keyframes hero-mascot-base-frame {
+  0%, 49.99% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes hero-mascot-wave-frame {
   0%, 49.99% { opacity: 0; }
   50%, 100% { opacity: 1; }
 }
@@ -223,9 +235,14 @@ body {
 
 /* ACESSIBILIDADE: MOVIMENTO REDUZIDO */
 @media (prefers-reduced-motion: reduce) {
+  .hero-mascot-base {
+    animation: none;
+    opacity: 1;
+  }
+
   .hero-mascot-wave {
     animation: none;
-    visibility: hidden;
+    opacity: 0;
   }
 
   html {

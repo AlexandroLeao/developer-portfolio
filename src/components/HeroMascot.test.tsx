@@ -17,6 +17,7 @@ describe('HeroMascot', () => {
       '/images/hero-poke-1024.webp',
     ])
     expect(container.querySelectorAll('picture')).toHaveLength(3)
+    expect(container.querySelector('.hero-mascot-base')).toBeInTheDocument()
     expect(container.querySelector('.hero-mascot-wave')).toBeInTheDocument()
     expect(container.querySelector('.hero-mascot-poke')).toBeInTheDocument()
     for (const image of container.querySelectorAll('img')) {

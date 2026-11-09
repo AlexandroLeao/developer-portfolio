@@ -60,8 +60,8 @@ export default function HeroMascot({ alt, language }: HeroMascotProps) {
       aria-label={language === 'pt' ? 'Cutucar o personagem Alexandro' : 'Poke Alexandro character'}
       className="hero-mascot relative z-10 block aspect-[4/3] w-full max-w-lg cursor-pointer border-0 bg-transparent p-0 focus-visible:rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
     >
-      {/* Both whole-character poses use the same dimensions and frame. */}
-      <MascotFrame name="hero-illustration" alt={alt} priority="high" />
+      {/* Swap complete frames exclusively: transparent areas must never reveal another pose. */}
+      <MascotFrame name="hero-illustration" className="hero-mascot-base" alt={alt} priority="high" />
       <MascotFrame name="hero-wave" className="hero-mascot-wave" />
       {/* Click is a third complete frame: no hand layers or CSS displacement. */}
       <MascotFrame name="hero-poke" className="hero-mascot-poke" />
