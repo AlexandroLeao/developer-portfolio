@@ -54,35 +54,29 @@ describe('Developer Portfolio', () => {
     expect(within(about).queryByText('Formado em Análise e Desenvolvimento de Sistemas')).not.toBeInTheDocument()
   })
 
-  it('shows six featured qualifications in a compact three-column grid', async () => {
+  it('shows the same three featured qualifications on mobile and desktop', async () => {
     const user = userEvent.setup()
     const { container } = render(<App />)
     const grid = container.querySelector<HTMLElement>('#certification-results')!
 
     expect(grid).toHaveClass('sm:grid-cols-2', 'lg:grid-cols-3')
-    expect(within(grid).getAllByRole('article')).toHaveLength(6)
-    const mobileVisible = Array.from(grid.querySelectorAll('article')).filter(
-      (card) => !card.classList.contains('hidden'),
-    )
-    expect(mobileVisible).toHaveLength(3)
-    expect(mobileVisible.map((card) => card.querySelector('h3')?.textContent)).toEqual([
+    const featuredCards = within(grid).getAllByRole('article')
+    expect(featuredCards).toHaveLength(3)
+    expect(featuredCards.map((card) => card.querySelector('h3')?.textContent)).toEqual([
       'Engenharia de Software',
       'Cloud Fundamentals, Administration and Solution Architect',
       'The Complete Full-Stack Web Development Bootcamp',
     ])
-    expect(grid.querySelectorAll('article.hidden.sm\\:flex')).toHaveLength(3)
+    expect(grid.querySelectorAll('article.hidden')).toHaveLength(0)
     for (const name of [
       'Engenharia de Software',
       'Cloud Fundamentals, Administration and Solution Architect',
-      'SCRUM: Gerenciando Projetos de Software com Agilidade',
       'The Complete Full-Stack Web Development Bootcamp',
-      'Fundamentos do Suporte Técnico',
-      'Bootcamp Itaú | Java com Inteligência Artificial',
     ]) {
       expect(within(grid).getByRole('heading', { name })).toBeInTheDocument()
     }
     expect(within(grid).queryByRole('heading', { name: 'UX e UI Design' })).not.toBeInTheDocument()
-    expect(within(grid).getByText('Em andamento')).toBeInTheDocument()
+    expect(within(grid).queryByText('Em andamento')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Destaques' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('group', { name: 'Área de conhecimento' }))
       .toHaveClass('technology-category-nav', 'overflow-x-auto', 'snap-x', 'sm:flex-wrap')
@@ -98,6 +92,7 @@ describe('Developer Portfolio', () => {
     await user.click(screen.getByRole('button', { name: 'Todas' }))
     expect(within(grid).getAllByRole('article')).toHaveLength(18)
     expect(grid.querySelectorAll('article.hidden')).toHaveLength(0)
+    expect(within(grid).getByText('Em andamento')).toBeInTheDocument()
   })
 
   it('shows one selectable project at a time on mobile while preserving the desktop grid', async () => {
@@ -224,7 +219,9 @@ describe('Developer Portfolio', () => {
     expect(javaDescription).toHaveClass('flex-1')
     expect(javaDescription).not.toHaveClass('line-clamp-2')
     expect(within(javaCard).getByRole('heading', { name: 'Competências' })).toBeInTheDocument()
-    expect(within(javaCard).getByRole('heading', { name: 'Competências' }).parentElement).toHaveClass('sm:min-h-20')
+    const javaSkills = within(javaCard).getByRole('heading', { name: 'Competências' }).parentElement!
+    expect(javaSkills).not.toHaveClass('sm:min-h-20')
+    expect(javaSkills.querySelector('ul')).toHaveClass('justify-center')
     expect(within(javaCard).getByText('Em andamento').parentElement).toHaveClass('justify-center')
 
     await user.click(screen.getByRole('button', { name: 'Todas' }))

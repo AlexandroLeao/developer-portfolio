@@ -30,12 +30,19 @@ describe('ProjectDetailsDialog', () => {
     expect(content).toHaveClass('grid', 'sm:grid-cols-2', 'gap-x-6', 'gap-y-5')
     expect(content.children).toHaveLength(3)
     expect(references).toHaveClass('sm:col-span-2', 'min-w-0')
-    expect(references.querySelector('ul')).toHaveClass('grid', 'sm:grid-cols-3')
-    expect(references.querySelectorAll('li')).toHaveLength(3)
+    expect(references.querySelector('ul')).toHaveClass('grid', 'sm:grid-cols-[0.8fr_0.8fr_1.4fr]')
+    const referenceItems = references.querySelectorAll('li')
+    expect(referenceItems).toHaveLength(3)
     expect(references.querySelector('img')).toBeNull()
-    for (const reference of adventureFiles.details.visualReferences ?? []) {
-      expect(within(references).getByText(reference.pt)).toHaveClass('break-words')
+    expect(referenceItems[0]).toHaveClass('items-center', 'justify-center', 'text-center')
+    expect(referenceItems[1]).toHaveClass('items-center', 'justify-center', 'text-center')
+    for (const reference of adventureFiles.details.visualReferences?.slice(0, 2) ?? []) {
+      expect(within(references).getByText(reference.pt)).toBeInTheDocument()
     }
+    const inspirationGrid = referenceItems[2].querySelector('div.grid-cols-3')!
+    expect(Array.from(inspirationGrid.children, (item) => item.textContent)).toEqual([
+      'D&D', 'Zelda', 'Pokémon', 'Mario', 'Fallout', 'Adventure Time',
+    ])
     expect(within(dialog).getByRole('heading', { name: 'Desafio' })).toBeInTheDocument()
     expect(within(dialog).getByRole('heading', { name: 'Arquitetura' })).toBeInTheDocument()
   })

@@ -47,7 +47,10 @@ describe('CertificationCard', () => {
     expect(screen.getByRole('heading', { name: 'Engenharia de Software' })).toHaveClass('min-h-12', 'sm:min-h-14')
     expect(screen.getByText(softwareEngineering.summary.pt)).toHaveClass('flex-1')
     expect(screen.getByText(softwareEngineering.summary.pt)).not.toHaveClass('line-clamp-2')
-    expect(screen.getByRole('heading', { name: 'Competências' }).parentElement).toHaveClass('mt-4', 'sm:min-h-20')
+    const skillsSection = screen.getByRole('heading', { name: 'Competências' }).parentElement!
+    expect(skillsSection).toHaveClass('mt-4')
+    expect(skillsSection).not.toHaveClass('sm:min-h-20')
+    expect(skillsSection.querySelector('ul')).toHaveClass('justify-center')
 
     expect(
       screen.getByRole('button', { name: 'Ver detalhes' }),
