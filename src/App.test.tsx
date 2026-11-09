@@ -64,6 +64,8 @@ describe('Developer Portfolio', () => {
     expect(screen.getByRole('button', { name: 'Destaques' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('group', { name: 'Área de conhecimento' }))
       .toHaveClass('technology-category-nav', 'overflow-x-auto', 'snap-x', 'sm:flex-wrap')
+    expect(screen.getByRole('group', { name: 'Área de conhecimento' }))
+      .toHaveAttribute('data-mobile-selection-track')
     expect(screen.getByRole('button', { name: 'Todas as áreas' }))
       .toHaveClass('shrink-0', 'whitespace-nowrap')
 
@@ -103,6 +105,7 @@ describe('Developer Portfolio', () => {
     const navigation = screen.getByRole('navigation', { name: 'Áreas de tecnologia' })
     expect(within(navigation).getAllByRole('button')).toHaveLength(5)
     expect(navigation).toHaveClass('overflow-x-auto', 'lg:flex-col')
+    expect(navigation).toHaveAttribute('data-mobile-selection-track')
     expect(within(navigation).getByRole('button', { name: /Engenharia & Ferramentas/ }))
       .toHaveClass('lg:leading-tight', 'lg:py-1.5')
     expect(within(navigation).queryByText('Explore por área')).not.toBeInTheDocument()

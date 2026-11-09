@@ -19,6 +19,8 @@ import {
   type CertificationCategory,
 } from './data/certifications'
 import ExperienceTimeline from './components/ExperienceTimeline'
+import HeroMascot from './components/HeroMascot'
+import { centerMobileSelection } from './utils/centerMobileSelection'
 import ProjectCard from './components/ProjectCard'
 import { projects } from './data/projects'
 
@@ -696,17 +698,7 @@ function App() {
             className="pointer-events-none absolute inset-0 -z-10 hidden rounded-full bg-[#235d59]/45 blur-[75px] dark:block"
           />
 
-          <img
-            src="/images/hero-illustration-1024.webp"
-            srcSet="/images/hero-illustration-640.webp 640w, /images/hero-illustration-1024.webp 1024w, /images/hero-illustration-1448.webp 1448w"
-            sizes="(max-width: 640px) calc(100vw - 3rem), 512px"
-            alt={text.hero.illustration}
-            width={1448}
-            height={1086}
-            loading="eager"
-            fetchPriority="high"
-            className="relative z-10 h-auto w-full max-w-lg object-contain"
-          />
+          <HeroMascot alt={text.hero.illustration} language={language} />
         </div>
 
         {/* INDICADOR DA HERO — APENAS DESKTOP */}
@@ -818,6 +810,7 @@ function App() {
           <div className="grid items-stretch gap-3 lg:grid-cols-[13.625rem_minmax(0,1fr)]">
             <nav
               aria-label={text.skills.categoryLabel}
+              data-mobile-selection-track
               className="technology-category-nav flex snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 lg:flex-col lg:overflow-visible lg:p-3"
             >
               {technologyCategories.map((category) => {
@@ -828,11 +821,12 @@ function App() {
                     key={category.id}
                     type="button"
                     aria-pressed={isActive}
-                    onClick={() => {
+                    onClick={(event) => {
                       setActiveTechnologyCategory(category.id)
                       setSelectedTechnologyId(null)
+                      centerMobileSelection(event.currentTarget, 1024)
                     }}
-                    className={`technology-category min-h-10 shrink-0 snap-start whitespace-nowrap rounded-full border px-4 py-2 text-center text-[13px] font-medium leading-snug transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) lg:min-h-11 lg:w-full lg:flex-1 lg:basis-0 lg:whitespace-normal lg:rounded-xl lg:px-2 lg:py-1.5 lg:leading-tight ${
+                    className={`technology-category min-h-10 shrink-0 snap-center whitespace-nowrap rounded-full border px-4 py-2 text-center text-[13px] font-medium leading-snug transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) lg:min-h-11 lg:w-full lg:flex-1 lg:basis-0 lg:whitespace-normal lg:rounded-xl lg:px-2 lg:py-1.5 lg:leading-tight ${
                       isActive
                         ? 'border-(--color-primary) bg-(--color-background) text-(--color-text)'
                         : 'border-transparent text-(--color-text-muted)'
@@ -958,9 +952,9 @@ function App() {
       <section
         id="experience"
         aria-labelledby="experience-title"
-        className="scroll-mt-12 border-t border-(--color-border) pt-8 pb-24 sm:pt-10 sm:pb-32"
+        className="scroll-mt-12 overflow-x-clip border-t border-(--color-border) pt-8 pb-24 sm:pt-10 sm:pb-32"
       >
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto w-full min-w-0 max-w-7xl px-6">
           <div className="mb-12 max-w-2xl">
             <span className={sectionEyebrowClass}>
               {text.experience.eyebrow}
@@ -1089,15 +1083,19 @@ function App() {
             <div
               role="group"
               aria-label={text.certifications.categoryLabel}
+              data-mobile-selection-track
               className="technology-category-nav mb-4 flex snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible sm:pb-0"
             >
               <button
                 type="button"
                 aria-pressed={selectedCertificationCategory === 'all'}
                 aria-controls="certification-results"
-                onClick={() => setSelectedCertificationCategory('all')}
+                onClick={(event) => {
+                  setSelectedCertificationCategory('all')
+                  centerMobileSelection(event.currentTarget, 640)
+                }}
                 className={
-                  'min-h-9 shrink-0 snap-start whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
+                  'min-h-9 shrink-0 snap-center whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
                   (selectedCertificationCategory === 'all'
                     ? 'border-(--color-primary) bg-(--color-surface) text-(--color-primary)'
                     : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)')
@@ -1111,9 +1109,12 @@ function App() {
                   type="button"
                   aria-pressed={selectedCertificationCategory === category.id}
                   aria-controls="certification-results"
-                  onClick={() => setSelectedCertificationCategory(category.id)}
+                  onClick={(event) => {
+                    setSelectedCertificationCategory(category.id)
+                    centerMobileSelection(event.currentTarget, 640)
+                  }}
                   className={
-                    'min-h-9 shrink-0 snap-start whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
+                    'min-h-9 shrink-0 snap-center whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ' +
                     (selectedCertificationCategory === category.id
                       ? 'border-(--color-primary) bg-(--color-surface) text-(--color-primary)'
                       : 'border-(--color-border) text-(--color-text-muted) hover:border-(--color-primary)')
