@@ -4,6 +4,18 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('Developer Portfolio', () => {
+  it('keeps the hero glow slightly contained without changing the illustration', () => {
+    render(<App />)
+    expect(screen.getByTestId('hero-glow')).toHaveClass(
+      'inset-x-[8%]',
+      'inset-y-[8%]',
+      'bg-[#235d59]/40',
+      'blur-[65px]',
+      'dark:block',
+    )
+    expect(screen.getByTestId('hero-mascot')).toBeInTheDocument()
+  })
+
   it('uses consistent section typography across the portfolio', () => {
     const { container } = render(<App />)
     for (const id of ['about', 'skills', 'projects', 'experience', 'certifications', 'contact']) {
