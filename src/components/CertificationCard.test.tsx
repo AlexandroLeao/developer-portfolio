@@ -44,10 +44,16 @@ describe('CertificationCard', () => {
     expect(
       screen.getByText(softwareEngineering.summary.pt),
     ).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Engenharia de Software' })).toHaveClass('min-h-12', 'sm:min-h-14')
+    expect(screen.getByText(softwareEngineering.summary.pt)).toHaveClass('flex-1')
+    expect(screen.getByText(softwareEngineering.summary.pt)).not.toHaveClass('line-clamp-2')
+    expect(screen.getByRole('heading', { name: 'Competências' }).parentElement).toHaveClass('mt-4', 'sm:min-h-20')
 
     expect(
       screen.getByRole('button', { name: 'Ver detalhes' }),
     ).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getByRole('button', { name: 'Ver detalhes' }).parentElement).toHaveClass('justify-center')
+    expect(screen.getByRole('button', { name: 'Ver detalhes' }).querySelector('svg')).toBeNull()
     expect(
       screen.queryByRole('region', { name: /Conteúdos abordados/ }),
     ).not.toBeInTheDocument()

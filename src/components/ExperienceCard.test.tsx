@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
 import ExperienceCard from './ExperienceCard'
 import { experiences } from '../data/experiences'
 
@@ -39,16 +40,23 @@ describe('ExperienceCard', () => {
     }
   })
 
-  it('links the Kosei Home experience to Natsu Matsuri', () => {
-    render(<ExperienceCard experience={koseiExperience} language="pt" />)
+  it('centers the related-project action without a duplicate project label', async () => {
+    const user = userEvent.setup()
+    const onRelatedProjectClick = vi.fn()
+    render(<ExperienceCard experience={koseiExperience} language="pt" onRelatedProjectClick={onRelatedProjectClick} />)
 
     expect(screen.getByRole('link', { name: 'Ver projeto relacionado' })).toHaveAttribute('href', '#projects')
-    expect(screen.getByText('Natsu Matsuri Project')).toBeInTheDocument()
+    expect(screen.queryByText('Natsu Matsuri Project')).not.toBeInTheDocument()
     const relatedLink = screen.getByRole('link', { name: 'Ver projeto relacionado' })
     expect(relatedLink.closest('section')).toContainElement(
       screen.getByRole('heading', { name: 'Principais contribuições' }),
     )
-    expect(relatedLink.parentElement).toHaveClass('text-right')
+    expect(relatedLink.parentElement).toHaveClass('justify-center')
+    expect(relatedLink.querySelector('svg')).toBeNull()
+
+    await user.click(relatedLink)
+    expect(onRelatedProjectClick).toHaveBeenCalledOnce()
+    expect(onRelatedProjectClick).toHaveBeenCalledWith('natsu-matsuri')
   })
 
   it('omits the project action when no related project exists', () => {

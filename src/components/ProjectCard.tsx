@@ -28,7 +28,7 @@ export default function ProjectCard({ project, language }: ProjectCardProps) {
   return (
     <article
       id={`project-${project.id}`}
-      className="group flex h-full min-w-0 scroll-mt-24 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface)"
+      className="group flex h-full min-w-0 scroll-mt-28 flex-col overflow-hidden rounded-3xl border border-(--color-border) bg-(--color-surface)"
     >
       <div className="aspect-video overflow-hidden border-b border-(--color-border) bg-(--color-background)">
         <img

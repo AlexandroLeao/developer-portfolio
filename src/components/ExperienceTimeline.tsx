@@ -5,6 +5,7 @@ import { centerMobileSelection } from '../utils/centerMobileSelection'
 
 type ExperienceTimelineProps = {
   language: ExperienceLanguage
+  onRelatedProjectClick?: (projectId: string) => void
 }
 
 const translations = {
@@ -12,7 +13,7 @@ const translations = {
   en: { navigation: 'Professional timeline' },
 }
 
-export default function ExperienceTimeline({ language }: ExperienceTimelineProps) {
+export default function ExperienceTimeline({ language, onRelatedProjectClick }: ExperienceTimelineProps) {
   const [selectedId, setSelectedId] = useState(experiences[0].id)
   const text = translations[language]
   const selectedIndex = experiences.findIndex((experience) => experience.id === selectedId)
@@ -98,7 +99,7 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
               hidden={!isSelected}
               className={`min-w-0 lg:h-full ${isSelected ? 'block' : 'hidden'}`}
             >
-              <ExperienceCard experience={experience} language={language} />
+              <ExperienceCard experience={experience} language={language} onRelatedProjectClick={onRelatedProjectClick} />
             </div>
           )
         })}

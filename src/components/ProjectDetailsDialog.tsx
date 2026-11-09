@@ -91,56 +91,49 @@ export default function ProjectDetailsDialog({ project, language }: ProjectDetai
           </button>
         </div>
 
-        <div id={detailsId} className="grid gap-3 px-4 py-3 sm:grid-cols-[1fr_0.95fr] sm:gap-5 sm:px-6 sm:py-5">
-          <section className="min-w-0">
-            <h4 className="font-display mb-2 text-base font-semibold text-(--color-primary)">{text.highlights}</h4>
-            <ul className="grid gap-2">
-              {project.details.features.map((feature) => (
-                <li key={feature.pt} className="flex items-start gap-2 text-[13px] leading-5 text-(--color-text-muted) sm:text-sm sm:leading-6">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-(--color-primary)" />
-                  {feature[language]}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <div className="grid min-w-0 content-start gap-2.5 border-t border-(--color-border) pt-3 sm:gap-3 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-5">
-            <section className="rounded-xl bg-(--color-background) p-2.5 sm:p-3">
-              <h4 className="font-display mb-1 text-sm font-semibold text-(--color-primary)">{text.architecture}</h4>
-              <p className="text-[13px] leading-5 text-(--color-text-muted) sm:text-sm">{project.details.architecture[language]}</p>
+        <div id={detailsId} className="grid min-w-0 gap-x-6 gap-y-5 px-4 py-5 sm:grid-cols-2 sm:px-6 sm:py-6">
+          <div className="grid min-w-0 content-start gap-5">
+            <section className="min-w-0">
+              <h4 className="font-display mb-3 text-sm font-semibold text-(--color-primary)">{text.highlights}</h4>
+              <ul className="grid gap-2.5">
+                {project.details.features.map((feature) => (
+                  <li key={feature.pt} className="flex min-w-0 items-start gap-2.5 text-[13px] leading-6 text-(--color-text-muted) sm:text-sm">
+                    <span aria-hidden="true" className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-(--color-primary)" />
+                    <span className="min-w-0">{feature[language]}</span>
+                  </li>
+                ))}
+              </ul>
             </section>
-            <section className="project-dialog-secondary">
-              <h4 className="font-display mb-1 text-sm font-semibold">{text.challenge}</h4>
-              <p className="text-[13px] leading-5 text-(--color-text-muted) sm:text-sm">{project.details.challenges[language]}</p>
+            <section className="min-w-0 rounded-xl border border-(--color-border) bg-(--color-background) p-3">
+              <h4 className="font-display mb-1.5 text-sm font-semibold text-(--color-primary)">{text.challenge}</h4>
+              <p className="text-[13px] leading-6 text-(--color-text-muted) sm:text-sm">{project.details.challenges[language]}</p>
             </section>
-            <section className="project-dialog-secondary">
-              <h4 className="font-display mb-1 text-sm font-semibold">{text.practices}</h4>
-              <p className="text-[13px] leading-5 text-(--color-text-muted) sm:text-sm">{project.details.practices[language]}</p>
-            </section>
-            {project.details.visualReferences && (
-              <section className="border-t border-(--color-border) pt-2">
-                <h4 className="font-display mb-1.5 text-sm font-semibold text-(--color-primary)">{text.visual}</h4>
-                <div className="flex items-center gap-3">
-                  <img
-                    src={project.image}
-                    alt={project.imageAlt[language]}
-                    loading="lazy"
-                    className="hidden h-16 w-24 shrink-0 rounded-lg border border-(--color-border) object-cover [@media(min-height:700px)]:block"
-                  />
-                  <div className="min-w-0">
-                    <ul className="flex flex-wrap gap-1">
-                      {project.details.visualReferences.map((reference) => (
-                        <li key={reference.pt} className="rounded-full border border-(--color-border) bg-(--color-background) px-2 py-0.5 text-[11px] leading-4 text-(--color-text)">
-                          {reference[language]}
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="mt-1 text-[11px] leading-4 text-(--color-text-muted)">{text.inspiration}</p>
-                  </div>
-                </div>
-              </section>
-            )}
           </div>
+
+          <div className="grid min-w-0 content-start gap-5 border-t border-(--color-border) pt-5 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-6">
+            <section className="min-w-0 rounded-xl border border-(--color-border) bg-(--color-background) p-3">
+              <h4 className="font-display mb-1.5 text-sm font-semibold text-(--color-primary)">{text.architecture}</h4>
+              <p className="text-[13px] leading-6 text-(--color-text-muted) sm:text-sm">{project.details.architecture[language]}</p>
+            </section>
+            <section className="min-w-0">
+              <h4 className="font-display mb-1.5 text-sm font-semibold text-(--color-primary)">{text.practices}</h4>
+              <p className="text-[13px] leading-6 text-(--color-text-muted) sm:text-sm">{project.details.practices[language]}</p>
+            </section>
+          </div>
+
+          {project.details.visualReferences && (
+            <section className="min-w-0 border-t border-(--color-border) pt-4 sm:col-span-2">
+              <h4 className="font-display mb-3 text-sm font-semibold text-(--color-primary)">{text.visual}</h4>
+              <ul className="grid min-w-0 gap-2 sm:grid-cols-3">
+                {project.details.visualReferences.map((reference) => (
+                  <li key={reference.pt} className="min-w-0 break-words rounded-xl border border-(--color-border) bg-(--color-background) px-3 py-2.5 text-xs leading-5 text-(--color-text)">
+                    {reference[language]}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-xs leading-5 text-(--color-text-muted)">{text.inspiration}</p>
+            </section>
+          )}
         </div>
       </dialog>, document.body)}
     </>
