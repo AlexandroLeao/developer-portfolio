@@ -695,7 +695,8 @@ function App() {
         <div className="relative isolate flex w-full flex-1 items-center justify-center">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 -z-10 hidden rounded-full bg-[#235d59]/45 blur-[75px] dark:block"
+            data-testid="hero-glow"
+            className="pointer-events-none absolute inset-x-[8%] inset-y-[8%] -z-10 hidden rounded-full bg-[#235d59]/40 blur-[65px] dark:block"
           />
 
           <HeroMascot alt={text.hero.illustration} language={language} />
