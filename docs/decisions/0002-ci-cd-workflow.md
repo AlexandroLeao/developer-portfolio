@@ -40,8 +40,9 @@ The workflow uses Node.js 24 and executes:
 - npm run test
 - npm run build
 
-The current test suite contains 34 automated tests
-across 6 test files.
+The automated suite grows with the project; its current test count
+must be obtained by running `npm run test`. The documented
+2026-11-09 baseline is 71 passing tests across 14 test files.
 
 ## Continuous Deployment
 

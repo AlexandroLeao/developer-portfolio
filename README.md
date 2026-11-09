@@ -6,28 +6,28 @@ The repository also documents the engineering practices behind the portfolio: an
 
 ## Project Status
 
-**The portfolio is implemented and deployed to Vercel Production.** SEO, performance, accessibility, and visual identity improvements have been completed. The custom domain [alexandroleao.com.br](https://alexandroleao.com.br/) is connected to Vercel Production, with DNS configuration validated. The first stable release (`v1.0.0`) has been published. See the [official GitHub Release](https://github.com/AlexandroLeao/developer-portfolio/releases/tag/v1.0.0).
+**The portfolio is implemented and deployed to Vercel Production.** The custom domain [alexandroleao.com.br](https://alexandroleao.com.br/) is connected to Vercel Production, with DNS configuration validated. The first stable release (`v1.0.0`) has been published; subsequent responsive, interaction, and visual refinements are tracked separately in the [changelog](CHANGELOG.md). See the [official GitHub Release](https://github.com/AlexandroLeao/developer-portfolio/releases/tag/v1.0.0).
 
 - Default language: Portuguese, with an English option.
 - Appearance: light and dark themes.
-- Current automated test suite: **35 tests across 6 test files**.
+- Automated test baseline on 2026-11-09: **71 tests across 14 test files**. Run `npm run test` for the current count.
 - Development: GitHub Issues, feature branches, Pull Requests, GitHub Actions, and Vercel Preview.
 - Deployment: the `main` branch is published to Vercel Production.
 
 ## Implemented Features
 
-- **Hero and Header:** professional introduction, responsive navigation, theme/language controls, language-specific PDF resume downloads, and scroll-aware behavior.
+- **Hero and Header:** professional introduction, responsive navigation, theme/language controls, Portuguese/English PDF resume downloads, and a lightweight stop-motion character that waves continuously and reacts to clicks/taps.
 - **About Me:** professional background and approach to software development.
-- **Technologies:** categorized skills with interactive details.
-- **Projects:** project cards with technology tags, expandable technical descriptions, repository links, and live demos when available.
-- **Experience:** professional timeline with expandable responsibilities, contributions, and relevant skills.
-- **Education and Certifications:** academic background, 17 completed courses/certifications, detailed learning topics, supported official verification mechanisms, and Java training clearly marked as in progress.
+- **Technologies:** categorized skills with interactive details and a horizontally scrollable, selection-centering category control on mobile.
+- **Projects:** responsive cards, technology distribution charts, structured technical-detail dialogs, repository/live-demo links, and a mobile selector that shows one project at a time without expanding the viewport.
+- **Experience:** selectable professional timeline, responsibilities, contributions, relevant skills, and context-aware navigation to a related project; mobile selections are gently centered.
+- **Education and Certifications:** academic background, 17 completed courses/certifications, detailed learning topics and verification mechanisms. A curated set of three qualifications is featured on both desktop and mobile; the full catalog and category filters remain available, with Java training marked as in progress.
 - **Contact:** reusable, accessible dialog with Email, LinkedIn, GitHub, and WhatsApp links; a dedicated contact section and footer with direct links.
 - **Internationalization:** Portuguese and English content throughout the interface.
-- **Accessibility and responsiveness:** semantic elements, accessible labels and interactive states, keyboard interactions, reduced-motion considerations, and desktop/mobile layouts.
-- **Navigation:** responsive menu, section anchors, and a back-to-top control.
+- **Accessibility and responsiveness:** semantic elements, accessible dialogs and interactive states, keyboard interactions, reduced-motion support, and viewport-safe desktop/mobile layouts.
+- **Navigation and motion:** responsive menu, section anchors, back-to-top control, and gentle scroll-triggered section reveals when motion is permitted.
 
-Accessibility and performance improvements have been validated through automated tests, manual reviews, and Lighthouse audits. Recorded scores are individual measurements and do not constitute WCAG certification or guarantee future scores.
+The owner reports a **Google PageSpeed Insights result of 100/100 in Performance, Accessibility, Best Practices, and SEO** on 2026-11-09, following the recent refinements. The underlying report URL, device profile, and raw audit output have not yet been archived in this repository; this is an owner-reported measurement, not a new independently reproduced audit. See [Performance and Quality](docs/performance-and-quality.md) for provenance, limitations, and a repeatable validation checklist.
 
 ## Technology Stack
 
@@ -51,11 +51,14 @@ Docker and AWS are **not** required to build or host the current portfolio. They
   ISSUE_TEMPLATE/         Issue templates
   workflows/ci.yml       Pull Request CI
 public/
-  images/                Portfolio and project illustrations
+  images/                Responsive WebP mascot frames and project illustrations
+  resumes/               Public Portuguese/English resume PDFs
+  fonts/                 Self-hosted fonts and icon subset
   favicon.svg            Custom AL favicon
 src/
   components/            Reusable UI components and component tests
   data/                  Typed content for projects, experience, certifications, and contact
+  utils/                 Mobile selection-centering helper and tests
   test/                  Shared test setup
   App.tsx                Main page, sections, and language integration
   App.test.tsx           Main application tests
@@ -64,9 +67,11 @@ index.html               HTML entry point and SEO metadata
 docs/
   architecture.md         Architecture overview
   use-cases.md            Visitor use case catalog
+  performance-and-quality.md  Audit provenance and verification guidance
   diagrams/               PlantUML diagrams
   decisions/              Architectural decision records
 CONTRIBUTING.md          Development and review conventions
+CHANGELOG.md             Post-release improvements and documentation history
 README.md                Project overview and setup
 ```
 
@@ -107,7 +112,7 @@ Vite starts a local development server and prints its address in the terminal. U
 
 ## Testing and Quality
 
-The current suite includes **35 automated tests in 6 test files**, covering the main application and interactive cards/components for projects, experience, certifications, the contact modal, and the footer.
+The suite contained **71 automated tests across 14 files** at the 2026-11-09 baseline. It covers the main application, language/theme behavior, character frames, mobile selection helpers, navigation, experience, projects, certification filtering and dialogs, contact channels, and the footer. The count is a snapshot, not a hard-coded target; check the test runner for the current total.
 
 ```bash
 npm run lint
@@ -132,9 +137,10 @@ A failed step fails the CI job. Vercel deployment checks are handled separately 
 
 ## Technical Documentation
 
-The repository includes documentation of the implemented
-software architecture, visitor use cases, engineering workflow,
-and architectural decisions.
+The repository includes current architecture and use-case documentation, an audit-evidence record, a dated changelog, engineering conventions, and architectural decisions.
+
+- [Changelog](CHANGELOG.md)
+- [Performance and Quality](docs/performance-and-quality.md)
 
 ### Architecture and UML
 
@@ -151,6 +157,7 @@ They can be rendered with a compatible PlantUML tool.
 - [ADR 0001 — Client-Side React Architecture](docs/decisions/0001-client-side-architecture.md)
 - [ADR 0002 — Issue-Driven Development and CI/CD](docs/decisions/0002-ci-cd-workflow.md)
 - [ADR 0003 — Local Fonts and Optimized Static Assets](docs/decisions/0003-local-assets-performance.md)
+- [ADR 0004 — Accessible Motion and Viewport-Safe Mobile Navigation](docs/decisions/0004-accessible-motion-mobile-navigation.md)
 
 These records retrospectively document decisions reflected
 in the implemented project. They do not imply that a formal
@@ -202,7 +209,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Configure ESLint and TypeScript validation.
 - [x] Establish an Issue-driven development workflow.
 - [x] Implement GitHub Actions continuous integration.
-- [x] Add 35 automated tests across 6 test files.
+- [x] Establish and expand automated component/application tests (71 passing tests across 14 files as of 2026-11-09).
 - [x] Implement all core portfolio sections.
 - [x] Support Portuguese and English languages.
 - [x] Support light and dark themes.
@@ -225,6 +232,12 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Update and expand technical project documentation.
 - [x] Document software architecture and UML diagrams.
 - [x] Record significant architectural decisions using ADRs.
+- [x] Add a stop-motion Hero mascot with a separate click/tap reaction and responsive WebP frames.
+- [x] Keep mobile project and category selectors inside the viewport, with subtle selection centering.
+- [x] Refine project-details dialogs, experience navigation, and certification card consistency.
+- [x] Curate three featured qualifications on desktop and mobile while retaining the full catalog.
+- [x] Add scroll-reveal transitions with reduced-motion behavior.
+- [x] Document the owner-reported 2026-11-09 PageSpeed Insights results in all four categories.
 
 ### Planned
 
@@ -236,9 +249,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [ ] Consider end-to-end tests if future complexity justifies them.
 - [ ] Explore Docker, AWS, and infrastructure automation separately.
 
-The roadmap reflects completed and planned work. Lighthouse scores
-represent individual audit results rather than a permanent guarantee
-of performance or accessibility compliance.
+The roadmap reflects completed and planned work. The latest PageSpeed Insights scores are recorded as an owner-reported snapshot; results may vary between devices, networks, and audit runs, and do not establish accessibility conformance.
 
 ## Project Management
 

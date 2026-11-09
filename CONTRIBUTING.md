@@ -188,11 +188,23 @@ When relevant, verify:
 
 Vitest, React Testing Library, Testing Library jest-dom, and jsdom are implemented in the project.
 
-At the completion of the Contact section, the test suite contained 33 tests across six test files, covering the application and selected components. This count is a documented baseline and may increase as the project evolves.
+The test suite covers the application and key components, including mobile-selection behavior, the Hero mascot, dialogs, and certification filtering. For historical context, the verified baseline on 2026-11-09 was 71 passing tests across 14 files. Run `npm run test` to see the current total; do not copy an old count into a new PR without running the suite.
 
 GitHub Actions automatically runs `npm run lint`, `npm run test`, and `npm run build` on pull requests targeting `main`. A failing command causes the CI job to fail.
 
 End-to-end tests with Playwright are a potential future improvement; they are not currently implemented.
+
+### Performance and Accessibility Audits
+
+For changes that affect loading, layout, rendering, or animation:
+
+1. Run the production build and inspect the relevant desktop and mobile views.
+2. Run PageSpeed Insights or Lighthouse against the intended deployment URL.
+3. Record the URL, audit date, device mode (mobile/desktop), four category scores, and a shareable report link or exported JSON when available.
+4. Clearly label audit results reported by another person when the raw report has not been independently reviewed.
+5. Check that animations respect `prefers-reduced-motion` and that horizontal selectors do not expand the page width.
+
+Scores are point-in-time laboratory measurements. A perfect Accessibility score does not constitute WCAG certification. See [Performance and Quality](docs/performance-and-quality.md).
 
 ## 7. Pull Requests
 
