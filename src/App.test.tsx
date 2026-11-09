@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 
@@ -181,16 +181,105 @@ describe('Developer Portfolio', () => {
     document.documentElement.lang = 'pt-BR'
   })
 
-  it('marks only selected section titles for lightweight entrance feedback', () => {
-    render(<App />)
+  it('marks all sections and their content for consistent scroll reveals', () => {
+    const { container } = render(<App />)
 
-    for (const name of [/^Projetos/, /^Experiência/, /^Formação e certificações/]) {
-      const heading = screen.getByRole('heading', { level: 2, name })
-      expect(heading).toHaveAttribute('data-reveal-on-scroll')
+    for (const id of ['about', 'skills', 'projects', 'experience', 'certifications', 'contact']) {
+      const heading = container.querySelector(`#${id}-title`)
+      expect(heading?.closest('[data-reveal-on-scroll]')).not.toBeNull()
     }
 
-    expect(screen.getByRole('heading', { level: 2, name: /^Sobre mim/ }))
-      .not.toHaveAttribute('data-reveal-on-scroll')
+    expect(container.querySelectorAll('[data-reveal-on-scroll]').length).toBeGreaterThanOrEqual(11)
+    expect(screen.getByTestId('hero-mascot').closest('[data-reveal-on-scroll]')).toBeNull()
+  })
+
+  it('repeats reveals in both scroll directions without changing element geometry', () => {
+    const observers: Array<{
+      callback: IntersectionObserverCallback
+      observe: ReturnType<typeof vi.fn>
+      disconnect: ReturnType<typeof vi.fn>
+    }> = []
+
+    class MockIntersectionObserver {
+      callback: IntersectionObserverCallback
+      observe = vi.fn()
+      disconnect = vi.fn()
+
+      constructor(callback: IntersectionObserverCallback) {
+        this.callback = callback
+        observers.push(this)
+      }
+    }
+
+    vi.stubGlobal('IntersectionObserver', MockIntersectionObserver)
+    const { container, unmount } = render(<App />)
+    const sectionTitle = container.querySelector<HTMLElement>('#projects-title')!
+    const revealTarget = sectionTitle.closest<HTMLElement>('[data-reveal-on-scroll]')!
+    const sectionObserver = observers.find((observer) =>
+      observer.observe.mock.calls.some(([element]) => element === revealTarget),
+    )!
+
+    expect(sectionObserver).toBeDefined()
+    expect(revealTarget).toHaveClass('reveal-pending')
+    expect(revealTarget).not.toHaveClass('reveal-visible')
+
+    act(() => {
+      sectionObserver.callback(
+        [{ target: revealTarget, isIntersecting: true } as unknown as IntersectionObserverEntry],
+        sectionObserver as unknown as IntersectionObserver,
+      )
+    })
+    expect(revealTarget).toHaveClass('reveal-visible')
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 300 })
+    fireEvent.scroll(window)
+    expect(document.documentElement).toHaveAttribute('data-scroll-direction', 'down')
+
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 200 })
+    fireEvent.scroll(window)
+    expect(document.documentElement).toHaveAttribute('data-scroll-direction', 'up')
+
+    act(() => {
+      sectionObserver.callback(
+        [{ target: revealTarget, isIntersecting: false } as unknown as IntersectionObserverEntry],
+        sectionObserver as unknown as IntersectionObserver,
+      )
+    })
+    expect(revealTarget).not.toHaveClass('reveal-visible')
+    expect(sectionObserver.observe.mock.calls.length).toBeGreaterThanOrEqual(11)
+
+    act(() => {
+      sectionObserver.callback(
+        [{ target: revealTarget, isIntersecting: true } as unknown as IntersectionObserverEntry],
+        sectionObserver as unknown as IntersectionObserver,
+      )
+    })
+    expect(revealTarget).toHaveClass('reveal-visible')
+
+    unmount()
+    expect(sectionObserver.disconnect).toHaveBeenCalledOnce()
+    expect(revealTarget).not.toHaveClass('reveal-pending')
+    expect(document.documentElement).not.toHaveAttribute('data-scroll-direction')
+  })
+
+  it('keeps sections visible without an observer or with reduced motion', () => {
+    vi.stubGlobal('IntersectionObserver', undefined)
+    const firstRender = render(<App />)
+    expect(firstRender.container.querySelector('.reveal-pending')).toBeNull()
+    firstRender.unmount()
+
+    vi.stubGlobal('IntersectionObserver', class {
+      observe = vi.fn()
+      disconnect = vi.fn()
+    })
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true }))
+    const secondRender = render(<App />)
+    expect(secondRender.container.querySelector('.reveal-pending')).toBeNull()
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 })
   })
 
   it('renders the main portfolio sections', () => {

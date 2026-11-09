@@ -550,8 +550,16 @@ function App() {
   }, [language])
 
   useEffect(() => {
+    let previousY = window.scrollY
+    document.documentElement.dataset.scrollDirection = 'down'
+
     function handleScroll() {
       const currentY = window.scrollY
+
+      if (Math.abs(currentY - previousY) >= 3) {
+        document.documentElement.dataset.scrollDirection = currentY < previousY ? 'up' : 'down'
+        previousY = currentY
+      }
 
       setIsAtTop(currentY < 80)
 
@@ -568,37 +576,36 @@ function App() {
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
+      delete document.documentElement.dataset.scrollDirection
     }
   }, [])
 
-  // Revela apenas os títulos selecionados, uma vez, sem listeners de scroll.
+  // Um observador para todas as seções; a entrada se repete ao subir e descer.
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
 
-    const headings = Array.from(
+    const elements = Array.from(
       document.querySelectorAll<HTMLElement>('[data-reveal-on-scroll]'),
     )
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue
-          entry.target.classList.add('reveal-visible')
-          observer.unobserve(entry.target)
+          entry.target.classList.toggle('reveal-visible', entry.isIntersecting)
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.08, rootMargin: '-3% 0px -10% 0px' },
     )
 
-    headings.forEach((heading) => {
-      heading.classList.add('reveal-pending')
-      observer.observe(heading)
+    elements.forEach((element) => {
+      element.classList.add('reveal-pending')
+      observer.observe(element)
     })
 
     return () => {
       observer.disconnect()
-      headings.forEach((heading) =>
-        heading.classList.remove('reveal-pending', 'reveal-visible'),
+      elements.forEach((element) =>
+        element.classList.remove('reveal-pending', 'reveal-visible'),
       )
     }
   }, [])
@@ -749,7 +756,7 @@ function App() {
         className="scroll-mt-12 border-t border-(--color-border) pt-16 pb-10 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-8"
       >
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 px-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-          <div className="flex flex-col items-start">
+          <div data-reveal-on-scroll className="flex flex-col items-start">
             <span className={sectionEyebrowClass}>
               {text.about.eyebrow}
             </span>
@@ -769,7 +776,7 @@ function App() {
 
           </div>
 
-          <div className="space-y-6">
+          <div data-reveal-on-scroll data-reveal-delay="1" className="space-y-6">
             {text.about.paragraphs.map(
               (paragraph, index) => (
                 <p
@@ -791,7 +798,7 @@ function App() {
         className="scroll-mt-12 border-t border-(--color-border) py-12 sm:py-14"
       >
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-8 max-w-3xl">
+          <div data-reveal-on-scroll className="mb-8 max-w-3xl">
             <span className={sectionEyebrowClass}>
               {text.skills.eyebrow}
             </span>
@@ -808,7 +815,7 @@ function App() {
             </p>
           </div>
 
-          <div className="grid items-stretch gap-3 lg:grid-cols-[13.625rem_minmax(0,1fr)]">
+          <div data-reveal-on-scroll data-reveal-delay="1" className="grid items-stretch gap-3 lg:grid-cols-[13.625rem_minmax(0,1fr)]">
             <nav
               aria-label={text.skills.categoryLabel}
               data-mobile-selection-track
@@ -913,14 +920,13 @@ function App() {
         className="scroll-mt-12 border-t border-(--color-border) pt-16 pb-8 sm:pt-20 sm:pb-10 lg:pt-24"
       >
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-12 max-w-2xl">
+          <div data-reveal-on-scroll className="mb-12 max-w-2xl">
             <span className={sectionEyebrowClass}>
               {text.projects.eyebrow}
             </span>
 
             <h2
               id="projects-title"
-              data-reveal-on-scroll
               className={sectionHeadingClass}
             >
               {text.projects.title}
@@ -937,7 +943,7 @@ function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-8">
+          <div data-reveal-on-scroll data-reveal-delay="1" className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-8">
             {projects.map((project) => (
               <ProjectCard
                 key={project.id}
@@ -956,14 +962,13 @@ function App() {
         className="scroll-mt-12 overflow-x-clip border-t border-(--color-border) pt-8 pb-24 sm:pt-10 sm:pb-32"
       >
         <div className="mx-auto w-full min-w-0 max-w-7xl px-6">
-          <div className="mb-12 max-w-2xl">
+          <div data-reveal-on-scroll className="mb-12 max-w-2xl">
             <span className={sectionEyebrowClass}>
               {text.experience.eyebrow}
             </span>
 
             <h2
               id="experience-title"
-              data-reveal-on-scroll
               className={sectionHeadingClass}
             >
               {text.experience.title}
@@ -980,7 +985,9 @@ function App() {
             </p>
           </div>
 
-          <ExperienceTimeline language={language} />
+          <div data-reveal-on-scroll data-reveal-delay="1">
+            <ExperienceTimeline language={language} />
+          </div>
         </div>
       </section>
 
@@ -991,14 +998,13 @@ function App() {
         className="scroll-mt-12 border-t border-(--color-border) pt-14 pb-24 sm:pt-16 sm:pb-32"
       >
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-8 max-w-2xl">
+          <div data-reveal-on-scroll className="mb-8 max-w-2xl">
             <span className={sectionEyebrowClass}>
               {text.certifications.eyebrow}
             </span>
 
             <h2
               id="certifications-title"
-              data-reveal-on-scroll
               className={sectionHeadingClass}
             >
               {text.certifications.title}
@@ -1016,7 +1022,7 @@ function App() {
           </div>
 
           {/* GRADUAÇÃO */}
-          <div className="mb-8">
+          <div data-reveal-on-scroll data-reveal-delay="1" className="mb-8">
             <h3 className={`${subsectionHeadingClass} mb-3`}>
               {text.certifications.degreeLabel}
             </h3>
@@ -1048,7 +1054,7 @@ function App() {
           </div>
 
           {/* CURSOS E CERTIFICAÇÕES */}
-          <div>
+          <div data-reveal-on-scroll data-reveal-delay="2">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <h3 className={subsectionHeadingClass}>
                 {text.certifications.certificationLabel}
@@ -1186,7 +1192,7 @@ function App() {
         aria-labelledby="contact-title"
         className="scroll-mt-12 border-t border-(--color-border) py-20 sm:py-28"
       >
-        <div className="mx-auto flex max-w-7xl flex-col items-center px-6 text-center">
+        <div data-reveal-on-scroll className="mx-auto flex max-w-7xl flex-col items-center px-6 text-center">
           <span className={sectionEyebrowClass}>
             {text.contact.eyebrow}
           </span>
