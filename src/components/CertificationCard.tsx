@@ -15,7 +15,6 @@ import type {
 type CertificationCardProps = {
   certification: Certification
   language: CertificationLanguage
-  hideOnMobile?: boolean
 }
 
 const translations = {
@@ -72,7 +71,6 @@ function formatCompletionDate(
 export default function CertificationCard({
   certification,
   language,
-  hideOnMobile = false,
 }: CertificationCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const dialogRef = useRef<HTMLDialogElement>(null)
@@ -103,7 +101,7 @@ export default function CertificationCard({
   }
 
   return (
-    <article className={`group h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) transition-[transform,border-color] duration-200 [@media(hover:hover)]:hover:-translate-y-0.5 [@media(hover:hover)]:hover:border-(--color-primary) focus-within:border-(--color-primary) motion-reduce:transform-none motion-reduce:transition-none ${hideOnMobile ? 'hidden sm:flex' : 'flex'}`}>
+    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) transition-[transform,border-color] duration-200 [@media(hover:hover)]:hover:-translate-y-0.5 [@media(hover:hover)]:hover:border-(--color-primary) focus-within:border-(--color-primary) motion-reduce:transform-none motion-reduce:transition-none">
       <div className="flex flex-1 flex-col p-4">
         {/* INSTITUIÇÃO E ÍCONE */}
         <div className="mb-3 flex min-h-12 items-start justify-between gap-3">
@@ -153,12 +151,12 @@ export default function CertificationCard({
         </p>
 
         {/* COMPETÊNCIAS */}
-        <div className="mt-4 sm:min-h-20">
+        <div className="mt-4">
           <h4 className="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-(--color-text-muted)">
             {text.skills}
           </h4>
 
-          <ul className="flex flex-wrap gap-1.5">
+          <ul className="flex flex-wrap justify-center gap-1.5">
             {certification.skills.map((skill, index) => (
               <li
                 key={`${certification.id}-skill-${index}`}

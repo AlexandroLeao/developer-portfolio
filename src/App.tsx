@@ -508,7 +508,7 @@ const sectionEyebrowClass = 'mb-4 block text-xs font-semibold tracking-[0.2em] t
 const sectionHeadingClass = 'font-display text-4xl font-bold tracking-tight sm:text-5xl'
 const sectionIntroClass = 'text-base leading-8 text-(--color-text-muted) sm:text-lg'
 const subsectionHeadingClass = 'font-display text-xl font-semibold text-(--color-text) sm:text-2xl'
-const mobileFeaturedCertificationIds = new Set([
+const featuredCertificationIds = new Set([
   'software-engineering',
   'cloud-fundamentals',
   'full-stack-bootcamp',
@@ -622,9 +622,12 @@ function App() {
 
   const text = translations[language]
 
+  const isDefaultFeaturedView = certificationView === 'featured' && selectedCertificationCategory === 'all'
+
   const visibleCertifications = certifications.filter(
     (certification) =>
       (certificationView === 'all' || certification.featured) &&
+      (!isDefaultFeaturedView || featuredCertificationIds.has(certification.id)) &&
       (selectedCertificationCategory === 'all' || certification.category === selectedCertificationCategory),
   )
 
@@ -636,7 +639,7 @@ function App() {
   const certificationCards = [
     ...completedCards('engineering'),
     ...completedCards('development'),
-    ...(selectedCertificationCategory === 'all' || selectedCertificationCategory === 'development'
+    ...(!isDefaultFeaturedView && (selectedCertificationCategory === 'all' || selectedCertificationCategory === 'development')
       ? ongoingEducation.map((course) => ({ kind: 'ongoing' as const, course }))
       : []),
     ...completedCards('foundations'),
@@ -1210,12 +1213,11 @@ function App() {
                     key={card.certification.id}
                     certification={card.certification}
                     language={language}
-                    hideOnMobile={certificationView === 'featured' && selectedCertificationCategory === 'all' && !mobileFeaturedCertificationIds.has(card.certification.id)}
                   />
                 ) : (
                   <article
                     key={card.course.id}
-                    className={`group h-full min-w-0 flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 transition-[transform,border-color] duration-200 hover:border-(--color-primary) motion-safe:hover:-translate-y-0.5 ${certificationView === 'featured' && selectedCertificationCategory === 'all' ? 'hidden sm:flex' : 'flex'}`}
+                    className="group flex h-full min-w-0 flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 transition-[transform,border-color] duration-200 hover:border-(--color-primary) motion-safe:hover:-translate-y-0.5"
                   >
                     <div className="mb-3 flex min-h-12 items-start justify-between gap-3">
                       <span className="text-xs font-semibold text-(--color-primary)">
@@ -1231,11 +1233,11 @@ function App() {
                     <p className="mt-2 flex-1 text-xs leading-5 text-(--color-text-muted)">
                       {card.course.summary[language]}
                     </p>
-                    <div className="mt-4 sm:min-h-20">
+                    <div className="mt-4">
                       <h5 className="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-(--color-text-muted)">
                         {text.certifications.competenciesLabel}
                       </h5>
-                      <ul className="flex flex-wrap gap-1.5">
+                      <ul className="flex flex-wrap justify-center gap-1.5">
                         {card.course.skills.map((skill) => (
                           <li
                             key={skill.pt}

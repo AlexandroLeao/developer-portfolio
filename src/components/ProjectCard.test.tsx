@@ -109,7 +109,10 @@ describe('ProjectCard', () => {
     expect(dialog.parentElement).toBe(document.body)
     expect(within(dialog).getByText(adventureProject.details.features[0].pt)).toBeInTheDocument()
     expect(within(dialog).getByText('Referências visuais')).toBeInTheDocument()
-    expect(within(dialog).getByText(/Zelda · Pokémon/)).toBeInTheDocument()
+    const inspirationItems = Array.from(dialog.querySelectorAll('li div.grid-cols-3 span'))
+    expect(inspirationItems.map((item) => item.textContent)).toEqual([
+      'D&D', 'Zelda', 'Pokémon', 'Mario', 'Fallout', 'Adventure Time',
+    ])
 
     rerender(<ProjectCard project={adventureProject} language="en" />)
     expect(within(dialog).getByText('Visual references')).toBeInTheDocument()

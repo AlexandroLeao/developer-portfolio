@@ -124,14 +124,26 @@ export default function ProjectDetailsDialog({ project, language }: ProjectDetai
           {project.details.visualReferences && (
             <section className="min-w-0 border-t border-(--color-border) pt-4 sm:col-span-2">
               <h4 className="font-display mb-3 text-sm font-semibold text-(--color-primary)">{text.visual}</h4>
-              <ul className="grid min-w-0 gap-2 sm:grid-cols-3">
-                {project.details.visualReferences.map((reference) => (
-                  <li key={reference.pt} className="min-w-0 break-words rounded-xl border border-(--color-border) bg-(--color-background) px-3 py-2.5 text-xs leading-5 text-(--color-text)">
-                    {reference[language]}
-                  </li>
-                ))}
+              <ul className="grid min-w-0 gap-2 sm:grid-cols-[0.8fr_0.8fr_1.4fr]">
+                {project.details.visualReferences.map((reference) => {
+                  const relatedNames = reference[language].split(' · ')
+
+                  return (
+                    <li key={reference.pt} className="flex min-h-16 min-w-0 items-center justify-center rounded-xl border border-(--color-border) bg-(--color-background) px-3 py-2 text-center text-xs leading-5 text-(--color-text)">
+                      {relatedNames.length === 6 ? (
+                        <div className="grid w-full min-w-0 grid-cols-3 items-center gap-x-2 gap-y-1.5 text-[11px] leading-4">
+                          {relatedNames.map((name) => (
+                            <span key={name} className="min-w-0">{name}</span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="min-w-0 break-words">{reference[language]}</span>
+                      )}
+                    </li>
+                  )
+                })}
               </ul>
-              <p className="mt-3 text-xs leading-5 text-(--color-text-muted)">{text.inspiration}</p>
+              <p className="mt-2 text-xs leading-5 text-(--color-text-muted)">{text.inspiration}</p>
             </section>
           )}
         </div>
