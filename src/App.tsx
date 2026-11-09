@@ -397,6 +397,7 @@ const translations = {
       title: 'Projetos',
       description:
         'Uma seleção de projetos que desenvolvi para transformar necessidades e ideias em soluções práticas.',
+      selectionLabel: 'Selecionar projeto',
     },
     experience: {
       eyebrow: 'MINHA TRAJETÓRIA PROFISSIONAL',
@@ -463,6 +464,7 @@ const translations = {
       title: 'Projects',
       description:
         'A selection of projects I have built to turn needs and ideas into practical solutions.',
+      selectionLabel: 'Select project',
     },
     experience: {
       eyebrow: 'MY PROFESSIONAL JOURNEY',
@@ -504,6 +506,11 @@ const sectionEyebrowClass = 'mb-4 block text-xs font-semibold tracking-[0.2em] t
 const sectionHeadingClass = 'font-display text-4xl font-bold tracking-tight sm:text-5xl'
 const sectionIntroClass = 'text-base leading-8 text-(--color-text-muted) sm:text-lg'
 const subsectionHeadingClass = 'font-display text-xl font-semibold text-(--color-text) sm:text-2xl'
+const mobileFeaturedCertificationIds = new Set([
+  'software-engineering',
+  'cloud-fundamentals',
+  'full-stack-bootcamp',
+])
 
 function App() {
   const [language, setLanguage] = useState<Language>(() => {
@@ -521,6 +528,7 @@ function App() {
   })
 
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id)
   const [certificationView, setCertificationView] = useState<'featured' | 'all'>('featured')
   const [selectedCertificationCategory, setSelectedCertificationCategory] = useState<CertificationCategory | 'all'>('all')
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
@@ -703,7 +711,7 @@ function App() {
           <div
             aria-hidden="true"
             data-testid="hero-glow"
-            className="pointer-events-none absolute inset-x-[8%] inset-y-[8%] -z-10 hidden rounded-full bg-[#235d59]/40 blur-[65px] dark:block"
+            className="pointer-events-none absolute inset-x-[13%] inset-y-[13%] -z-10 hidden rounded-full bg-[#235d59]/35 blur-[55px] dark:block"
           />
 
           <HeroMascot alt={text.hero.illustration} language={language} />
@@ -917,7 +925,7 @@ function App() {
       <section
         id="projects"
         aria-labelledby="projects-title"
-        className="scroll-mt-12 border-t border-(--color-border) pt-16 pb-8 sm:pt-20 sm:pb-10 lg:pt-24"
+        className="scroll-mt-12 overflow-x-clip border-t border-(--color-border) pt-16 pb-8 sm:pt-20 sm:pb-10 lg:pt-24"
       >
         <div className="mx-auto max-w-7xl px-6">
           <div data-reveal-on-scroll className="mb-12 max-w-2xl">
@@ -943,14 +951,44 @@ function App() {
             </p>
           </div>
 
-          <div data-reveal-on-scroll data-reveal-delay="1" className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-8">
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                language={language}
-              />
-            ))}
+          <div data-reveal-on-scroll data-reveal-delay="1" className="min-w-0 max-w-full">
+            <nav
+              aria-label={text.projects.selectionLabel}
+              data-mobile-selection-track
+              className="technology-category-nav mb-5 flex w-full min-w-0 max-w-full snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto overscroll-x-contain rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 touch-pan-x lg:hidden"
+            >
+              {projects.map((project) => (
+                <button
+                  key={project.id}
+                  type="button"
+                  aria-pressed={selectedProjectId === project.id}
+                  aria-controls={`project-panel-${project.id}`}
+                  onClick={(event) => {
+                    setSelectedProjectId(project.id)
+                    centerMobileSelection(event.currentTarget, 1024)
+                  }}
+                  className={`min-h-10 shrink-0 snap-center whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary) ${
+                    selectedProjectId === project.id
+                      ? 'border-(--color-primary) bg-(--color-background) text-(--color-primary)'
+                      : 'border-(--color-border) text-(--color-text-muted)'
+                  }`}
+                >
+                  {project.nameTranslations?.[language] ?? project.name}
+                </button>
+              ))}
+            </nav>
+
+            <div className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-8">
+              {projects.map((project) => (
+                <div
+                  key={project.id}
+                  id={`project-panel-${project.id}`}
+                  className={`min-w-0 ${selectedProjectId === project.id ? 'block' : 'hidden'} lg:block`}
+                >
+                  <ProjectCard project={project} language={language} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -1143,11 +1181,12 @@ function App() {
                     key={card.certification.id}
                     certification={card.certification}
                     language={language}
+                    hideOnMobile={certificationView === 'featured' && selectedCertificationCategory === 'all' && !mobileFeaturedCertificationIds.has(card.certification.id)}
                   />
                 ) : (
                   <article
                     key={card.course.id}
-                    className="group flex h-full min-w-0 flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 transition-[transform,border-color] duration-200 hover:border-(--color-primary) motion-safe:hover:-translate-y-0.5"
+                    className={`group h-full min-w-0 flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 transition-[transform,border-color] duration-200 hover:border-(--color-primary) motion-safe:hover:-translate-y-0.5 ${certificationView === 'featured' && selectedCertificationCategory === 'all' ? 'hidden sm:flex' : 'flex'}`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <span className="text-xs font-semibold text-(--color-primary)">

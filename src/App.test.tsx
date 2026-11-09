@@ -4,13 +4,13 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('Developer Portfolio', () => {
-  it('keeps the hero glow slightly contained without changing the illustration', () => {
+  it('contains the hero glow further without changing the illustration', () => {
     render(<App />)
     expect(screen.getByTestId('hero-glow')).toHaveClass(
-      'inset-x-[8%]',
-      'inset-y-[8%]',
-      'bg-[#235d59]/40',
-      'blur-[65px]',
+      'inset-x-[13%]',
+      'inset-y-[13%]',
+      'bg-[#235d59]/35',
+      'blur-[55px]',
       'dark:block',
     )
     expect(screen.getByTestId('hero-mascot')).toBeInTheDocument()
@@ -61,6 +61,16 @@ describe('Developer Portfolio', () => {
 
     expect(grid).toHaveClass('sm:grid-cols-2', 'lg:grid-cols-3')
     expect(within(grid).getAllByRole('article')).toHaveLength(6)
+    const mobileVisible = Array.from(grid.querySelectorAll('article')).filter(
+      (card) => !card.classList.contains('hidden'),
+    )
+    expect(mobileVisible).toHaveLength(3)
+    expect(mobileVisible.map((card) => card.querySelector('h3')?.textContent)).toEqual([
+      'Engenharia de Software',
+      'Cloud Fundamentals, Administration and Solution Architect',
+      'The Complete Full-Stack Web Development Bootcamp',
+    ])
+    expect(grid.querySelectorAll('article.hidden.sm\\:flex')).toHaveLength(3)
     for (const name of [
       'Engenharia de Software',
       'Cloud Fundamentals, Administration and Solution Architect',
@@ -87,6 +97,67 @@ describe('Developer Portfolio', () => {
 
     await user.click(screen.getByRole('button', { name: 'Todas' }))
     expect(within(grid).getAllByRole('article')).toHaveLength(18)
+    expect(grid.querySelectorAll('article.hidden')).toHaveLength(0)
+  })
+
+  it('shows one selectable project at a time on mobile while preserving the desktop grid', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<App />)
+    const section = container.querySelector<HTMLElement>('#projects')!
+    const navigation = within(section).getByRole('navigation', { name: 'Selecionar projeto' })
+    const options = within(navigation).getAllByRole('button')
+    const panels = Array.from(section.querySelectorAll<HTMLElement>('[id^="project-panel-"]'))
+
+    expect(section).toHaveClass('overflow-x-clip')
+    expect(navigation).toHaveAttribute('data-mobile-selection-track')
+    expect(navigation).toHaveClass('overflow-x-auto', 'max-w-full', 'lg:hidden')
+    expect(options).toHaveLength(3)
+    expect(options.every((option) => option.classList.contains('snap-center'))).toBe(true)
+    expect(options[0]).toHaveAttribute('aria-pressed', 'true')
+    expect(panels).toHaveLength(3)
+    expect(panels[0]).toHaveClass('block', 'lg:block')
+    expect(panels[1]).toHaveClass('hidden', 'lg:block')
+    expect(panels[2]).toHaveClass('hidden', 'lg:block')
+    expect(section.querySelector('.lg\\:grid-cols-3')).toBeInTheDocument()
+
+    await user.click(options[1])
+    expect(options[0]).toHaveAttribute('aria-pressed', 'false')
+    expect(options[1]).toHaveAttribute('aria-pressed', 'true')
+    expect(panels[0]).toHaveClass('hidden', 'lg:block')
+    expect(panels[1]).toHaveClass('block', 'lg:block')
+    expect(panels[2]).toHaveClass('hidden', 'lg:block')
+
+    await user.click(screen.getByRole('button', { name: 'EN' }))
+    expect(within(navigation).getByRole('button', { name: 'Ideas and Projects Organizer' }))
+      .toHaveAttribute('aria-pressed', 'true')
+    expect(navigation).toHaveAccessibleName('Select project')
+  })
+
+  it('centers a tapped project option inside the mobile track without page scrolling', async () => {
+    const originalWidth = window.innerWidth
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 375 })
+
+    try {
+      const user = userEvent.setup()
+      const { container } = render(<App />)
+      const navigation = within(container.querySelector<HTMLElement>('#projects')!)
+        .getByRole('navigation', { name: 'Selecionar projeto' })
+      const option = within(navigation).getByRole('button', { name: 'Natsu Matsuri Project' })
+      const scrollTo = vi.fn()
+
+      Object.defineProperty(navigation, 'scrollWidth', { configurable: true, value: 850 })
+      Object.defineProperty(navigation, 'clientWidth', { configurable: true, value: 320 })
+      Object.defineProperty(navigation, 'scrollTo', { configurable: true, value: scrollTo })
+      vi.spyOn(navigation, 'getBoundingClientRect').mockReturnValue({ left: 0, width: 320 } as DOMRect)
+      vi.spyOn(option, 'getBoundingClientRect').mockReturnValue({ left: 620, width: 185 } as DOMRect)
+
+      await user.click(option)
+
+      expect(option).toHaveAttribute('aria-pressed', 'true')
+      expect(scrollTo).toHaveBeenCalledWith({ left: 530, behavior: 'smooth' })
+    } finally {
+      Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalWidth })
+    }
   })
 
   it('filters certifications and the ongoing Java bootcamp by knowledge area', async () => {
