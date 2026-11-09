@@ -413,6 +413,7 @@ const translations = {
       degreeLabel: 'Formação acadêmica',
       degreeStatus: 'Concluída',
       certificationLabel: 'Cursos e certificações',
+      competenciesLabel: 'Competências',
       viewLabel: 'Visualizar',
       featuredLabel: 'Destaques',
       allLabel: 'Todas',
@@ -480,6 +481,7 @@ const translations = {
       degreeLabel: 'Academic education',
       degreeStatus: 'Completed',
       certificationLabel: 'Courses and certifications',
+      competenciesLabel: 'Skills',
       viewLabel: 'View',
       featuredLabel: 'Highlights',
       allLabel: 'All',
@@ -647,6 +649,31 @@ function App() {
   const selectedTechnology = activeCategory.technologies.find(
     (technology) => technology.id === selectedTechnologyId,
   )
+
+  function openRelatedProject(projectId: string) {
+    if (!projects.some((project) => project.id === projectId)) return
+
+    const isMobile = window.matchMedia
+      ? !window.matchMedia('(min-width: 1024px)').matches
+      : window.innerWidth < 1024
+
+    setSelectedProjectId(projectId)
+    window.history.pushState(null, '', isMobile ? '#projects' : `#project-${projectId}`)
+
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById(
+        isMobile ? 'project-selector' : `project-${projectId}`,
+      )
+      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+
+      target?.scrollIntoView({ behavior: reducedMotion ? 'instant' : 'smooth', block: 'start' })
+
+      if (isMobile) {
+        const option = document.getElementById(`project-option-${projectId}`)
+        if (option) centerMobileSelection(option, 1024)
+      }
+    })
+  }
 
   return (
     <>
@@ -953,13 +980,15 @@ function App() {
 
           <div data-reveal-on-scroll data-reveal-delay="1" className="min-w-0 max-w-full">
             <nav
+              id="project-selector"
               aria-label={text.projects.selectionLabel}
               data-mobile-selection-track
-              className="technology-category-nav mb-5 flex w-full min-w-0 max-w-full snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto overscroll-x-contain rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 touch-pan-x lg:hidden"
+              className="technology-category-nav mb-5 flex w-full min-w-0 max-w-full scroll-mt-28 snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto overscroll-x-contain rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 touch-pan-x lg:hidden"
             >
               {projects.map((project) => (
                 <button
                   key={project.id}
+                  id={`project-option-${project.id}`}
                   type="button"
                   aria-pressed={selectedProjectId === project.id}
                   aria-controls={`project-panel-${project.id}`}
@@ -1024,7 +1053,7 @@ function App() {
           </div>
 
           <div data-reveal-on-scroll data-reveal-delay="1">
-            <ExperienceTimeline language={language} />
+            <ExperienceTimeline language={language} onRelatedProjectClick={openRelatedProject} />
           </div>
         </div>
       </section>
@@ -1188,7 +1217,7 @@ function App() {
                     key={card.course.id}
                     className={`group h-full min-w-0 flex-col rounded-2xl border border-(--color-border) bg-(--color-surface) p-4 transition-[transform,border-color] duration-200 hover:border-(--color-primary) motion-safe:hover:-translate-y-0.5 ${certificationView === 'featured' && selectedCertificationCategory === 'all' ? 'hidden sm:flex' : 'flex'}`}
                   >
-                    <div className="flex items-start justify-between gap-3">
+                    <div className="mb-3 flex min-h-12 items-start justify-between gap-3">
                       <span className="text-xs font-semibold text-(--color-primary)">
                         {text.certifications.ongoingLabel}
                       </span>
@@ -1196,23 +1225,28 @@ function App() {
                         <BookOpen size={17} aria-hidden="true" />
                       </div>
                     </div>
-                    <h4 className="font-display mt-2 text-base font-bold leading-snug tracking-tight text-(--color-text) sm:text-lg">
+                    <h4 className="font-display min-h-12 text-base font-bold leading-snug tracking-tight text-(--color-text) sm:min-h-14 sm:text-lg">
                       {card.course.title[language]}
                     </h4>
-                    <p className="mt-2 line-clamp-2 text-xs leading-5 text-(--color-text-muted)">
+                    <p className="mt-2 flex-1 text-xs leading-5 text-(--color-text-muted)">
                       {card.course.summary[language]}
                     </p>
-                    <ul className="mt-3 flex flex-wrap gap-1.5">
-                      {card.course.skills.map((skill) => (
-                        <li
-                          key={skill.pt}
-                          className="rounded-full border border-(--color-border) bg-(--color-background) px-2 py-1 text-[11px] text-(--color-text)"
-                        >
-                          {skill[language]}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-auto border-t border-(--color-border) pt-3">
+                    <div className="mt-4 sm:min-h-20">
+                      <h5 className="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-(--color-text-muted)">
+                        {text.certifications.competenciesLabel}
+                      </h5>
+                      <ul className="flex flex-wrap gap-1.5">
+                        {card.course.skills.map((skill) => (
+                          <li
+                            key={skill.pt}
+                            className="rounded-full border border-(--color-border) bg-(--color-background) px-2 py-1 text-[11px] font-medium text-(--color-text)"
+                          >
+                            {skill[language]}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="mt-3 flex justify-center border-t border-(--color-border) pt-3">
                       <span className="inline-flex rounded-full border border-(--color-border) px-3 py-1 text-xs font-semibold text-(--color-primary)">
                         {text.certifications.ongoingStatus}
                       </span>

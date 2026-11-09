@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 
@@ -160,6 +160,53 @@ describe('Developer Portfolio', () => {
     }
   })
 
+  it.each([
+    { width: 375, targetId: 'project-selector', hash: '#projects' },
+    { width: 1280, targetId: 'project-natsu-matsuri', hash: '#project-natsu-matsuri' },
+  ])('routes the related-project link to the correct $width px destination', async ({ width, targetId, hash }) => {
+    const originalWidth = window.innerWidth
+    const scrollIntoViewDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollIntoView')
+    const scrollIntoView = vi.fn()
+
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: width })
+    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoView,
+    })
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
+      queueMicrotask(() => callback(0))
+      return 1
+    })
+
+    try {
+      const user = userEvent.setup()
+      render(<App />)
+      const timeline = screen.getByRole('navigation', { name: 'Linha do tempo profissional' })
+      await user.click(within(timeline).getByRole('button', { name: /Centro de Reabilitação Social Kosei Home/ }))
+      await user.click(screen.getByRole('link', { name: 'Ver projeto relacionado' }))
+
+      await waitFor(() => expect(scrollIntoView).toHaveBeenCalledOnce())
+      const scrolledElement = scrollIntoView.mock.instances[0]
+      expect(scrolledElement).toBe(document.getElementById(targetId))
+      expect(window.location.hash).toBe(hash)
+      expect(document.getElementById('project-panel-natsu-matsuri')).toHaveClass('block', 'lg:block')
+      expect(document.getElementById('project-option-natsu-matsuri')).toHaveAttribute('aria-pressed', 'true')
+      if (width >= 1024) {
+        expect(scrolledElement).toHaveClass('scroll-mt-28')
+      } else {
+        expect(scrolledElement).toHaveClass('overflow-x-auto', 'scroll-mt-28')
+      }
+    } finally {
+      Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalWidth })
+      if (scrollIntoViewDescriptor) {
+        Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', scrollIntoViewDescriptor)
+      } else {
+        Reflect.deleteProperty(HTMLElement.prototype, 'scrollIntoView')
+      }
+      window.history.replaceState(null, '', window.location.pathname)
+    }
+  })
+
   it('filters certifications and the ongoing Java bootcamp by knowledge area', async () => {
     const user = userEvent.setup()
     const { container } = render(<App />)
@@ -168,9 +215,17 @@ describe('Developer Portfolio', () => {
 
     await user.click(within(filters).getByRole('button', { name: 'Programação e Desenvolvimento Web' }))
     expect(within(grid).getAllByRole('article')).toHaveLength(2)
-    expect(within(grid).getByRole('heading', {
+    const javaHeading = within(grid).getByRole('heading', {
       name: 'Bootcamp Itaú | Java com Inteligência Artificial',
-    })).toBeInTheDocument()
+    })
+    const javaCard = javaHeading.closest('article')!
+    const javaDescription = within(javaCard).getByText(/Formação em Java em andamento/)
+    expect(javaHeading).toHaveClass('min-h-12', 'sm:min-h-14')
+    expect(javaDescription).toHaveClass('flex-1')
+    expect(javaDescription).not.toHaveClass('line-clamp-2')
+    expect(within(javaCard).getByRole('heading', { name: 'Competências' })).toBeInTheDocument()
+    expect(within(javaCard).getByRole('heading', { name: 'Competências' }).parentElement).toHaveClass('sm:min-h-20')
+    expect(within(javaCard).getByText('Em andamento').parentElement).toHaveClass('justify-center')
 
     await user.click(screen.getByRole('button', { name: 'Todas' }))
     expect(within(grid).getAllByRole('article')).toHaveLength(8)

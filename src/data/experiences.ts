@@ -14,6 +14,7 @@ export type Experience = {
   skills: TranslatedText[]
   contributions: TranslatedText[]
   relatedProject?: {
+    projectId: string
     name: string
     href: string
   }
@@ -188,6 +189,7 @@ export const experiences: Experience[] = [
       },
     ],
     relatedProject: {
+      projectId: 'natsu-matsuri',
       name: 'Natsu Matsuri Project',
       href: '#projects',
     },

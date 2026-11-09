@@ -1,9 +1,10 @@
-import { ArrowUpRight, MapPin } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import type { Experience, ExperienceLanguage } from '../data/experiences'
 
 type ExperienceCardProps = {
   experience: Experience
   language: ExperienceLanguage
+  onRelatedProjectClick?: (projectId: string) => void
 }
 
 const translations = {
@@ -22,6 +23,7 @@ const translations = {
 export default function ExperienceCard({
   experience,
   language,
+  onRelatedProjectClick,
 }: ExperienceCardProps) {
   const text = translations[language]
 
@@ -88,17 +90,18 @@ export default function ExperienceCard({
           ))}
         </ul>
         {experience.relatedProject && (
-          <div className="mt-auto border-t border-(--color-border) pt-3 text-right">
+          <div className="mt-auto flex justify-center border-t border-(--color-border) pt-3">
             <a
               href={experience.relatedProject.href}
-              className="inline-flex min-h-10 items-center justify-end gap-2 rounded-full text-sm font-semibold text-(--color-primary) transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
+              onClick={(event) => {
+                if (!onRelatedProjectClick || !experience.relatedProject) return
+                event.preventDefault()
+                onRelatedProjectClick(experience.relatedProject.projectId)
+              }}
+              className="inline-flex min-h-10 items-center justify-center rounded-full px-3 text-center text-sm font-semibold text-(--color-primary) transition-opacity hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
               {text.relatedProject}
-              <ArrowUpRight size={17} aria-hidden="true" />
             </a>
-            <p className="text-xs text-(--color-text-muted)">
-              {experience.relatedProject.name}
-            </p>
           </div>
         )}
       </section>

@@ -4,7 +4,6 @@ import {
   ArrowUpRight,
   Award,
   Check,
-  ChevronDown,
   Copy,
   X,
 } from 'lucide-react'
@@ -107,7 +106,7 @@ export default function CertificationCard({
     <article className={`group h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-surface) transition-[transform,border-color] duration-200 [@media(hover:hover)]:hover:-translate-y-0.5 [@media(hover:hover)]:hover:border-(--color-primary) focus-within:border-(--color-primary) motion-reduce:transform-none motion-reduce:transition-none ${hideOnMobile ? 'hidden sm:flex' : 'flex'}`}>
       <div className="flex flex-1 flex-col p-4">
         {/* INSTITUIÇÃO E ÍCONE */}
-        <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="mb-3 flex min-h-12 items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-xs font-semibold text-(--color-primary)">
               {certification.issuer}
@@ -144,17 +143,17 @@ export default function CertificationCard({
         </div>
 
         {/* TÍTULO */}
-        <h3 className="font-display text-base font-bold leading-snug tracking-tight text-(--color-text) sm:text-lg">
+        <h3 className="font-display min-h-12 text-base font-bold leading-snug tracking-tight text-(--color-text) sm:min-h-14 sm:text-lg">
           {certification.title[language]}
         </h3>
 
         {/* RESUMO */}
-        <p className="mt-2 line-clamp-2 text-xs leading-5 text-(--color-text-muted)">
+        <p className="mt-2 flex-1 text-xs leading-5 text-(--color-text-muted)">
           {certification.summary[language]}
         </p>
 
         {/* COMPETÊNCIAS */}
-        <div className="mt-3">
+        <div className="mt-4 sm:min-h-20">
           <h4 className="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-(--color-text-muted)">
             {text.skills}
           </h4>
@@ -172,8 +171,8 @@ export default function CertificationCard({
         </div>
 
         {/* DETALHES EXPANSÍVEIS */}
-        <div className="mt-auto pt-3">
-          <div className="border-t border-(--color-border) pt-3">
+        <div className="mt-3 border-t border-(--color-border) pt-3">
+          <div className="flex justify-center">
             <button
               type="button"
               aria-expanded={isExpanded}
@@ -182,17 +181,9 @@ export default function CertificationCard({
                 dialogRef.current?.showModal()
                 setIsExpanded(true)
               }}
-              className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-(--color-border) px-3 py-1.5 text-xs font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
+              className="inline-flex min-h-9 items-center justify-center rounded-full border border-(--color-border) px-4 py-1.5 text-xs font-semibold text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
             >
               {text.showDetails}
-
-              <ChevronDown
-                size={15}
-                aria-hidden="true"
-                className={`transition-transform duration-200 motion-reduce:transition-none ${
-                  isExpanded ? 'rotate-180' : ''
-                }`}
-              />
             </button>
           </div>
 
