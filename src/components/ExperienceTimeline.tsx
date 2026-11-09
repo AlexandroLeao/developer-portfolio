@@ -17,9 +17,9 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
   const selectedIndex = experiences.findIndex((experience) => experience.id === selectedId)
 
   return (
-    <div className="grid items-start gap-6 lg:items-stretch lg:grid-cols-[17rem_minmax(0,1fr)] xl:gap-8">
-      <nav aria-label={text.navigation} className="min-w-0 lg:h-full">
-        <ol className="technology-category-nav flex snap-x snap-proximity gap-2 overflow-x-auto rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 lg:grid lg:h-full lg:auto-rows-fr lg:grid-cols-1 lg:gap-3 lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:pl-8">
+    <div className="grid w-full min-w-0 max-w-full grid-cols-[minmax(0,1fr)] items-start gap-6 lg:items-stretch lg:grid-cols-[17rem_minmax(0,1fr)] xl:gap-8">
+      <nav aria-label={text.navigation} className="w-full min-w-0 max-w-full lg:h-full">
+        <ol className="technology-category-nav flex w-full min-w-0 max-w-full snap-x snap-proximity flex-nowrap gap-2 overflow-x-auto overscroll-x-contain rounded-3xl border border-(--color-border) bg-(--color-surface) p-2 touch-pan-x lg:grid lg:h-full lg:auto-rows-fr lg:grid-cols-1 lg:gap-3 lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:pl-8">
           {experiences.map((experience, index) => {
             const isSelected = experience.id === selectedId
             const isReached = index <= selectedIndex
@@ -79,7 +79,7 @@ export default function ExperienceTimeline({ language }: ExperienceTimelineProps
         </ol>
       </nav>
 
-      <div className="min-w-0 lg:h-full">
+      <div className="w-full min-w-0 max-w-full lg:h-full">
         {experiences.map((experience) => {
           const isSelected = experience.id === selectedId
 

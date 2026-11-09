@@ -19,6 +19,7 @@ import {
   type CertificationCategory,
 } from './data/certifications'
 import ExperienceTimeline from './components/ExperienceTimeline'
+import HeroMascot from './components/HeroMascot'
 import ProjectCard from './components/ProjectCard'
 import { projects } from './data/projects'
 
@@ -696,17 +697,7 @@ function App() {
             className="pointer-events-none absolute inset-0 -z-10 hidden rounded-full bg-[#235d59]/45 blur-[75px] dark:block"
           />
 
-          <img
-            src="/images/hero-illustration-1024.webp"
-            srcSet="/images/hero-illustration-640.webp 640w, /images/hero-illustration-1024.webp 1024w, /images/hero-illustration-1448.webp 1448w"
-            sizes="(max-width: 640px) calc(100vw - 3rem), 512px"
-            alt={text.hero.illustration}
-            width={1448}
-            height={1086}
-            loading="eager"
-            fetchPriority="high"
-            className="relative z-10 h-auto w-full max-w-lg object-contain"
-          />
+          <HeroMascot alt={text.hero.illustration} language={language} />
         </div>
 
         {/* INDICADOR DA HERO — APENAS DESKTOP */}
@@ -958,9 +949,9 @@ function App() {
       <section
         id="experience"
         aria-labelledby="experience-title"
-        className="scroll-mt-12 border-t border-(--color-border) pt-8 pb-24 sm:pt-10 sm:pb-32"
+        className="scroll-mt-12 overflow-x-clip border-t border-(--color-border) pt-8 pb-24 sm:pt-10 sm:pb-32"
       >
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto w-full min-w-0 max-w-7xl px-6">
           <div className="mb-12 max-w-2xl">
             <span className={sectionEyebrowClass}>
               {text.experience.eyebrow}
