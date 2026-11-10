@@ -281,6 +281,9 @@ describe('Developer Portfolio', () => {
 
     await user.click(within(navigation).getByRole('button', { name: /Back-End & Dados/ }))
     expect(screen.getByRole('button', { name: 'Node.js' }).parentElement?.children).toHaveLength(6)
+    const restApiCard = screen.getByRole('button', { name: 'APIs REST' })
+    expect(restApiCard.querySelector('svg.technology-icon')).toBeInTheDocument()
+    expect(restApiCard.querySelector('.devicon-fastapi-plain')).not.toBeInTheDocument()
 
     await user.click(within(navigation).getByRole('button', { name: /Cloud & DevOps/ }))
     await user.click(screen.getByRole('button', { name: 'Azure' }))
