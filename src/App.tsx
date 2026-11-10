@@ -6,6 +6,7 @@ import {
   ChevronDown,
   Download,
   Mail,
+  Network,
 } from 'lucide-react'
 import Header from './components/Header'
 import ContactModal from './components/ContactModal'
@@ -156,7 +157,7 @@ const technologyCategories: TechnologyCategory[] = [
       {
         id: 'rest',
         name: 'APIs REST',
-        icon: 'devicon-fastapi-plain',
+        icon: 'network',
         description: {
           pt: 'Desenvolvo e integro APIs REST para permitir a comunicação entre interfaces, serviços e bancos de dados.',
           en: 'I build and integrate REST APIs to connect interfaces, services, and databases.',
@@ -917,7 +918,11 @@ function App() {
                           : 'border-(--color-border)'
                       }`}
                     >
-                      <i aria-hidden="true" className={`${technology.icon} technology-icon text-[1.75rem]`} />
+                      {technology.icon === 'network' ? (
+                        <Network aria-hidden="true" className="technology-icon h-7 w-7" strokeWidth={1.8} />
+                      ) : (
+                        <i aria-hidden="true" className={`${technology.icon} technology-icon text-[1.75rem]`} />
+                      )}
                       <span className="text-xs font-semibold leading-snug text-(--color-text)">
                         {technology.name}
                       </span>
