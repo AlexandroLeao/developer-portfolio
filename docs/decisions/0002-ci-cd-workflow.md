@@ -101,3 +101,11 @@ Kanban board is not required by this workflow.
 Issue #99 and PR #100 extend the established review workflow with a **separate** `.github/workflows/playwright.yml` job. The original `ci.yml` lint/Vitest/build checks remain intact. The new job installs headless Chromium on GitHub-hosted Ubuntu and runs five Playwright E2E scenarios from `e2e/portfolio.e2e.ts`, covering language and theme switching, project details, resume downloads, and mobile navigation.
 
 This addition improves browser-level regression coverage without changing the client-side architecture, introducing a backend, or replacing manual accessibility reviews. Evidence: the [Playwright workflow](../../.github/workflows/playwright.yml), [E2E test file](../../e2e/portfolio.e2e.ts), and [Issue #99](https://github.com/AlexandroLeao/developer-portfolio/issues/99).
+
+## Addendum — 2026-11-11: P2–P4 browser, accessibility, and Lighthouse gates
+
+The original five Playwright tests above are a **dated implementation baseline**, not the current total. [PR #106](https://github.com/AlexandroLeao/developer-portfolio/pull/106) extended Chromium functional E2E coverage to **10** scenarios. [PR #108](https://github.com/AlexandroLeao/developer-portfolio/pull/108) added **11** development-only axe-core accessibility audits, giving **21 Playwright scenarios** in the same independent PR workflow, while retaining the 72-test Vitest suite.
+
+[PR #110](https://github.com/AlexandroLeao/developer-portfolio/pull/110) added a **third, independent Lighthouse CI workflow** that audits a compiled local production build on mobile and desktop, three samples each, retaining HTML/JSON artifacts for seven days. The final PR #110 CI, Playwright and both Lighthouse jobs passed before the owner's merge. Median Lighthouse category thresholds are advisory; metadata checks are enforced. No hosted Lighthouse service, paid infrastructure, app backend, or production secrets were introduced.
+
+These additions preserve the Issue → branch → tests → PR → owner-review/merge process. Axe and Lighthouse automation do **not** certify WCAG conformance or replace real-device and production checks. Refer to [Performance and Quality](../performance-and-quality.md) for the evidence, limitations, and reproducible commands.
