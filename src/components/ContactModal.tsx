@@ -47,9 +47,8 @@ function ContactLink({
       target={contact.external ? '_blank' : undefined}
       rel={contact.external ? 'noopener noreferrer' : undefined}
       aria-label={
-        contact.external
-          ? `${contact.ariaLabel[language]}. ${text.externalLink}`
-          : contact.ariaLabel[language]
+        `${contact.label[language]} ${contact.display}. ${contact.ariaLabel[language]}` +
+        (contact.external ? `. ${text.externalLink}` : '')
       }
       className="group flex min-w-0 items-center gap-4 rounded-2xl border border-(--color-border) bg-(--color-background) p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-(--color-primary) hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transform-none motion-reduce:transition-none sm:p-3"
     >
