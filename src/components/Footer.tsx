@@ -42,7 +42,7 @@ export default function Footer({ language }: FooterProps) {
           <div className="max-w-md">
             <a
               href="#home"
-              aria-label={text.backToTop}
+              aria-label={`Alexandro Leão. — ${text.backToTop}`}
               className="font-display inline-block text-xl font-bold tracking-tight text-(--color-text) transition-colors hover:text-(--color-primary) focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
             >
               Alexandro Leão

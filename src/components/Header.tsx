@@ -190,7 +190,7 @@ function Header({ language, onLanguageChange }: HeaderProps) {
           {/* LOGOTIPO */}
           <a
             href="#home"
-            aria-label={text.home}
+            aria-label={`AL. — ${text.home}`}
             onClick={returnHome}
             className="nav-hover-lift font-display shrink-0 text-2xl font-bold tracking-tight text-(--color-text) transition-[transform,opacity] duration-200 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary)"
           >

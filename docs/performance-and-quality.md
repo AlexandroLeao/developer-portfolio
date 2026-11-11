@@ -48,7 +48,7 @@ Issue #105 extends the five baseline Playwright scenarios to 10 in two test file
 
 ## Automated accessibility (P3) — pending CI validation
 
-Issue #107 adds 11 Chromium `@axe-core/playwright` scenarios in `e2e/axe-accessibility.e2e.ts`: PT/EN homepages in light/dark modes, contact/project/certification dialogs in both languages, and a mobile viewport. WCAG 2.0–2.2 Level A/AA rule tags are enabled, including contrast where applicable; no violations are suppressed. The existing `npm run test:e2e` runs them. Record actual CI results and address confirmed failures before calling the milestone complete.
+Issue #107 adds 11 Chromium `@axe-core/playwright` scenarios in `e2e/axe-accessibility.e2e.ts`: PT/EN homepages in light/dark modes, contact/project/certification dialogs in both languages, and a mobile viewport. WCAG 2.0–2.2 Level A/AA rule tags are enabled, including contrast where applicable; no violations are suppressed. The audit uses a reduced-motion preference and waits for transitions to settle to avoid sampling transient color blends; each modal is inspected in isolation while homepage states are checked as entire documents. The existing `npm run test:e2e` runs them. Record actual CI results and address confirmed failures before calling the milestone complete.
 
 **Evidence boundaries:** automated rule checks cannot prove complete WCAG conformance, screen-reader support or real-device usability. Historical owner-reported PageSpeed scores and manual audits remain distinct from these checks.
 

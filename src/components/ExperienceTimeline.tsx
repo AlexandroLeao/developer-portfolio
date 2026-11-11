@@ -52,7 +52,7 @@ export default function ExperienceTimeline({ language, onRelatedProjectClick }: 
                 />
                 <button
                   type="button"
-                  aria-label={`${experience.company} — ${experience.role[language]}`}
+                  aria-label={`${experience.period[language]} — ${experience.company} — ${experience.role[language]}`}
                   aria-pressed={isSelected}
                   aria-controls={`experience-panel-${experience.id}`}
                   onClick={(event) => {

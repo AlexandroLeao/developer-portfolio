@@ -86,7 +86,7 @@ describe('Header navigation indicator', () => {
 
     expect(desktopLink).toHaveClass('border-(--color-primary)')
     expect(desktopLink).toHaveAttribute('aria-current', 'location')
-    fireEvent.click(getByRole('link', { name: 'Alexandro Leão — voltar ao início' }))
+    fireEvent.click(getByRole('link', { name: 'AL. — Alexandro Leão — voltar ao início' }))
     expect(desktopLink).toHaveClass('border-transparent')
     expect(desktopLink).not.toHaveAttribute('aria-current')
   })
