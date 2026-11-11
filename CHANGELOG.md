@@ -21,11 +21,14 @@ Entries below describe the implemented project, not additional release tags.
 ### Performance and testing
 
 - Use Vitest's `vmThreads` pool while preserving per-file test isolation. In Google Cloud Shell, the 71-test suite completed in 15.27–15.79 s of wall-clock time after configuration, compared with a 38.11 s default-pool baseline. These measurements are environment-specific; see [Performance and Quality](docs/performance-and-quality.md) and Issue #101.
+- Verify the expanded 36-item technology catalog with 72 passing Vitest tests across 14 files; GitHub Actions CI and Playwright browser E2E checks passed for PR #103.
+- Record the owner's 2026-11-11 post-merge manual QA confirmation for mobile/desktop layouts, both languages and themes, keyboard/reduced-motion behavior, external links, and PT/EN résumé downloads (Issue #97). The checklist is owner-reported, not an independent accessibility certification or new PageSpeed audit.
 
 ### Documentation
 
 - Refresh technical documentation, use cases, and architecture to match the post-release application.
 - Record performance evidence provenance and a repeatable quality-check procedure.
+- Link the merged catalog update (PR #103) and preserve the manual QA evidence and limitations in the [quality guide](docs/performance-and-quality.md).
 
 ## Post-v1.0.0 improvements — 2026-11-09
 

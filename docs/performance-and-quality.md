@@ -29,9 +29,18 @@ An earlier recorded production Lighthouse result also appears in [ADR 0003](deci
 These practices help contain asset and layout costs; they are not substitutes for profiling or field measurements. No specific byte savings, Core Web Vitals values, or Lighthouse run configuration are asserted here without supporting output.
 
 The 36-item technology catalog adds six entries and a small set of inline icons
-without importing a second icon library. Any impact on bundle size,
-reflow, or mobile card spacing must be checked against the new Preview build;
-older PageSpeed results are not a measurement of this change.
+without importing a second icon library. Its post-merge layout was inspected
+in production, and the owner confirmed the manual device and interaction checks
+below. Older PageSpeed results are not a measurement of this change.
+
+## Post-merge functional quality review — 2026-11-11
+
+- **Deployment:** [PR #103](https://github.com/AlexandroLeao/developer-portfolio/pull/103) was merged into `main` as commit `fbe10d1`, and the Vercel Production deployment reported success.
+- **Automated evidence:** 72 Vitest tests passed across 14 files; the PR's Continuous Integration and Playwright E2E workflows completed successfully. The browser suite covers language/theme switching, project details, PT/EN résumé downloads, and mobile navigation.
+- **Production desktop inspection:** the updated technology catalog, its six categories, selected details, English translation, and dark theme were inspected in a browser. No page-wide horizontal overflow was observed at the inspected desktop width.
+- **Owner-confirmed manual checks:** the owner reported successful mobile, tablet, and desktop layout checks; Portuguese/English and light/dark states; keyboard navigation and reduced-motion preference; and project, contact, certification, and résumé links/downloads. No problems were reported.
+
+**Evidence limitations:** the manual checks above were confirmed by the owner in conversation; a device/browser matrix and supporting screenshots were not archived. The desktop inspection is not a substitute for a full device accessibility audit, and no new PageSpeed Insights or Lighthouse score is claimed for this release. This record documents the functional QA completed for [Issue #97](https://github.com/AlexandroLeao/developer-portfolio/issues/97), not formal WCAG conformance.
 
 ## Vitest test-runner performance — 2026-11-11
 

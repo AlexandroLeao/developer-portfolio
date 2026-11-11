@@ -10,7 +10,7 @@ The repository also documents the engineering practices behind the portfolio: an
 
 - Default language: Portuguese, with an English option.
 - Appearance: light and dark themes.
-- Automated test baseline on 2026-11-09: **71 tests across 14 test files**. Run `npm run test` for the current count.
+- Automated tests as of 2026-11-11: **72 passing tests across 14 test files** (up from the 71-test baseline on 2026-11-09). Run `npm run test` for the current count.
 - Development: GitHub Issues, feature branches, Pull Requests, GitHub Actions, and Vercel Preview.
 - Deployment: the `main` branch is published to Vercel Production.
 
@@ -252,7 +252,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Configure ESLint and TypeScript validation.
 - [x] Establish an Issue-driven development workflow.
 - [x] Implement GitHub Actions continuous integration.
-- [x] Establish and expand automated component/application tests (71 passing tests across 14 files as of 2026-11-09).
+- [x] Establish and expand automated component/application tests (72 passing tests across 14 files as of 2026-11-11).
 - [x] Introduce five Chromium Playwright E2E tests with Pull Request CI (Issue #99).
 - [x] Implement all core portfolio sections.
 - [x] Support Portuguese and English languages.
@@ -264,7 +264,6 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Optimize project images using responsive WebP assets.
 - [x] Self-host Inter, Outfit, and optimized Devicon fonts.
 - [x] Improve the resume placeholder's accessibility.
-- [x] Achieve 100/100 in all four Lighthouse categories in a production audit.
 - [x] Purchase the custom domain alexandroleao.com.br.
 - [x] Complete custom domain DNS configuration and verification.
 - [x] Update canonical URLs and social metadata for the verified domain.
@@ -282,6 +281,8 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Curate three featured qualifications on desktop and mobile while retaining the full catalog.
 - [x] Add scroll-reveal transitions with reduced-motion behavior.
 - [x] Document the owner-reported 2026-11-09 PageSpeed Insights results in all four categories.
+- [x] Audit the 36-item technology catalog, evidence labels, and icon accuracy (Issue #97, PR #103).
+- [x] Complete the post-merge mobile/desktop, language/theme, keyboard, reduced-motion, and external-link review (owner-confirmed on 2026-11-11; see the quality guide).
 
 ### Planned
 
@@ -292,6 +293,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [ ] Reevaluate adding the Developer Portfolio to the Projects section.
 - [ ] Expand cross-browser and accessibility test coverage when justified by project needs.
 - [ ] Explore Docker, AWS, and infrastructure automation separately.
+- [ ] Revisit Portuguese and English résumé content after the other planned portfolio improvements.
 
 The roadmap reflects completed and planned work. The latest PageSpeed Insights scores are recorded as an owner-reported snapshot; results may vary between devices, networks, and audit runs, and do not establish accessibility conformance.
 
