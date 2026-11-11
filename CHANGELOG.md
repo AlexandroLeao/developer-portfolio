@@ -31,6 +31,9 @@ Entries below describe the implemented project, not additional release tags.
 
 ### Documentation
 
+- Reconcile the completed P1–P4 portfolio checks and preserve the approved next phases: Adventure Files R1–R6 (with R6 optional), one post-RPG portfolio update (R7), and only then an external open-source contribution (O1–O3). The accepted RPG MVP is not the same as implementing R1–R6.
+- Correct the release process description to acknowledge the already-published `v1.0.0` and add a dated CI/CD ADR addendum for the final 21-browser-test and Lighthouse workflow baselines.
+
 - Refresh technical documentation, use cases, and architecture to match the post-release application.
 - Record performance evidence provenance and a repeatable quality-check procedure.
 - Link the merged catalog update (PR #103) and preserve the manual QA evidence and limitations in the [quality guide](docs/performance-and-quality.md).
