@@ -127,7 +127,7 @@ Vite starts a local development server and prints its address in the terminal. U
 | `npm run test` | Run the Vitest test suite once |
 | `npm run test:watch` | Run Vitest in watch mode |
 | `npx playwright test --list` | Discover E2E cases without launching a browser |
-| `npx playwright test` | Run Chromium E2E tests (browser installation required locally) |
+| `npm run test:e2e` | Run Chromium E2E tests (browser installation required locally) |
 | `npm run build` | Run TypeScript compilation and create the production build |
 | `npm run preview` | Serve the production build locally for review |
 
@@ -145,7 +145,7 @@ The Vitest suite exercises representative rendering, language/theme changes, exp
 
 ### Browser E2E tests
 
-Playwright adds a separate **Chromium browser** test layer without replacing Vitest. As of Issue #99, five E2E tests validate:
+Playwright adds a separate **Chromium browser** test layer without replacing Vitest. Issue #99 introduced five E2E tests that validate:
 
 1. Opening the portfolio and switching from Portuguese to English.
 2. Switching between light and dark modes.
@@ -153,12 +153,12 @@ Playwright adds a separate **Chromium browser** test layer without replacing Vit
 4. Downloading the correct Portuguese and English PDF resumes.
 5. Opening the mobile menu, navigating to projects, and selecting a different project at a 375 px viewport.
 
-The tests live in `e2e/portfolio.e2e.ts` and use `.e2e.ts` names to avoid being collected by Vitest. Playwright starts the Vite development server automatically.
+Issue #105 adds five further browser checks for keyboard-operated contact/project dialogs and focus restoration, PT/EN contact/project link targets, reduced-motion behavior, and page-wide horizontal overflow at mobile, tablet, and desktop widths. The suite now contains **10 Chromium E2E tests** across `e2e/portfolio.e2e.ts` and `e2e/accessibility-and-layout.e2e.ts`. The `.e2e.ts` naming keeps them separate from Vitest. Playwright starts the Vite development server automatically. External links are inspected, not opened in tests.
 
 ```bash
 npx playwright test --list   # No browser download needed
 npx playwright install chromium   # Optional: local browser setup
-npx playwright test          # Run E2E tests locally
+npm run test:e2e             # Run E2E tests locally
 ```
 
 To avoid installing browser binaries on constrained devices, use the GitHub Actions workflow instead. These automated checks do not replace manual accessibility review or performance audits.
@@ -254,6 +254,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Implement GitHub Actions continuous integration.
 - [x] Establish and expand automated component/application tests (72 passing tests across 14 files as of 2026-11-11).
 - [x] Introduce five Chromium Playwright E2E tests with Pull Request CI (Issue #99).
+- [x] Expand browser regression coverage to 10 scenarios, including keyboard, reduced motion, links, and viewport overflow (Issue #105).
 - [x] Implement all core portfolio sections.
 - [x] Support Portuguese and English languages.
 - [x] Support light and dark themes.
