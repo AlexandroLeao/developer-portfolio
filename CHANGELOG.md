@@ -10,6 +10,10 @@ Entries below describe the implemented project, not additional release tags.
 
 - Add five Playwright Chromium end-to-end tests for language switching, themes, project details, Portuguese/English resume downloads, and mobile navigation, with a dedicated Pull Request GitHub Actions workflow (Issue #99, PR #100).
 
+### Performance and testing
+
+- Use Vitest's `vmThreads` pool while preserving per-file test isolation. In Google Cloud Shell, the 71-test suite completed in 15.27–15.79 s of wall-clock time after configuration, compared with a 38.11 s default-pool baseline. These measurements are environment-specific; see [Performance and Quality](docs/performance-and-quality.md) and Issue #101.
+
 ### Documentation
 
 - Refresh technical documentation, use cases, and architecture to match the post-release application.
