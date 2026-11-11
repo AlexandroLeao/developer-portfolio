@@ -52,6 +52,42 @@ Issue #107 adds 11 Chromium `@axe-core/playwright` scenarios in `e2e/axe-accessi
 
 **Evidence boundaries:** automated rule checks cannot prove complete WCAG conformance, screen-reader support or real-device usability. Historical owner-reported PageSpeed scores and manual audits remain distinct from these checks.
 
+## Lighthouse CI (P4) — first CI run verified (2026-11-11)
+
+Issue #109 adds a **separate Pull Request workflow** with Lighthouse CI CLI **0.16.0** (Lighthouse 13.6.0), using Node.js 24 and the Chrome version installed on the GitHub-hosted runner (reported in each job log). Both mobile and desktop profiles audit `dist/`, the compiled Vite static site, using the local `staticDistDir` server. Three measurements are taken **per profile**, in isolated matrix jobs; category thresholds use `aggregationMethod: 'median'`. All four Lighthouse categories are tracked:
+
+| Category | Initial advisory median threshold | Blocks PR? |
+| --- | ---: | --- |
+| Performance | 0.85 | No — warning |
+| Accessibility | 0.95 | No — warning |
+| Best Practices | 0.90 | No — warning |
+| SEO | 0.90 | No — warning |
+
+Document-title, meta-description and `meta-viewport` (zoom permitted) Lighthouse audits are enforced as errors. The workflow separately checks the compiled HTML for a responsive `width=device-width` meta viewport because Lighthouse 13 removed the former `viewport` audit. A failed collection or an error-level metadata check makes the new workflow fail. This initial configuration does **not** introduce a hard performance-score budget based on old PageSpeed claims; after reviewing actual mobile/desktop reports over multiple PRs, we can set realistic budgets in a separate, justified change. No Lighthouse audit is disabled.
+
+The `upload.target=filesystem` reports (HTML/JSON plus raw `.lighthouseci/` results) are uploaded to **GitHub Actions artifacts** under the repository's access controls for seven days; no public temporary LHCI report storage, dedicated server, API key, or account is required. Use the `lighthouse-mobile` and `lighthouse-desktop` artifacts on the PR's Lighthouse CI workflow run. The configured tool and build are comparable across PRs, but differences in Chrome, runner load and simulated network/CPU affect absolute scores. CI measures the local production build, **not** the Vercel production origin, a real user's Core Web Vitals, or the historical 2026-11-09 owner-reported PageSpeed result.
+
+Reproduce locally with Node.js 24, Chrome and `npm ci && npm run build`, then install `@lhci/cli@0.16.0` globally and use `LHCI_DEVICE=mobile lhci autorun` (or `LHCI_DEVICE=desktop`). Save one profile's files before running the next because local runs reuse `.lighthouseci/` and `lighthouse-reports/`. Do not publish numerical score claims until the PR's actual audit outputs have been reviewed and recorded.
+
+### GitHub Actions Lighthouse verification — 2026-11-11
+
+The first GitHub-hosted Lighthouse workflow passed on PR #110 at commit `db46c36`: [Lighthouse CI run](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43105530023), with **mobile and desktop jobs both successful**. The workflow produced separate downloadable artifacts `lighthouse-mobile` and `lighthouse-desktop`, each containing HTML/JSON reports from three configured samples. The same commit also passed [Continuous Integration](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43105529981) and [Playwright E2E Tests](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43105530030), and Vercel reported a successful Preview check.
+
+This confirms **execution and configured assertions** on the GitHub runner, not equality of CI scores to the Cloud Shell scores below: the GitHub artifact scores have not been extracted or independently summarized in this document. P4 remains subject to owner review and merge of PR #110.
+
+### Owner-reported local Lighthouse baseline — 2026-11-11
+
+The project owner ran `@lhci/cli@0.16.0` from the P4 branch in **Google Cloud Shell**, using the compiled Vite `dist/` site, Node.js **26.13.0** and **Chrome for Testing 158.0.8127.18**. The CLI successfully completed **three mobile** and **three desktop** audits using `LHCI_DEVICE=mobile` and `LHCI_DEVICE=desktop`. The owner then filtered the saved JSON results by `configSettings.formFactor` to exclude stale mobile files accidentally carried into the desktop evidence directory.
+
+| Lighthouse category | Mobile runs (0–100) | Mobile median | Desktop runs (0–100) | Desktop median |
+| --- | --- | ---: | --- | ---: |
+| Performance | 95, 96, 96 | **96** | 100, 100, 100 | **100** |
+| Accessibility | 100, 100, 100 | **100** | 100, 100, 100 | **100** |
+| Best Practices | 100, 100, 100 | **100** | 100, 100, 100 | **100** |
+| SEO | 100, 100, 100 | **100** | 100, 100, 100 | **100** |
+
+**Provenance:** these values come from the owner's Cloud Shell terminal output and local JSON extraction, **not** GitHub Actions, Vercel Production, or a new PageSpeed Insights measurement. The actual HTML/JSON report files have not been uploaded to or reviewed in this repository; they remain in the owner's Cloud Shell under `~/lighthouse-evidence-p4/{mobile,desktop}/`. The local checks establish that the Lighthouse configuration and audits run on that environment; the new [Lighthouse CI workflow](../.github/workflows/lighthouse.yml), along with existing CI and Playwright workflows, must still complete on GitHub before P4 is accepted. Scores are laboratory measurements, can vary across Chrome versions/runners, and do not establish WCAG conformance or field Core Web Vitals.
+
 ## Vitest test-runner performance — 2026-11-11
 
 This is **developer test execution time**, not the production site's runtime speed or a new Lighthouse result. The measurements below come from Google Cloud Shell terminal output for Vitest 5.0.5 and the same 71 passing tests across 14 files:
@@ -84,7 +120,7 @@ The `vmThreads` pool keeps test-file VM contexts separate, but Vitest documents 
    npm run build
    ```
 
-7. Verify that the [Playwright E2E Tests workflow](../.github/workflows/playwright.yml) passes on the Pull Request. The expanded 10-scenario Chromium suite covers five original journeys plus keyboard-operated dialogs, contact/project link destinations, reduced motion, and mobile/tablet/desktop page-wide overflow. For optional local execution, run `npx playwright install chromium` and then `npm run test:e2e`; on resource-constrained environments, prefer CI instead.
+7. Review the [Lighthouse CI workflow](../.github/workflows/lighthouse.yml) for both mobile and desktop, and retain the HTML/JSON artifacts for dated baseline comparisons. Verify that the [Playwright E2E Tests workflow](../.github/workflows/playwright.yml) passes on the Pull Request. The expanded 10-scenario Chromium suite covers five original journeys plus keyboard-operated dialogs, contact/project link destinations, reduced motion, and mobile/tablet/desktop page-wide overflow. For optional local execution, run `npx playwright install chromium` and then `npm run test:e2e`; on resource-constrained environments, prefer CI instead.
 8. Attach audit links/screenshots to the relevant Issue or PR and note which results were reproduced directly versus reported by someone else.
 
 ## Interpretation
