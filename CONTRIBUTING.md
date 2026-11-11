@@ -322,7 +322,7 @@ Documentation should distinguish between implemented features and planned work.
 
 ## 12. Release Process
 
-Before the first stable release:
+The first stable release, [`v1.0.0`](https://github.com/AlexandroLeao/developer-portfolio/releases/tag/v1.0.0), has already been published. For subsequent releases:
 
 - Complete the agreed portfolio scope.
 - Run the full applicable test suite.
@@ -333,4 +333,4 @@ Before the first stable release:
 - Close or appropriately defer outstanding Issues.
 - Publish a versioned release.
 
-The first stable release is planned as `v1.0.0`.
+Do not describe the already-published `v1.0.0` release as pending. Record any later release scope, validation, and deployment evidence in the relevant Issue and Pull Request.

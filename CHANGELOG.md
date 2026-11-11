@@ -8,7 +8,7 @@ Entries below describe the implemented project, not additional release tags.
 
 ### Added
 
-- Introduce P4 Lighthouse CI for production-build mobile/desktop audits (three samples each), advisory median category thresholds, enforced metadata checks, and seven-day GitHub Actions HTML/JSON artifacts without external upload (Issue #109; initial PR validation pending).
+- Introduce P4 Lighthouse CI for production-build mobile/desktop audits (three samples each), advisory median category thresholds, enforced metadata checks, and seven-day GitHub Actions HTML/JSON artifacts without external upload (Issue #109, merged PR #110; mobile/desktop GitHub Actions jobs passed).
 - Add development-only `@axe-core/playwright` WCAG A/AA checks for PT/EN homepages, themes, contact/project/certification dialogs, and a 375px viewport (Issue #107, PR #108; 11 axe audits and 10 functional E2E tests passed).
 - Expand Playwright browser regression coverage from 5 to 10 Chromium scenarios, adding keyboard/focus checks, PT/EN link targets, reduced-motion behavior, and viewport overflow; add a `test:e2e` npm script (Issue #105).
 - Expand the technology catalog from 30 to 36 entries across six categories, including Angular, jQuery, Supabase, Vitest, Playwright, and UX/UI Design (Issue #97).
@@ -30,6 +30,9 @@ Entries below describe the implemented project, not additional release tags.
 - Record the owner's 2026-11-11 post-merge manual QA confirmation for mobile/desktop layouts, both languages and themes, keyboard/reduced-motion behavior, external links, and PT/EN résumé downloads (Issue #97). The checklist is owner-reported, not an independent accessibility certification or new PageSpeed audit.
 
 ### Documentation
+
+- Reconcile the completed P1–P4 portfolio checks and preserve the approved next phases: Adventure Files R1–R6 (with R6 optional), one post-RPG portfolio update (R7), and only then an external open-source contribution (O1–O3). The accepted RPG MVP is not the same as implementing R1–R6.
+- Correct the release process description to acknowledge the already-published `v1.0.0` and add a dated CI/CD ADR addendum for the final 21-browser-test and Lighthouse workflow baselines.
 
 - Refresh technical documentation, use cases, and architecture to match the post-release application.
 - Record performance evidence provenance and a repeatable quality-check procedure.
