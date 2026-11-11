@@ -45,10 +45,19 @@ and contact dialog visibility.
 | `ContactModal` | Provide an accessible dialog for professional contact channels. |
 | `Footer` | Present footer navigation and contact links. |
 | `ContactIcon` | Render icons shared by contact-related components. |
+| `TechnologyIcon` | Render neutral Lucide concepts, lightweight inline brand SVGs, or existing local Devicon glyphs without loading another icon font. |
 | `centerMobileSelection` | Smoothly bring the chosen option toward the middle of a horizontal mobile selection track. |
 
 Other portfolio sections, including the Hero, About Me,
 Technologies, and Education, are coordinated within `App.tsx`.
+
+The technology catalog contains 36 entries in six groups. Each item has a typed
+`evidence` value (`implemented`, `studied`, `studying`, or `planned`)
+and localized explanatory text. The evidence badge appears in the details
+panel only, not on every card, to preserve consistent card dimensions.
+Desktop grids use category-specific column counts; mobile keeps two columns
+and an internally scrolling category selector. A short selection prompt
+uses the existing detail-panel space before an item is chosen.
 
 ## Data Organization
 
@@ -114,7 +123,8 @@ Static assets include:
 - The custom SVG favicon.
 - The social sharing preview image.
 - Locally hosted Inter and Outfit font files.
-- A reduced local Devicon font subset.
+- A reduced local Devicon font subset and lightweight inline Simple Icons
+  brand paths for catalog entries absent from the subset.
 
 The site does not depend on external Google Fonts or jsDelivr
 requests to load these fonts and icons.

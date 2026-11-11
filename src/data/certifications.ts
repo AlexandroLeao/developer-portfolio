@@ -86,7 +86,7 @@ export const certifications: Certification[] = [
     summary: t('Conceitos de computação em nuvem, arquitetura de soluções, containers e práticas DevOps.', 'Cloud computing, solution architecture, containers, and DevOps concepts.'),
     topics: [
       t('Modelos de serviço e fundamentos de AWS, Azure e Google Cloud.', 'Service models and fundamentals of AWS, Azure, and Google Cloud.'),
-      t('Virtualização, Docker, orquestração de containers e noções de DevSecOps.', 'Virtualization, Docker, container orchestration, and DevSecOps concepts.'),
+      t('Virtualização, Docker, orquestração de containers e fundamentos de DevOps.', 'Virtualization, Docker, container orchestration, and DevOps fundamentals.'),
     ],
     skills: [t('Cloud', 'Cloud'), t('Docker', 'Docker'), t('DevOps', 'DevOps')],
     verification: { type: 'manual', portalUrl: 'https://on.fiap.com.br/validar-certificado/', code: '2443839968A949AB6BCF8BBB102E335' },

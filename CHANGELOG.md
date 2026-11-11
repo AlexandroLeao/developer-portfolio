@@ -8,7 +8,15 @@ Entries below describe the implemented project, not additional release tags.
 
 ### Added
 
+- Expand the technology catalog from 30 to 36 entries across six categories, including Angular, jQuery, Supabase, Vitest, Playwright, and UX/UI Design (Issue #97).
+- Add compact bilingual evidence badges for implemented work, completed study, ongoing study, and future plans; introduce a dedicated Quality & Testing category.
 - Add five Playwright Chromium end-to-end tests for language switching, themes, project details, Portuguese/English resume downloads, and mobile navigation, with a dedicated Pull Request GitHub Actions workflow (Issue #99, PR #100).
+
+### Changed
+
+- Replace misleading third-party tool logos on general AI, SQL, QA, and Scrum concepts with accurate neutral icons; use lightweight brand vectors for TanStack, Zod, and new supported technologies.
+- Keep the technology cards compact while adapting desktop columns to the new category sizes and reusing the existing detail-panel space for a selection prompt.
+- Clarify course-backed versus project-backed descriptions, including FIAP Cloud DevOps coverage and the in-progress Java bootcamp.
 
 ### Performance and testing
 
