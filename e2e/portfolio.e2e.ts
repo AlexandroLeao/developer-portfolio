@@ -80,3 +80,53 @@ test('opens and closes project details', async ({ page }) => {
 
   await expect(dialog).not.toBeVisible()
 })
+
+test('downloads Portuguese and English resumes', async ({ page }) => {
+  await page.goto('/')
+
+  // Download the Portuguese resume
+  const portugueseResume = page.getByRole('link', {
+    name: 'Baixar currículo em PDF',
+  })
+
+  await expect(portugueseResume).toHaveAttribute(
+    'href',
+    '/resumes/alexandro-leao-curriculo-pt.pdf',
+  )
+
+  const portugueseDownloadPromise = page.waitForEvent('download')
+
+  await portugueseResume.click()
+
+  const portugueseDownload = await portugueseDownloadPromise
+
+  expect(portugueseDownload.suggestedFilename()).toBe(
+    'alexandro-leao-curriculo-pt.pdf',
+  )
+
+  // Switch to English
+  await page.getByRole('button', {
+    name: 'EN',
+    exact: true,
+  }).click()
+
+  // Download the English resume
+  const englishResume = page.getByRole('link', {
+    name: 'Download résumé as PDF',
+  })
+
+  await expect(englishResume).toHaveAttribute(
+    'href',
+    '/resumes/alexandro-leao-resume-en.pdf',
+  )
+
+  const englishDownloadPromise = page.waitForEvent('download')
+
+  await englishResume.click()
+
+  const englishDownload = await englishDownloadPromise
+
+  expect(englishDownload.suggestedFilename()).toBe(
+    'alexandro-leao-resume-en.pdf',
+  )
+})
