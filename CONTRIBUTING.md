@@ -205,6 +205,8 @@ Vitest, React Testing Library, Testing Library jest-dom, and jsdom are implement
 
 The test suite covers the application and key components, including mobile-selection behavior, the Hero mascot, dialogs, and certification filtering. For historical context, the verified baseline on 2026-11-09 was 71 passing tests across 14 files. Run `npm run test` to see the current total; do not copy an old count into a new PR without running the suite.
 
+The Vitest configuration uses the `vmThreads` pool to reduce repeated `jsdom` setup while retaining separate VM contexts for test files. Run the normal `npm run test` command; no extra CLI flag is required. The pool can have cross-realm and memory-retention trade-offs, so preserve isolation and confirm repeated runs in CI before accepting further test-runner changes. See [Performance and Quality](docs/performance-and-quality.md) for the dated Cloud Shell timings.
+
 Two independent GitHub Actions workflows run on pull requests targeting `main`:
 
 - [Continuous Integration](.github/workflows/ci.yml) executes `npm run lint`, `npm run test` (Vitest), and `npm run build`.

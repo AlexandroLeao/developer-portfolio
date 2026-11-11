@@ -8,6 +8,7 @@ export default defineConfig({
     allowedHosts: ['.app.github.dev'],
   },
   test: {
+    pool: 'vmThreads',
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
