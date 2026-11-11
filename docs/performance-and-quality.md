@@ -52,7 +52,7 @@ Issue #107 adds 11 Chromium `@axe-core/playwright` scenarios in `e2e/axe-accessi
 
 **Evidence boundaries:** automated rule checks cannot prove complete WCAG conformance, screen-reader support or real-device usability. Historical owner-reported PageSpeed scores and manual audits remain distinct from these checks.
 
-## Lighthouse CI (P4) — pending initial workflow evidence
+## Lighthouse CI (P4) — first CI run verified (2026-11-11)
 
 Issue #109 adds a **separate Pull Request workflow** with Lighthouse CI CLI **0.16.0** (Lighthouse 13.6.0), using Node.js 24 and the Chrome version installed on the GitHub-hosted runner (reported in each job log). Both mobile and desktop profiles audit `dist/`, the compiled Vite static site, using the local `staticDistDir` server. Three measurements are taken **per profile**, in isolated matrix jobs; category thresholds use `aggregationMethod: 'median'`. All four Lighthouse categories are tracked:
 
@@ -68,6 +68,12 @@ Document-title, meta-description and `meta-viewport` (zoom permitted) Lighthouse
 The `upload.target=filesystem` reports (HTML/JSON plus raw `.lighthouseci/` results) are uploaded to **GitHub Actions artifacts** under the repository's access controls for seven days; no public temporary LHCI report storage, dedicated server, API key, or account is required. Use the `lighthouse-mobile` and `lighthouse-desktop` artifacts on the PR's Lighthouse CI workflow run. The configured tool and build are comparable across PRs, but differences in Chrome, runner load and simulated network/CPU affect absolute scores. CI measures the local production build, **not** the Vercel production origin, a real user's Core Web Vitals, or the historical 2026-11-09 owner-reported PageSpeed result.
 
 Reproduce locally with Node.js 24, Chrome and `npm ci && npm run build`, then install `@lhci/cli@0.16.0` globally and use `LHCI_DEVICE=mobile lhci autorun` (or `LHCI_DEVICE=desktop`). Save one profile's files before running the next because local runs reuse `.lighthouseci/` and `lighthouse-reports/`. Do not publish numerical score claims until the PR's actual audit outputs have been reviewed and recorded.
+
+### GitHub Actions Lighthouse verification — 2026-11-11
+
+The first GitHub-hosted Lighthouse workflow passed on PR #110 at commit `db46c36`: [Lighthouse CI run](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43105530023), with **mobile and desktop jobs both successful**. The workflow produced separate downloadable artifacts `lighthouse-mobile` and `lighthouse-desktop`, each containing HTML/JSON reports from three configured samples. The same commit also passed [Continuous Integration](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43105529981) and [Playwright E2E Tests](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43105530030), and Vercel reported a successful Preview check.
+
+This confirms **execution and configured assertions** on the GitHub runner, not equality of CI scores to the Cloud Shell scores below: the GitHub artifact scores have not been extracted or independently summarized in this document. P4 remains subject to owner review and merge of PR #110.
 
 ### Owner-reported local Lighthouse baseline — 2026-11-11
 
