@@ -294,7 +294,7 @@ Update documentation when:
 - The development workflow changes.
 - Important architectural decisions are made.
 
-Documentation should distinguish between implemented features and planned work.
+Documentation should distinguish between implemented features and planned work. Keep the [cross-project engineering roadmap](docs/engineering-roadmap.md) checked against merged code, Issues and PRs, without treating an accepted RPG MVP as completion of its separate later improvements. For Lighthouse evidence, preserve run date, tested URL and device, source artifact, report retention, and score provenance in the [quality guide](docs/performance-and-quality.md) and [dated CI evidence record](docs/evidence/lighthouse-ci-2026-11-11.md). Owner-reported PageSpeed values without raw files remain explicitly qualified.
 
 ## 11. Session Checklist
 
