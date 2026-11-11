@@ -19,7 +19,7 @@ The repository also documents the engineering practices behind the portfolio: an
 - **Hero and Header:** professional introduction, responsive navigation, theme/language controls, Portuguese/English PDF resume downloads, and a lightweight stop-motion character that waves continuously and reacts to clicks/taps.
 - **About Me:** professional background and approach to software development.
 - **Technologies:** 36 technologies and competencies in six categories, with compact interactive details explaining practical implementation, coursework, ongoing study, or future plans. The mobile category selector remains horizontally scrollable and selection-centering.
-- **Projects:** responsive cards, technology distribution charts, structured technical-detail dialogs, repository/live-demo links, and a mobile selector that shows one project at a time without expanding the viewport.
+- **Projects:** responsive cards, technology distribution charts, structured technical-detail dialogs, repository/live-demo links, and a mobile selector that shows one project at a time without expanding the viewport. Chart counts are manually maintained source-file associations from a 2026-11-07 project-repository snapshot, not live measurements or mutually exclusive language percentages.
 - **Experience:** selectable professional timeline, responsibilities, contributions, relevant skills, and context-aware navigation to a related project; mobile selections are gently centered.
 - **Education and Certifications:** academic background, 17 completed courses/certifications, detailed learning topics and verification mechanisms. A curated set of three qualifications is featured on both desktop and mobile; the full catalog and category filters remain available, with Java training marked as in progress.
 - **Contact:** reusable, accessible dialog with Email, LinkedIn, GitHub, and WhatsApp links; a dedicated contact section and footer with direct links.
@@ -280,7 +280,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Introduce five Chromium Playwright E2E tests with Pull Request CI (Issue #99).
 - [x] Expand browser regression coverage to 10 scenarios, including keyboard, reduced motion, links, and viewport overflow (Issue #105).
 - [x] Add 11 axe-core WCAG A/AA audits for PT/EN and representative dialogs; fix confirmed accessible-name issues and pass CI (Issue #107, PR #108).
-- [ ] Integrate Lighthouse CI (P4) for production-build mobile/desktop measurements and artifact retention (Issue #109; pending PR validation/merge).
+- [x] Integrate Lighthouse CI (P4) for production-build mobile/desktop measurements, median advisory thresholds and seven-day artifacts (Issue #109, merged PR #110; [latest PR CI run](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43105981242), [Playwright](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43105981248), [Lighthouse](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43105981330)).
 - [x] Implement all core portfolio sections.
 - [x] Support Portuguese and English languages.
 - [x] Support light and dark themes.
@@ -313,14 +313,15 @@ The current application is a static frontend built with Vite; it does not requir
 
 ### Planned
 
-- [ ] Align LinkedIn with the completed portfolio and resume.
+- [ ] Continue the established Adventure Files RPG roadmap in its own repository after this portfolio quality documentation closes.
 
 ### Deferred / Future Improvements
+
+- [ ] Align LinkedIn and revise résumé content after the RPG and external open-source phases, using only verified project evidence.
 
 - [ ] Reevaluate adding the Developer Portfolio to the Projects section.
 - [ ] Expand cross-browser and accessibility test coverage when justified by project needs.
 - [ ] Explore Docker, AWS, and infrastructure automation separately.
-- [ ] Revisit Portuguese and English résumé content after the other planned portfolio improvements.
 
 The roadmap reflects completed and planned work. The latest PageSpeed Insights scores are recorded as an owner-reported snapshot; results may vary between devices, networks, and audit runs, and do not establish accessibility conformance.
 

@@ -8,7 +8,7 @@ Entries below describe the implemented project, not additional release tags.
 
 ### Added
 
-- Introduce P4 Lighthouse CI for production-build mobile/desktop audits (three samples each), advisory median category thresholds, enforced metadata checks, and seven-day GitHub Actions HTML/JSON artifacts without external upload (Issue #109; initial PR validation pending).
+- Introduce P4 Lighthouse CI for production-build mobile/desktop audits (three samples each), advisory median category thresholds, enforced metadata checks, and seven-day GitHub Actions HTML/JSON artifacts without external upload (Issue #109, merged PR #110; mobile/desktop GitHub Actions jobs passed).
 - Add development-only `@axe-core/playwright` WCAG A/AA checks for PT/EN homepages, themes, contact/project/certification dialogs, and a 375px viewport (Issue #107, PR #108; 11 axe audits and 10 functional E2E tests passed).
 - Expand Playwright browser regression coverage from 5 to 10 Chromium scenarios, adding keyboard/focus checks, PT/EN link targets, reduced-motion behavior, and viewport overflow; add a `test:e2e` npm script (Issue #105).
 - Expand the technology catalog from 30 to 36 entries across six categories, including Angular, jQuery, Supabase, Vitest, Playwright, and UX/UI Design (Issue #97).
