@@ -313,7 +313,7 @@ The current application is a static frontend built with Vite; it does not requir
 
 ### Planned
 
-- [ ] Continue the established Adventure Files RPG roadmap in its own repository after this portfolio quality documentation closes.
+- [ ] Start a focused external open-source contribution (O1–O3) after this documentation closure. The Adventure Files MVP is already completed and represented in the portfolio; optional RPG enhancements require a separate, justified issue.
 
 ### Deferred / Future Improvements
 
