@@ -49,3 +49,34 @@ test('switches between light and dark themes', async ({ page }) => {
 
   await expect(html).not.toHaveClass(/\bdark\b/)
 })
+
+test('opens and closes project details', async ({ page }) => {
+  await page.goto('/')
+
+  // Find the Adventure Files project
+  const project = page.locator('#project-adventure-files')
+
+  await expect(project).toBeVisible()
+
+  // Open project details
+  await project.getByRole('button', {
+    name: 'Detalhes',
+  }).click()
+
+  // Verify that the dialog opened
+  const dialog = page.getByRole('dialog', {
+    name: 'Adventure Files',
+  })
+
+  await expect(dialog).toBeVisible()
+
+  // Verify real project information
+  await expect(dialog).toContainText('Criador em 6 etapas')
+
+  // Close project details
+  await dialog.getByRole('button', {
+    name: 'Fechar detalhes',
+  }).click()
+
+  await expect(dialog).not.toBeVisible()
+})
