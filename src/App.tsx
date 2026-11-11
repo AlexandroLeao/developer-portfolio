@@ -6,7 +6,6 @@ import {
   ChevronDown,
   Download,
   Mail,
-  Network,
 } from 'lucide-react'
 import Header from './components/Header'
 import ContactModal from './components/ContactModal'
@@ -21,6 +20,7 @@ import {
 } from './data/certifications'
 import ExperienceTimeline from './components/ExperienceTimeline'
 import HeroMascot from './components/HeroMascot'
+import TechnologyIcon from './components/TechnologyIcon'
 import { centerMobileSelection } from './utils/centerMobileSelection'
 import ProjectCard from './components/ProjectCard'
 import { projects } from './data/projects'
@@ -32,12 +32,16 @@ type CategoryId =
   | 'backend'
   | 'ai'
   | 'cloud'
+  | 'testing'
   | 'engineering'
+
+type TechnologyEvidence = 'implemented' | 'studied' | 'studying' | 'planned'
 
 type Technology = {
   id: string
   name: string
   icon: string
+  evidence: TechnologyEvidence
   description: {
     pt: string
     en: string
@@ -62,6 +66,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'html',
         name: 'HTML5',
         icon: 'devicon-html5-plain',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo HTML5 para estruturar páginas semânticas, acessíveis e organizadas.',
           en: 'I use HTML5 to build semantic, accessible, and well-structured web pages.',
@@ -71,6 +76,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'css',
         name: 'CSS3',
         icon: 'devicon-css3-plain',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo CSS3 para criar layouts responsivos, animações e experiências visuais consistentes.',
           en: 'I use CSS3 to create responsive layouts, animations, and consistent visual experiences.',
@@ -80,6 +86,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'javascript',
         name: 'JavaScript',
         icon: 'devicon-javascript-plain',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo JavaScript para desenvolver interatividade, lógica de aplicações e integração com APIs.',
           en: 'I use JavaScript to implement interactivity, application logic, and API integrations.',
@@ -89,6 +96,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'typescript',
         name: 'TypeScript',
         icon: 'devicon-typescript-plain',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo TypeScript para adicionar tipagem estática, melhorar a manutenção e reduzir erros no desenvolvimento.',
           en: 'I use TypeScript to add static typing, improve maintainability, and reduce development errors.',
@@ -98,6 +106,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'react',
         name: 'React',
         icon: 'devicon-react-original',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo React para construir interfaces dinâmicas com componentes reutilizáveis e gerenciamento de estado.',
           en: 'I use React to build dynamic interfaces with reusable components and state management.',
@@ -107,6 +116,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'tailwind',
         name: 'Tailwind CSS',
         icon: 'devicon-tailwindcss-original',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo Tailwind CSS para desenvolver interfaces responsivas com estilos consistentes e reutilizáveis.',
           en: 'I use Tailwind CSS to develop responsive interfaces with consistent, reusable styles.',
@@ -116,18 +126,40 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'bootstrap',
         name: 'Bootstrap',
         icon: 'devicon-bootstrap-plain',
+        evidence: 'studied',
         description: {
-          pt: 'Utilizo Bootstrap para acelerar a construção de layouts responsivos e componentes de interface.',
-          en: 'I use Bootstrap to speed up the creation of responsive layouts and interface components.',
+          pt: 'Estudei Bootstrap 4, incluindo grids responsivos, utilitários e componentes de interface.',
+          en: 'I studied Bootstrap 4, including responsive grids, utilities, and interface components.',
         },
       },
       {
         id: 'tanstack',
         name: 'TanStack',
-        icon: 'devicon-react-original',
+        icon: 'brand-tanstack',
+        evidence: 'implemented',
         description: {
-          pt: 'Exploro ferramentas do ecossistema TanStack para organizar o gerenciamento de dados e estados assíncronos em aplicações React.',
-          en: 'I explore the TanStack ecosystem to organize data fetching and asynchronous state in React applications.',
+          pt: 'Utilizo TanStack Router, Start e Query para estruturar rotas, aplicações e gerenciamento de dados assíncronos.',
+          en: 'I use TanStack Router, Start, and Query to structure routes, applications, and asynchronous data fetching.',
+        },
+      },
+      {
+        id: 'angular',
+        name: 'Angular',
+        icon: 'brand-angular',
+        evidence: 'implemented',
+        description: {
+          pt: 'Desenvolvi um CRUD com Angular 16, Angular Material e uma API simulada com JSON Server.',
+          en: 'I built a CRUD application with Angular 16, Angular Material, and a mock API using JSON Server.',
+        },
+      },
+      {
+        id: 'jquery',
+        name: 'jQuery',
+        icon: 'brand-jquery',
+        evidence: 'studied',
+        description: {
+          pt: 'Estudei jQuery para manipulação do DOM, seletores, eventos e efeitos em páginas web.',
+          en: 'I studied jQuery for DOM manipulation, selectors, events, and effects on web pages.',
         },
       },
     ],
@@ -140,6 +172,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'nodejs',
         name: 'Node.js',
         icon: 'devicon-nodejs-plain',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo Node.js para desenvolver serviços e aplicações back-end com JavaScript.',
           en: 'I use Node.js to develop back-end services and applications with JavaScript.',
@@ -149,6 +182,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'express',
         name: 'Express',
         icon: 'devicon-express-original',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo Express para estruturar rotas, middlewares e APIs em aplicações Node.js.',
           en: 'I use Express to structure routes, middleware, and APIs in Node.js applications.',
@@ -158,6 +192,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'rest',
         name: 'APIs REST',
         icon: 'network',
+        evidence: 'implemented',
         description: {
           pt: 'Desenvolvo e integro APIs REST para permitir a comunicação entre interfaces, serviços e bancos de dados.',
           en: 'I build and integrate REST APIs to connect interfaces, services, and databases.',
@@ -166,7 +201,8 @@ const technologyCategories: TechnologyCategory[] = [
       {
         id: 'sql',
         name: 'SQL',
-        icon: 'devicon-azuresqldatabase-plain',
+        icon: 'database',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo SQL para consultar, organizar e manipular dados em bancos relacionais.',
           en: 'I use SQL to query, organize, and manipulate data in relational databases.',
@@ -176,6 +212,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'postgresql',
         name: 'PostgreSQL',
         icon: 'devicon-postgresql-plain',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo PostgreSQL para modelagem relacional, armazenamento de dados e consultas em aplicações.',
           en: 'I use PostgreSQL for relational modeling, data storage, and application queries.',
@@ -185,9 +222,20 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'java',
         name: 'Java',
         icon: 'devicon-java-plain',
+        evidence: 'studying',
         description: {
           pt: 'Aprofundo meus conhecimentos em Java e orientação a objetos para desenvolver APIs e aplicações back-end robustas.',
           en: 'I am expanding my knowledge of Java and object-oriented programming to build robust back-end APIs and applications.',
+        },
+      },
+      {
+        id: 'supabase',
+        name: 'Supabase',
+        icon: 'brand-supabase',
+        evidence: 'implemented',
+        description: {
+          pt: 'Utilizo Supabase com PostgreSQL, autenticação e políticas RLS para proteger dados de usuários.',
+          en: 'I use Supabase with PostgreSQL, authentication, and RLS policies to protect user data.',
         },
       },
     ],
@@ -202,7 +250,8 @@ const technologyCategories: TechnologyCategory[] = [
       {
         id: 'generative-ai',
         name: 'IA Generativa',
-        icon: 'devicon-python-plain',
+        icon: 'sparkles',
+        evidence: 'studying',
         description: {
           pt: 'Estudo aplicações de IA Generativa para apoiar a criação de conteúdo, análise de informações e automação de processos.',
           en: 'I study Generative AI applications for content generation, information analysis, and process automation.',
@@ -211,7 +260,8 @@ const technologyCategories: TechnologyCategory[] = [
       {
         id: 'llms',
         name: 'LLMs',
-        icon: 'devicon-pytorch-original',
+        icon: 'brain-circuit',
+        evidence: 'studying',
         description: {
           pt: 'Exploro modelos de linguagem para desenvolver funcionalidades inteligentes e integrar recursos de IA a sistemas.',
           en: 'I explore language models to build intelligent features and integrate AI capabilities into software.',
@@ -220,7 +270,8 @@ const technologyCategories: TechnologyCategory[] = [
       {
         id: 'ai-agents',
         name: 'Agentes de IA',
-        icon: 'devicon-python-plain',
+        icon: 'bot',
+        evidence: 'planned',
         description: {
           pt: 'Pretendo desenvolver agentes capazes de integrar modelos de linguagem, ferramentas e APIs para automatizar tarefas.',
           en: 'I plan to build agents that connect language models, tools, and APIs to automate tasks.',
@@ -229,7 +280,8 @@ const technologyCategories: TechnologyCategory[] = [
       {
         id: 'applied-ai',
         name: 'IA Aplicada',
-        icon: 'devicon-tensorflow-original',
+        icon: 'brain',
+        evidence: 'planned',
         description: {
           pt: 'Busco aplicar inteligência artificial na resolução de problemas reais e na criação de soluções de software úteis.',
           en: 'I aim to apply artificial intelligence to real-world problems and useful software solutions.',
@@ -248,6 +300,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'aws',
         name: 'AWS',
         icon: 'devicon-amazonwebservices-plain-wordmark',
+        evidence: 'studied',
         description: {
           pt: 'Conheço fundamentos de serviços AWS, como EC2, Lambda e IAM, e pretendo aplicá-los em projetos na nuvem.',
           en: 'I understand AWS fundamentals such as EC2, Lambda, and IAM, and plan to apply them in cloud projects.',
@@ -257,6 +310,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'azure',
         name: 'Azure',
         icon: 'devicon-azure-plain',
+        evidence: 'studied',
         description: {
           pt: 'Estudei fundamentos de infraestrutura e serviços do Microsoft Azure, incluindo máquinas virtuais e redes.',
           en: 'I studied Microsoft Azure infrastructure and service fundamentals, including virtual machines and networking.',
@@ -266,6 +320,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'gcp',
         name: 'Google Cloud',
         icon: 'devicon-googlecloud-plain',
+        evidence: 'studied',
         description: {
           pt: 'Conheço conceitos de serviços Google Cloud e pretendo explorar suas possibilidades em aplicações escaláveis.',
           en: 'I understand Google Cloud service concepts and plan to explore them in scalable applications.',
@@ -275,6 +330,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'docker',
         name: 'Docker',
         icon: 'devicon-docker-plain',
+        evidence: 'studied',
         description: {
           pt: 'Conheço os fundamentos de conteinerização e pretendo utilizar Docker para padronizar ambientes de aplicações.',
           en: 'I understand containerization fundamentals and plan to use Docker to standardize application environments.',
@@ -284,6 +340,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'kubernetes',
         name: 'Kubernetes',
         icon: 'devicon-kubernetes-plain',
+        evidence: 'studied',
         description: {
           pt: 'Estudei conceitos de orquestração de contêineres e pretendo aprofundar sua aplicação em sistemas distribuídos.',
           en: 'I studied container orchestration concepts and plan to deepen my knowledge of distributed systems.',
@@ -293,9 +350,46 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'cicd',
         name: 'CI/CD',
         icon: 'devicon-githubactions-plain',
+        evidence: 'implemented',
         description: {
-          pt: 'Conheço princípios de integração e entrega contínuas para automatizar testes, builds e implantação de software.',
-          en: 'I understand continuous integration and delivery principles for automating tests, builds, and deployments.',
+          pt: 'Implementei workflows de GitHub Actions para executar testes e builds e apoiar o processo de entrega.',
+          en: 'I implemented GitHub Actions workflows to run tests and builds and support the delivery process.',
+        },
+      },
+    ],
+  },
+  {
+    id: 'testing',
+    title: { pt: 'Qualidade & Testes', en: 'Quality & Testing' },
+    technologies: [
+      {
+        id: 'qa',
+        name: 'QA',
+        icon: 'shield-check',
+        evidence: 'implemented',
+        description: {
+          pt: 'Aplico conceitos de qualidade de software, regras de negócio e testes automatizados para melhorar a confiabilidade das aplicações.',
+          en: 'I apply software quality practices, business rules, and automated testing to improve application reliability.',
+        },
+      },
+      {
+        id: 'vitest',
+        name: 'Vitest',
+        icon: 'brand-vitest',
+        evidence: 'implemented',
+        description: {
+          pt: 'Utilizo Vitest para testar componentes, comportamento e regras de negócio em projetos React e TypeScript.',
+          en: 'I use Vitest to test components, behavior, and business rules in React and TypeScript projects.',
+        },
+      },
+      {
+        id: 'playwright',
+        name: 'Playwright',
+        icon: 'scan-eye',
+        evidence: 'implemented',
+        description: {
+          pt: 'Implementei testes de ponta a ponta com Playwright para validar fluxos reais do portfólio no navegador.',
+          en: 'I implemented Playwright end-to-end tests to verify real portfolio user journeys in a browser.',
         },
       },
     ],
@@ -311,6 +405,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'git',
         name: 'Git',
         icon: 'devicon-git-plain',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo Git para versionar código, organizar alterações e acompanhar a evolução dos projetos.',
           en: 'I use Git for version control, organizing changes, and tracking project evolution.',
@@ -320,6 +415,7 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'github',
         name: 'GitHub',
         icon: 'devicon-github-original',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo GitHub para hospedar repositórios, documentar projetos e colaborar no desenvolvimento.',
           en: 'I use GitHub to host repositories, document projects, and collaborate on development.',
@@ -328,7 +424,8 @@ const technologyCategories: TechnologyCategory[] = [
       {
         id: 'scrum',
         name: 'Scrum',
-        icon: 'devicon-jira-plain',
+        icon: 'refresh-cw',
+        evidence: 'studied',
         description: {
           pt: 'Conheço práticas Scrum para planejar entregas incrementais, organizar prioridades e promover melhoria contínua.',
           en: 'I understand Scrum practices for incremental delivery, prioritization, and continuous improvement.',
@@ -338,27 +435,30 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'uml',
         name: 'UML',
         icon: 'devicon-unifiedmodelinglanguage-plain',
+        evidence: 'studied',
         description: {
-          pt: 'Utilizo conceitos de UML para representar requisitos, fluxos, estruturas e interações de sistemas.',
-          en: 'I use UML concepts to represent requirements, workflows, structures, and system interactions.',
-        },
-      },
-      {
-        id: 'qa',
-        name: 'QA',
-        icon: 'devicon-selenium-original',
-        description: {
-          pt: 'Aplico conceitos de qualidade de software, regras de negócio e testes para melhorar a confiabilidade das aplicações.',
-          en: 'I apply software quality concepts, business rules, and testing to improve application reliability.',
+          pt: 'Estudei modelagem UML para representar requisitos, casos de uso e interações de sistemas.',
+          en: 'I studied UML modeling to represent requirements, use cases, and system interactions.',
         },
       },
       {
         id: 'zod',
         name: 'Zod',
-        icon: 'devicon-typescript-plain',
+        icon: 'brand-zod',
+        evidence: 'implemented',
         description: {
           pt: 'Utilizo Zod para validar dados e tornar mais segura a comunicação entre formulários, APIs e aplicações.',
           en: 'I use Zod to validate data and make communication between forms, APIs, and applications safer.',
+        },
+      },
+      {
+        id: 'ux-ui',
+        name: 'UX/UI Design',
+        icon: 'palette',
+        evidence: 'studied',
+        description: {
+          pt: 'Estudei design centrado no usuário, arquitetura da informação, prototipação e testes de usabilidade.',
+          en: 'I studied user-centered design, information architecture, prototyping, and usability testing.',
         },
       },
     ],
@@ -389,9 +489,16 @@ const translations = {
       eyebrow: 'MINHAS FERRAMENTAS E CONHECIMENTOS',
       title: 'Tecnologias',
       description:
-        'Tecnologias, ferramentas e conceitos que utilizo e exploro para transformar ideias em soluções.',
+        'Tecnologias que implementei, estudei ou pretendo aplicar. Selecione uma para conhecer meu contato com ela.',
       categoryLabel: 'Áreas de tecnologia',
       detailsLabel: 'Detalhes da tecnologia',
+      selectPrompt: 'Selecione uma tecnologia para conhecer minha experiência ou formação.',
+      evidence: {
+        implemented: 'Implementei',
+        studied: 'Estudei',
+        studying: 'Em estudo',
+        planned: 'Pretendo aplicar',
+      },
     },
     projects: {
       eyebrow: 'SOLUÇÕES QUE DESENVOLVI',
@@ -457,9 +564,16 @@ const translations = {
       eyebrow: 'MY TOOLS AND KNOWLEDGE',
       title: 'Technologies',
       description:
-        'Technologies, tools, and concepts I use and explore to turn ideas into solutions.',
+        'Technologies I have implemented, studied, or plan to apply. Select one to learn more.',
       categoryLabel: 'Technology areas',
       detailsLabel: 'Technology details',
+      selectPrompt: 'Select a technology to learn about my experience or training.',
+      evidence: {
+        implemented: 'Implemented',
+        studied: 'Studied',
+        studying: 'Currently studying',
+        planned: 'Plan to apply',
+      },
     },
     projects: {
       eyebrow: 'SOLUTIONS I HAVE BUILT',
@@ -885,7 +999,7 @@ function App() {
               })}
             </nav>
 
-            <div className="min-w-0 rounded-3xl border border-(--color-border) bg-(--color-surface) p-4 sm:p-5">
+            <div className="min-w-0 rounded-3xl border border-(--color-border) bg-(--color-surface) p-4 sm:p-5 lg:flex lg:flex-col">
               <h3 className={subsectionHeadingClass}>
                 {activeCategory.title[language]}
               </h3>
@@ -893,11 +1007,13 @@ function App() {
               <div
                 ref={technologyGridRef}
                 className={`mt-3 grid grid-cols-2 gap-2.5 ${
-                  activeCategory.technologies.length === 8
-                    ? 'sm:grid-cols-4'
-                    : activeCategory.technologies.length === 6
-                      ? 'sm:grid-cols-3'
-                      : 'sm:grid-cols-2'
+                  activeCategory.technologies.length >= 10
+                    ? 'sm:grid-cols-5'
+                    : activeCategory.technologies.length >= 7
+                      ? 'sm:grid-cols-4'
+                      : activeCategory.technologies.length === 6 || activeCategory.technologies.length === 3
+                        ? 'sm:grid-cols-3'
+                        : 'sm:grid-cols-2'
                 }`}
               >
                 {activeCategory.technologies.map((technology) => {
@@ -918,11 +1034,7 @@ function App() {
                           : 'border-(--color-border)'
                       }`}
                     >
-                      {technology.icon === 'network' ? (
-                        <Network aria-hidden="true" className="technology-icon h-7 w-7" strokeWidth={1.8} />
-                      ) : (
-                        <i aria-hidden="true" className={`${technology.icon} technology-icon text-[1.75rem]`} />
-                      )}
+                      <TechnologyIcon icon={technology.icon} />
                       <span className="text-xs font-semibold leading-snug text-(--color-text)">
                         {technology.name}
                       </span>
@@ -938,17 +1050,25 @@ function App() {
                   ? `${selectedTechnology.name} — ${text.skills.detailsLabel}`
                   : text.skills.detailsLabel}
                 aria-live="polite"
-                className="mt-4 flex min-h-19 items-center border-t border-(--color-border) pt-3"
+                className="mt-4 flex min-h-19 items-center border-t border-(--color-border) pt-3 lg:flex-1"
               >
                 {selectedTechnology && (
                   <div className="min-w-0">
-                    <h4 className="font-display text-lg font-semibold text-(--color-text)">
-                      {selectedTechnology.name}
-                    </h4>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <h4 className="font-display text-lg font-semibold text-(--color-text)">
+                        {selectedTechnology.name}
+                      </h4>
+                      <span className="rounded-full border border-(--color-border) bg-(--color-background) px-2.5 py-0.5 text-[11px] font-semibold text-(--color-text-muted)">
+                        {text.skills.evidence[selectedTechnology.evidence]}
+                      </span>
+                    </div>
                     <p className="mt-1 text-sm leading-6 text-(--color-text-muted)">
                       {selectedTechnology.description[language]}
                     </p>
                   </div>
+                )}
+                {!selectedTechnology && (
+                  <p className="text-sm text-(--color-text-muted)">{text.skills.selectPrompt}</p>
                 )}
               </div>
             </div>

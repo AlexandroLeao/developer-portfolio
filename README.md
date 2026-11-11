@@ -18,7 +18,7 @@ The repository also documents the engineering practices behind the portfolio: an
 
 - **Hero and Header:** professional introduction, responsive navigation, theme/language controls, Portuguese/English PDF resume downloads, and a lightweight stop-motion character that waves continuously and reacts to clicks/taps.
 - **About Me:** professional background and approach to software development.
-- **Technologies:** categorized skills with interactive details and a horizontally scrollable, selection-centering category control on mobile.
+- **Technologies:** 36 technologies and competencies in six categories, with compact interactive details explaining practical implementation, coursework, ongoing study, or future plans. The mobile category selector remains horizontally scrollable and selection-centering.
 - **Projects:** responsive cards, technology distribution charts, structured technical-detail dialogs, repository/live-demo links, and a mobile selector that shows one project at a time without expanding the viewport.
 - **Experience:** selectable professional timeline, responsibilities, contributions, relevant skills, and context-aware navigation to a related project; mobile selections are gently centered.
 - **Education and Certifications:** academic background, 17 completed courses/certifications, detailed learning topics and verification mechanisms. A curated set of three qualifications is featured on both desktop and mobile; the full catalog and category filters remain available, with Java training marked as in progress.
@@ -35,7 +35,7 @@ The owner reports a **Google PageSpeed Insights result of 100/100 in Performance
 | --- | --- |
 | Application | React 19, TypeScript, Vite 8 |
 | Styling | Tailwind CSS v4, CSS custom properties |
-| Icons and typography | Lucide React, local Devicon WOFF2 subset, self-hosted Inter and Outfit fonts |
+| Icons and typography | Lucide React, local Devicon WOFF2 subset, small inline Simple Icons vectors, self-hosted Inter and Outfit fonts |
 | Unit/component testing | Vitest, React Testing Library, jest-dom, user-event, jsdom |
 | Browser E2E testing | Playwright Test (Chromium) |
 | Code quality | ESLint, TypeScript compiler |
@@ -44,6 +44,21 @@ The owner reports a **Google PageSpeed Insights result of 100/100 in Performance
 | Deployment | Vercel Preview and Production |
 
 Docker and AWS are **not** required to build or host the current portfolio. They may be evaluated in separate learning or infrastructure experiments.
+
+### Technology catalog and evidence
+
+The Technologies section is a **learning and project-experience catalog**, not a claim that every entry has been deployed to production or used professionally. Six compact categories group 36 items:
+
+| Category | Items | Evidence examples |
+| --- | ---: | --- |
+| Front-End | 10 | React, Tailwind, TypeScript, and TanStack in published project code; Angular and Angular Material in [Project Form](https://github.com/AlexandroLeao/project-form); Bootstrap and jQuery in completed courses |
+| Back-End & Data | 7 | Node, Express, REST, SQL, PostgreSQL, and Supabase in [Adventure Files](https://github.com/AlexandroLeao/rpg-character-creator); Java bootcamp in progress |
+| Artificial Intelligence | 4 | Generative AI and LLMs in ongoing studies; agents and AI integration as future goals, not deployed model integrations |
+| Cloud & DevOps Fundamentals | 6 | AWS, Azure, GCP, Docker, and Kubernetes in the completed FIAP cloud curriculum; GitHub Actions CI/CD in repository workflows |
+| Quality & Testing | 3 | QA practices, Vitest unit/component tests, and Playwright browser E2E tests |
+| Engineering & Tools | 6 | Git, GitHub, and Zod in projects; Scrum, UML, and UX/UI in completed coursework |
+
+Each selected item displays one bilingual evidence label: **Implemented**, **Studied**, **Currently studying**, or **Plan to apply**. This status records the strongest supported context; studying a tool does not automatically imply professional or production experience. The portfolio does not claim Python, PyTorch, TensorFlow, Jira, Selenium, or Azure SQL Database experience by displaying unrelated icons. Icon concepts use Lucide and brand marks use small inline [Simple Icons](https://github.com/simple-icons/simple-icons) paths (CC0), avoiding an additional icon runtime package.
 
 ## Repository Structure
 

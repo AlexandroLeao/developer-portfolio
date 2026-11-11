@@ -233,12 +233,12 @@ describe('Developer Portfolio', () => {
     expect(within(grid).getAllByRole('article')).toHaveLength(8)
   })
 
-  it('keeps all 30 technologies in a compact, deselectable category browser', async () => {
+  it('keeps all 36 technologies in a compact, deselectable category browser', async () => {
     const user = userEvent.setup()
     render(<App />)
 
     const navigation = screen.getByRole('navigation', { name: 'Áreas de tecnologia' })
-    expect(within(navigation).getAllByRole('button')).toHaveLength(5)
+    expect(within(navigation).getAllByRole('button')).toHaveLength(6)
     expect(navigation).toHaveClass('overflow-x-auto', 'lg:flex-col')
     expect(navigation).toHaveAttribute('data-mobile-selection-track')
     expect(within(navigation).getByRole('button', { name: /Engenharia & Ferramentas/ }))
@@ -246,8 +246,11 @@ describe('Developer Portfolio', () => {
     expect(within(navigation).queryByText('Explore por área')).not.toBeInTheDocument()
 
     const frontendGrid = screen.getByRole('button', { name: 'HTML5' }).parentElement
-    expect(frontendGrid).toHaveClass('sm:grid-cols-4')
-    expect(frontendGrid?.children).toHaveLength(8)
+    expect(frontendGrid).toHaveClass('sm:grid-cols-5')
+    expect(frontendGrid?.children).toHaveLength(10)
+    for (const name of ['Angular', 'jQuery', 'TanStack']) {
+      expect(screen.getByRole('button', { name }).querySelector('svg path')).toBeInTheDocument()
+    }
 
     expect(screen.getByRole('button', { name: 'React' })).toHaveAttribute('aria-pressed', 'false')
     expect(document.getElementById('technology-detail-panel')).toHaveClass('min-h-19')
@@ -256,6 +259,8 @@ describe('Developer Portfolio', () => {
     expect(screen.getByRole('button', { name: 'CSS3' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('region', { name: /CSS3 — Detalhes da tecnologia/ }))
       .toHaveTextContent('Utilizo CSS3 para criar layouts responsivos')
+    expect(screen.getByRole('region', { name: /CSS3 — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Implementei')
     expect(screen.queryByText('Onde foi aplicado')).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('heading', { level: 2, name: /^Tecnologias/ }))
@@ -275,12 +280,19 @@ describe('Developer Portfolio', () => {
 
     await user.click(within(navigation).getByRole('button', { name: /Inteligência Artificial/ }))
     expect(screen.getByRole('button', { name: 'IA Generativa' }).parentElement?.children).toHaveLength(4)
+    expect(screen.getByRole('button', { name: 'LLMs' }).querySelector('svg.technology-icon')).toBeInTheDocument()
+
+    await user.click(within(navigation).getByRole('button', { name: /Qualidade & Testes/ }))
+    expect(screen.getByRole('button', { name: 'QA' }).parentElement?.children).toHaveLength(3)
+    expect(screen.getByRole('button', { name: 'Vitest' }).querySelector('svg path')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Playwright' }).querySelector('svg')).toBeInTheDocument()
 
     await user.click(within(navigation).getByRole('button', { name: /Engenharia & Ferramentas/ }))
     expect(screen.getByRole('button', { name: 'Git' }).parentElement?.children).toHaveLength(6)
 
     await user.click(within(navigation).getByRole('button', { name: /Back-End & Dados/ }))
-    expect(screen.getByRole('button', { name: 'Node.js' }).parentElement?.children).toHaveLength(6)
+    expect(screen.getByRole('button', { name: 'Node.js' }).parentElement?.children).toHaveLength(7)
+    expect(screen.getByRole('button', { name: 'Supabase' }).querySelector('svg path')).toBeInTheDocument()
     const restApiCard = screen.getByRole('button', { name: 'APIs REST' })
     expect(restApiCard.querySelector('svg.technology-icon')).toBeInTheDocument()
     expect(restApiCard.querySelector('.devicon-fastapi-plain')).not.toBeInTheDocument()
@@ -294,11 +306,43 @@ describe('Developer Portfolio', () => {
     expect(screen.getByRole('navigation', { name: 'Technology areas' })).toBeInTheDocument()
     expect(screen.getByRole('region', { name: /Azure — Technology details/ }))
       .toHaveTextContent('I studied Microsoft Azure infrastructure and service fundamentals')
+    expect(screen.getByRole('region', { name: /Azure — Technology details/ }))
+      .toHaveTextContent('Studied')
 
     await user.click(screen.getByRole('button', { name: 'Switch to dark mode' }))
     expect(screen.getByRole('button', { name: 'Azure' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('region', { name: /Azure — Technology details/ }))
       .toHaveTextContent('I studied Microsoft Azure infrastructure and service fundamentals')
+  })
+
+  it('labels practical work, coursework, ongoing study, and future plans accurately', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: 'Angular' }))
+    expect(screen.getByRole('region', { name: /Angular — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Implementei')
+    expect(screen.getByRole('region', { name: /Angular — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Angular Material')
+
+    await user.click(screen.getByRole('button', { name: 'jQuery' }))
+    expect(screen.getByRole('region', { name: /jQuery — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Estudei')
+
+    const navigation = screen.getByRole('navigation', { name: 'Áreas de tecnologia' })
+    await user.click(within(navigation).getByRole('button', { name: /Back-End & Dados/ }))
+    await user.click(screen.getByRole('button', { name: 'Java' }))
+    expect(screen.getByRole('region', { name: /Java — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Em estudo')
+
+    await user.click(within(navigation).getByRole('button', { name: /Inteligência Artificial/ }))
+    await user.click(screen.getByRole('button', { name: 'Agentes de IA' }))
+    expect(screen.getByRole('region', { name: /Agentes de IA — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Pretendo aplicar')
+
+    await user.click(screen.getByRole('button', { name: 'EN' }))
+    expect(screen.getByRole('region', { name: /Agentes de IA — Technology details/ }))
+      .toHaveTextContent('Plan to apply')
   })
 
   beforeEach(() => {

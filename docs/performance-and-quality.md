@@ -21,12 +21,17 @@ An earlier recorded production Lighthouse result also appears in [ADR 0003](deci
 | --- | --- | --- |
 | Hero animation | Swap three complete character frames, avoiding separately animated hand layers and permanently visible duplicate poses. | `src/components/HeroMascot.tsx`, `src/index.css` |
 | Image delivery | Use responsive WebP variants for the mascot and project artwork, with appropriate loading priority. | `public/images/`, `src/components/HeroMascot.tsx`, `src/components/ProjectCard.tsx` |
-| Fonts and icons | Self-host Inter/Outfit and a reduced Devicon subset. | `public/fonts/`, `src/styles/` |
+| Fonts and icons | Self-host Inter/Outfit and a reduced Devicon subset; render a handful of extra brand icons as inline vectors. | `public/fonts/`, `src/styles/`, `src/components/TechnologyIcon.tsx` |
 | Mobile layout | Keep horizontal choices in bounded scroll containers, with one visible project panel at a time. | `src/App.tsx`, `src/components/ExperienceTimeline.tsx`, `src/utils/centerMobileSelection.ts` |
 | Motion | Use small CSS opacity/translation transitions and `IntersectionObserver`, respecting reduced-motion preferences. | `src/App.tsx`, `src/index.css` |
 | Delivery | Build a static application and deploy it through Vercel. | `vite.config.ts`, `.github/workflows/ci.yml` |
 
 These practices help contain asset and layout costs; they are not substitutes for profiling or field measurements. No specific byte savings, Core Web Vitals values, or Lighthouse run configuration are asserted here without supporting output.
+
+The 36-item technology catalog adds six entries and a small set of inline icons
+without importing a second icon library. Any impact on bundle size,
+reflow, or mobile card spacing must be checked against the new Preview build;
+older PageSpeed results are not a measurement of this change.
 
 ## Vitest test-runner performance — 2026-11-11
 
