@@ -11,6 +11,7 @@ The repository also documents the engineering practices behind the portfolio: an
 - Default language: Portuguese, with an English option.
 - Appearance: light and dark themes.
 - Automated tests as of 2026-11-11: **72 passing tests across 14 test files** (up from the 71-test baseline on 2026-11-09). Run `npm run test` for the current count.
+- **P1–P4 quality cycle completed and owner-merged** on 2026-11-11: [PR #112](https://github.com/AlexandroLeao/developer-portfolio/pull/112) produced `main` commit `d0b50e4`. The final PR head passed CI, Playwright, and both Lighthouse jobs; the merge commit's Vercel status reported `success`. This is not an independent production-site visual audit.
 - Development: GitHub Issues, feature branches, Pull Requests, GitHub Actions, and Vercel Preview.
 - Deployment: the `main` branch is published to Vercel Production.
 
@@ -208,6 +209,8 @@ The repository includes current architecture and use-case documentation, an audi
 
 - [Changelog](CHANGELOG.md)
 - [Performance and Quality](docs/performance-and-quality.md)
+- [Inspected Lighthouse CI evidence — 2026-11-11](docs/evidence/lighthouse-ci-2026-11-11.md)
+- [Engineering Roadmap — completed and future work](docs/engineering-roadmap.md)
 
 ### Architecture and UML
 
@@ -270,6 +273,8 @@ The current application is a static frontend built with Vite; it does not requir
 
 ## Roadmap
 
+For the checked P1–P5 / R1–R7 / O1–O3 plan, original evidence and implementation boundaries, see the [detailed engineering roadmap](docs/engineering-roadmap.md).
+
 ### Completed
 
 - [x] Initialize the React, TypeScript, Vite, and Tailwind CSS project.
@@ -310,10 +315,12 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Document the owner-reported 2026-11-09 PageSpeed Insights results in all four categories.
 - [x] Audit the 36-item technology catalog, evidence labels, and icon accuracy (Issue #97, PR #103).
 - [x] Complete the post-merge mobile/desktop, language/theme, keyboard, reduced-motion, and external-link review (owner-confirmed on 2026-11-11; see the quality guide).
+- [x] Close P1–P4 documentation on owner-merged PR #112 (`main` `d0b50e4`, 2026-11-11).
+- [x] Inspect GitHub Lighthouse CI raw JSON from PR #112: mobile/desktop Performance medians **97/98**, with other median categories at **100** (local runner build; [dated evidence](docs/evidence/lighthouse-ci-2026-11-11.md)). Original historical PageSpeed report remains unavailable.
 
 ### Next steps — approved cross-project sequence
 
-The portfolio's **P1–P4 quality cycle is completed** as of 2026-11-11: P1 content/evidence review ([Issue #97](https://github.com/AlexandroLeao/developer-portfolio/issues/97)), P2 browser regression coverage ([PR #106](https://github.com/AlexandroLeao/developer-portfolio/pull/106)), P3 automated accessibility checks ([PR #108](https://github.com/AlexandroLeao/developer-portfolio/pull/108)), and P4 repeatable mobile/desktop Lighthouse CI ([PR #110](https://github.com/AlexandroLeao/developer-portfolio/pull/110)). The closing documentation review is tracked in [Issue #111](https://github.com/AlexandroLeao/developer-portfolio/issues/111) / [PR #112](https://github.com/AlexandroLeao/developer-portfolio/pull/112). Automated results and owner-reported manual checks retain distinct evidence labels.
+The portfolio's **P1–P4 quality cycle is completed** as of 2026-11-11: P1 content/evidence review ([Issue #97](https://github.com/AlexandroLeao/developer-portfolio/issues/97)), P2 browser regression coverage ([PR #106](https://github.com/AlexandroLeao/developer-portfolio/pull/106)), P3 automated accessibility checks ([PR #108](https://github.com/AlexandroLeao/developer-portfolio/pull/108)), and P4 repeatable mobile/desktop Lighthouse CI ([PR #110](https://github.com/AlexandroLeao/developer-portfolio/pull/110)). The closing documentation review was **owner-merged** in [Issue #111](https://github.com/AlexandroLeao/developer-portfolio/issues/111) / [PR #112](https://github.com/AlexandroLeao/developer-portfolio/pull/112) (`d0b50e4`). The subsequent evidence/documentation reconciliation is tracked separately in [Issue #113](https://github.com/AlexandroLeao/developer-portfolio/issues/113). Automated results and owner-reported manual checks retain distinct evidence labels.
 
 The [Adventure Files](https://github.com/AlexandroLeao/rpg-character-creator) **MVP was accepted on 2026-11-05**; that completed product milestone is **not** evidence that the separately planned R1–R6 engineering improvements have been implemented. Following the agreed portfolio → RPG → portfolio update → external open-source sequence, the remaining work is:
 
