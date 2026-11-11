@@ -42,6 +42,10 @@ below. Older PageSpeed results are not a measurement of this change.
 
 **Evidence limitations:** the manual checks above were confirmed by the owner in conversation; a device/browser matrix and supporting screenshots were not archived. The desktop inspection is not a substitute for a full device accessibility audit, and no new PageSpeed Insights or Lighthouse score is claimed for this release. This record documents the functional QA completed for [Issue #97](https://github.com/AlexandroLeao/developer-portfolio/issues/97), not formal WCAG conformance.
 
+## Browser E2E regression expansion — 2026-11-11
+
+Issue #105 extends the five baseline Playwright scenarios to 10 in two test files. These checks exercise keyboard focus and Escape behavior in contact/project dialogs, PT/EN contact/project link destinations without visiting external services, emulated reduced motion, and page-wide overflow at 375, 768, and 1280 px. The Chromium workflow remains separate from Vitest and uses standard GitHub Actions runners; check the associated PR for an actual passing run rather than treating the implementation alone as verification. Automated smoke tests are not a WCAG conformance audit, cross-browser guarantee, live third-party link test, or reproducible Lighthouse measurement.
+
 ## Vitest test-runner performance — 2026-11-11
 
 This is **developer test execution time**, not the production site's runtime speed or a new Lighthouse result. The measurements below come from Google Cloud Shell terminal output for Vitest 5.0.5 and the same 71 passing tests across 14 files:
@@ -74,7 +78,7 @@ The `vmThreads` pool keeps test-file VM contexts separate, but Vitest documents 
    npm run build
    ```
 
-7. Verify that the [Playwright E2E Tests workflow](../.github/workflows/playwright.yml) passes on the Pull Request. It checks five real-browser journeys using headless Chromium. For optional local execution, run `npx playwright install chromium` and then `npx playwright test`; on resource-constrained environments, prefer CI instead.
+7. Verify that the [Playwright E2E Tests workflow](../.github/workflows/playwright.yml) passes on the Pull Request. The expanded 10-scenario Chromium suite covers five original journeys plus keyboard-operated dialogs, contact/project link destinations, reduced motion, and mobile/tablet/desktop page-wide overflow. For optional local execution, run `npx playwright install chromium` and then `npm run test:e2e`; on resource-constrained environments, prefer CI instead.
 8. Attach audit links/screenshots to the relevant Issue or PR and note which results were reproduced directly versus reported by someone else.
 
 ## Interpretation

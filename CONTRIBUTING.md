@@ -167,7 +167,7 @@ To execute the Playwright tests locally, install Chromium once and run the suite
 
 ```bash
 npx playwright install chromium
-npx playwright test
+npm run test:e2e
 ```
 
 The GitHub Actions workflow installs headless Chromium automatically, so local browser installation is optional.
@@ -212,7 +212,7 @@ Two independent GitHub Actions workflows run on pull requests targeting `main`:
 - [Continuous Integration](.github/workflows/ci.yml) executes `npm run lint`, `npm run test` (Vitest), and `npm run build`.
 - [Playwright E2E Tests](.github/workflows/playwright.yml) installs headless Chromium and runs `npx playwright test`. A failing browser test fails its job.
 
-The five Playwright scenarios in `e2e/portfolio.e2e.ts` verify language switching, light/dark themes, project details, Portuguese/English resume downloads, and navigation/project selection on a 375 px mobile viewport. The `.e2e.ts` extension keeps them separate from the Vitest test discovery. Browser automation complements, rather than replaces, manual accessibility and device checks.
+The 10 Playwright scenarios across `e2e/portfolio.e2e.ts` and `e2e/accessibility-and-layout.e2e.ts` verify language switching, themes, project details, PT/EN résumé downloads, mobile navigation, keyboard-operated dialogs and focus restoration, contact/project link targets, reduced motion, and viewport overflow. The `.e2e.ts` extension keeps them separate from Vitest. Browser automation complements, rather than replaces, manual accessibility and device checks.
 
 ### Performance and Accessibility Audits
 
