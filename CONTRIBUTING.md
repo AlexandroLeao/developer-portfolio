@@ -212,7 +212,7 @@ Two independent GitHub Actions workflows run on pull requests targeting `main`:
 - [Continuous Integration](.github/workflows/ci.yml) executes `npm run lint`, `npm run test` (Vitest), and `npm run build`.
 - [Playwright E2E Tests](.github/workflows/playwright.yml) installs headless Chromium and runs `npx playwright test`. A failing browser test fails its job.
 
-The 10 Playwright scenarios across `e2e/portfolio.e2e.ts` and `e2e/accessibility-and-layout.e2e.ts` verify language switching, themes, project details, PT/EN résumé downloads, mobile navigation, keyboard-operated dialogs and focus restoration, contact/project link targets, reduced motion, and viewport overflow. The `.e2e.ts` extension keeps them separate from Vitest. Browser automation complements, rather than replaces, manual accessibility and device checks.
+The 10 Playwright scenarios across `e2e/portfolio.e2e.ts` and `e2e/accessibility-and-layout.e2e.ts` verify language switching, themes, project details, PT/EN résumé downloads, mobile navigation, keyboard-operated dialogs and focus restoration, contact/project link targets, reduced motion, and viewport overflow. The `.e2e.ts` extension keeps them separate from Vitest. A separate `e2e/axe-accessibility.e2e.ts` suite adds WCAG A/AA automated checks using `@axe-core/playwright` (see Issue #107). The same `npm run test:e2e` command runs functional and rule-based checks. Browser automation complements, rather than replaces, manual accessibility and device checks.
 
 ### Performance and Accessibility Audits
 

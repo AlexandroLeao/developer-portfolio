@@ -155,6 +155,12 @@ Playwright adds a separate **Chromium browser** test layer without replacing Vit
 
 Issue #105 adds five further browser checks for keyboard-operated contact/project dialogs and focus restoration, PT/EN contact/project link targets, reduced-motion behavior, and page-wide horizontal overflow at mobile, tablet, and desktop widths. The suite now contains **10 Chromium E2E tests** across `e2e/portfolio.e2e.ts` and `e2e/accessibility-and-layout.e2e.ts`. The `.e2e.ts` naming keeps them separate from Vitest. Playwright starts the Vite development server automatically. External links are inspected, not opened in tests.
 
+### Automated accessibility tests (P3)
+
+A development-only `@axe-core/playwright` suite in `e2e/axe-accessibility.e2e.ts` checks WCAG 2.0–2.2 Level A/AA rules in Chromium: the homepage in PT/EN and light/dark themes, contact/project/certification dialogs in both languages, and a narrow mobile viewport. Failures report rule IDs and DOM targets. The existing `npm run test:e2e` command and Playwright PR workflow run these checks without adding any runtime dependency to the deployed app.
+
+This automated check does not establish WCAG conformance or replace manual keyboard, screen-reader and real-device verification.
+
 ```bash
 npx playwright test --list   # No browser download needed
 npx playwright install chromium   # Optional: local browser setup

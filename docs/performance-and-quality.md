@@ -46,6 +46,12 @@ below. Older PageSpeed results are not a measurement of this change.
 
 Issue #105 extends the five baseline Playwright scenarios to 10 in two test files. These checks exercise keyboard focus and Escape behavior in contact/project dialogs, PT/EN contact/project link destinations without visiting external services, emulated reduced motion, and page-wide overflow at 375, 768, and 1280 px. The Chromium workflow remains separate from Vitest and uses standard GitHub Actions runners; check the associated PR for an actual passing run rather than treating the implementation alone as verification. Automated smoke tests are not a WCAG conformance audit, cross-browser guarantee, live third-party link test, or reproducible Lighthouse measurement.
 
+## Automated accessibility (P3) — pending CI validation
+
+Issue #107 adds 11 Chromium `@axe-core/playwright` scenarios in `e2e/axe-accessibility.e2e.ts`: PT/EN homepages in light/dark modes, contact/project/certification dialogs in both languages, and a mobile viewport. WCAG 2.0–2.2 Level A/AA rule tags are enabled, including contrast where applicable; no violations are suppressed. The existing `npm run test:e2e` runs them. Record actual CI results and address confirmed failures before calling the milestone complete.
+
+**Evidence boundaries:** automated rule checks cannot prove complete WCAG conformance, screen-reader support or real-device usability. Historical owner-reported PageSpeed scores and manual audits remain distinct from these checks.
+
 ## Vitest test-runner performance — 2026-11-11
 
 This is **developer test execution time**, not the production site's runtime speed or a new Lighthouse result. The measurements below come from Google Cloud Shell terminal output for Vitest 5.0.5 and the same 71 passing tests across 14 files:

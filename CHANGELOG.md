@@ -8,6 +8,7 @@ Entries below describe the implemented project, not additional release tags.
 
 ### Added
 
+- Add development-only `@axe-core/playwright` WCAG A/AA checks for PT/EN homepages, themes, contact/project/certification dialogs, and a 375px viewport (Issue #107; CI validation tracked in the PR).
 - Expand Playwright browser regression coverage from 5 to 10 Chromium scenarios, adding keyboard/focus checks, PT/EN link targets, reduced-motion behavior, and viewport overflow; add a `test:e2e` npm script (Issue #105).
 - Expand the technology catalog from 30 to 36 entries across six categories, including Angular, jQuery, Supabase, Vitest, Playwright, and UX/UI Design (Issue #97).
 - Add compact bilingual evidence badges for implemented work, completed study, ongoing study, and future plans; introduce a dedicated Quality & Testing category.
