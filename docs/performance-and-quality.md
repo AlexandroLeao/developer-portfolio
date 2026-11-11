@@ -69,6 +69,19 @@ The `upload.target=filesystem` reports (HTML/JSON plus raw `.lighthouseci/` resu
 
 Reproduce locally with Node.js 24, Chrome and `npm ci && npm run build`, then install `@lhci/cli@0.16.0` globally and use `LHCI_DEVICE=mobile lhci autorun` (or `LHCI_DEVICE=desktop`). Save one profile's files before running the next because local runs reuse `.lighthouseci/` and `lighthouse-reports/`. Do not publish numerical score claims until the PR's actual audit outputs have been reviewed and recorded.
 
+### Owner-reported local Lighthouse baseline — 2026-11-11
+
+The project owner ran `@lhci/cli@0.16.0` from the P4 branch in **Google Cloud Shell**, using the compiled Vite `dist/` site, Node.js **26.13.0** and **Chrome for Testing 158.0.8127.18**. The CLI successfully completed **three mobile** and **three desktop** audits using `LHCI_DEVICE=mobile` and `LHCI_DEVICE=desktop`. The owner then filtered the saved JSON results by `configSettings.formFactor` to exclude stale mobile files accidentally carried into the desktop evidence directory.
+
+| Lighthouse category | Mobile runs (0–100) | Mobile median | Desktop runs (0–100) | Desktop median |
+| --- | --- | ---: | --- | ---: |
+| Performance | 95, 96, 96 | **96** | 100, 100, 100 | **100** |
+| Accessibility | 100, 100, 100 | **100** | 100, 100, 100 | **100** |
+| Best Practices | 100, 100, 100 | **100** | 100, 100, 100 | **100** |
+| SEO | 100, 100, 100 | **100** | 100, 100, 100 | **100** |
+
+**Provenance:** these values come from the owner's Cloud Shell terminal output and local JSON extraction, **not** GitHub Actions, Vercel Production, or a new PageSpeed Insights measurement. The actual HTML/JSON report files have not been uploaded to or reviewed in this repository; they remain in the owner's Cloud Shell under `~/lighthouse-evidence-p4/{mobile,desktop}/`. The local checks establish that the Lighthouse configuration and audits run on that environment; the new [Lighthouse CI workflow](../.github/workflows/lighthouse.yml), along with existing CI and Playwright workflows, must still complete on GitHub before P4 is accepted. Scores are laboratory measurements, can vary across Chrome versions/runners, and do not establish WCAG conformance or field Core Web Vitals.
+
 ## Vitest test-runner performance — 2026-11-11
 
 This is **developer test execution time**, not the production site's runtime speed or a new Lighthouse result. The measurements below come from Google Cloud Shell terminal output for Vitest 5.0.5 and the same 71 passing tests across 14 files:
