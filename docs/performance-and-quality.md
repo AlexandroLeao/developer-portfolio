@@ -56,7 +56,7 @@ Issue #107 adds 11 Chromium `@axe-core/playwright` scenarios in `e2e/axe-accessi
 
 **Evidence boundaries:** automated rule checks cannot prove complete WCAG conformance, screen-reader support or real-device usability. Historical owner-reported PageSpeed scores and manual audits remain distinct from these checks.
 
-## Lighthouse CI (P4) — first CI run verified (2026-11-11)
+## Lighthouse CI (P4) — implemented and verified (2026-11-11)
 
 Issue #109 adds a **separate Pull Request workflow** with Lighthouse CI CLI **0.16.0** (Lighthouse 13.6.0), using Node.js 24 and the Chrome version installed on the GitHub-hosted runner (reported in each job log). Both mobile and desktop profiles audit `dist/`, the compiled Vite static site, using the local `staticDistDir` server. Three measurements are taken **per profile**, in isolated matrix jobs; category thresholds use `aggregationMethod: 'median'`. All four Lighthouse categories are tracked:
 
