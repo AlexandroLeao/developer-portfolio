@@ -37,6 +37,17 @@ jobs:
       - name: Build production site
         run: npm run build
 
+      - name: Verify responsive viewport metadata in built HTML
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs'
+          import assert from 'node:assert/strict'
+          const html = readFileSync('dist/index.html', 'utf8')
+          const viewport = html.match(/<meta\\b[^>]*\\bname=["']viewport["'][^>]*>/i)?.[0]
+          assert.ok(viewport, 'Missing viewport meta element in production HTML')
+          assert.match(viewport, /\\bcontent=["'][^"']*\\bwidth=device-width\\b/i, 'Viewport must specify width=device-width')
+          NODE
+
       - name: Report installed Chrome version
         run: |
           command -v google-chrome

@@ -29,7 +29,7 @@ module.exports = {
         // Stable metadata invariants already required by the portfolio.
         'document-title': ['error', { minScore: 1 }],
         'meta-description': ['error', { minScore: 1 }],
-        'viewport': ['error', { minScore: 1 }],
+        'meta-viewport': ['error', { minScore: 1 }],
       },
     },
     // No external LHCI server or temporary public storage.
