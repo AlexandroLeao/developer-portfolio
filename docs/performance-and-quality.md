@@ -52,6 +52,23 @@ Issue #107 adds 11 Chromium `@axe-core/playwright` scenarios in `e2e/axe-accessi
 
 **Evidence boundaries:** automated rule checks cannot prove complete WCAG conformance, screen-reader support or real-device usability. Historical owner-reported PageSpeed scores and manual audits remain distinct from these checks.
 
+## Lighthouse CI (P4) — pending initial workflow evidence
+
+Issue #109 adds a **separate Pull Request workflow** with Lighthouse CI CLI **0.16.0** (Lighthouse 13.6.0), using Node.js 24 and the Chrome version installed on the GitHub-hosted runner (reported in each job log). Both mobile and desktop profiles audit `dist/`, the compiled Vite static site, using the local `staticDistDir` server. Three measurements are taken **per profile**, in isolated matrix jobs; category thresholds use `aggregationMethod: 'median'`. All four Lighthouse categories are tracked:
+
+| Category | Initial advisory median threshold | Blocks PR? |
+| --- | ---: | --- |
+| Performance | 0.85 | No — warning |
+| Accessibility | 0.95 | No — warning |
+| Best Practices | 0.90 | No — warning |
+| SEO | 0.90 | No — warning |
+
+Metadata audits for document title, meta description and viewport are enforced as errors. A failed collection or an error-level metadata check makes the new workflow fail. This initial configuration does **not** introduce a hard performance-score budget based on old PageSpeed claims; after reviewing actual mobile/desktop reports over multiple PRs, we can set realistic budgets in a separate, justified change. No Lighthouse audit is disabled.
+
+The `upload.target=filesystem` reports (HTML/JSON plus raw `.lighthouseci/` results) are uploaded to **GitHub Actions artifacts** under the repository's access controls for seven days; no public temporary LHCI report storage, dedicated server, API key, or account is required. Use the `lighthouse-mobile` and `lighthouse-desktop` artifacts on the PR's Lighthouse CI workflow run. The configured tool and build are comparable across PRs, but differences in Chrome, runner load and simulated network/CPU affect absolute scores. CI measures the local production build, **not** the Vercel production origin, a real user's Core Web Vitals, or the historical 2026-11-09 owner-reported PageSpeed result.
+
+Reproduce locally with Node.js 24, Chrome and `npm ci && npm run build`, then install `@lhci/cli@0.16.0` globally and use `LHCI_DEVICE=mobile lhci autorun` (or `LHCI_DEVICE=desktop`). Save one profile's files before running the next because local runs reuse `.lighthouseci/` and `lighthouse-reports/`. Do not publish numerical score claims until the PR's actual audit outputs have been reviewed and recorded.
+
 ## Vitest test-runner performance — 2026-11-11
 
 This is **developer test execution time**, not the production site's runtime speed or a new Lighthouse result. The measurements below come from Google Cloud Shell terminal output for Vitest 5.0.5 and the same 71 passing tests across 14 files:
@@ -84,7 +101,7 @@ The `vmThreads` pool keeps test-file VM contexts separate, but Vitest documents 
    npm run build
    ```
 
-7. Verify that the [Playwright E2E Tests workflow](../.github/workflows/playwright.yml) passes on the Pull Request. The expanded 10-scenario Chromium suite covers five original journeys plus keyboard-operated dialogs, contact/project link destinations, reduced motion, and mobile/tablet/desktop page-wide overflow. For optional local execution, run `npx playwright install chromium` and then `npm run test:e2e`; on resource-constrained environments, prefer CI instead.
+7. Review the [Lighthouse CI workflow](../.github/workflows/lighthouse.yml) for both mobile and desktop, and retain the HTML/JSON artifacts for dated baseline comparisons. Verify that the [Playwright E2E Tests workflow](../.github/workflows/playwright.yml) passes on the Pull Request. The expanded 10-scenario Chromium suite covers five original journeys plus keyboard-operated dialogs, contact/project link destinations, reduced motion, and mobile/tablet/desktop page-wide overflow. For optional local execution, run `npx playwright install chromium` and then `npm run test:e2e`; on resource-constrained environments, prefer CI instead.
 8. Attach audit links/screenshots to the relevant Issue or PR and note which results were reproduced directly versus reported by someone else.
 
 ## Interpretation

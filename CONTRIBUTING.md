@@ -207,14 +207,17 @@ The test suite covers the application and key components, including mobile-selec
 
 The Vitest configuration uses the `vmThreads` pool to reduce repeated `jsdom` setup while retaining separate VM contexts for test files. Run the normal `npm run test` command; no extra CLI flag is required. The pool can have cross-realm and memory-retention trade-offs, so preserve isolation and confirm repeated runs in CI before accepting further test-runner changes. See [Performance and Quality](docs/performance-and-quality.md) for the dated Cloud Shell timings.
 
-Two independent GitHub Actions workflows run on pull requests targeting `main`:
+Three independent GitHub Actions workflows run on pull requests targeting `main`:
 
 - [Continuous Integration](.github/workflows/ci.yml) executes `npm run lint`, `npm run test` (Vitest), and `npm run build`.
+- [Lighthouse CI](.github/workflows/lighthouse.yml) runs repeated mobile and desktop audits of the production build and archives reports.
 - [Playwright E2E Tests](.github/workflows/playwright.yml) installs headless Chromium and runs `npx playwright test`. A failing browser test fails its job.
 
 The 10 Playwright scenarios across `e2e/portfolio.e2e.ts` and `e2e/accessibility-and-layout.e2e.ts` verify language switching, themes, project details, PT/EN résumé downloads, mobile navigation, keyboard-operated dialogs and focus restoration, contact/project link targets, reduced motion, and viewport overflow. The `.e2e.ts` extension keeps them separate from Vitest. A separate `e2e/axe-accessibility.e2e.ts` suite adds WCAG A/AA automated checks using `@axe-core/playwright` (see Issue #107). The same `npm run test:e2e` command runs functional and rule-based checks. Browser automation complements, rather than replaces, manual accessibility and device checks.
 
 ### Performance and Accessibility Audits
+
+On Pull Requests to `main`, the independent [Lighthouse CI workflow](.github/workflows/lighthouse.yml) builds `dist/` and collects three mobile and three desktop measurements with `@lhci/cli@0.16.0`. Review the HTML/JSON artifacts (`lighthouse-mobile`, `lighthouse-desktop`; retained seven days) and distinguish advisory median category warnings from hard failures of collection or metadata checks. Local reproduction uses Node.js 24, Chrome, and `npm install --global @lhci/cli@0.16.0`, followed by `npm run build` and `LHCI_DEVICE=mobile lhci autorun` or `LHCI_DEVICE=desktop lhci autorun`. Reports are not uploaded to external Lighthouse hosting.
 
 For changes that affect loading, layout, rendering, or animation:
 

@@ -169,6 +169,24 @@ npm run test:e2e             # Run E2E tests locally
 
 To avoid installing browser binaries on constrained devices, use the GitHub Actions workflow instead. These automated checks do not replace manual accessibility review or performance audits.
 
+### Lighthouse CI (P4)
+
+An independent [Lighthouse CI workflow](.github/workflows/lighthouse.yml) audits the **built static site** (`dist/`) on Pull Requests to `main`. It runs three samples each in separate **mobile and desktop** jobs using pinned `@lhci/cli@0.16.0` (Lighthouse 13.6.0), with explicit median score warnings for Performance, Accessibility, Best Practices, and SEO. Stable title, description and viewport metadata checks are enforced as errors. The installed Chrome version is logged; scores can still vary by CI runner and browser. Lighthouse collection failures block the workflow, while category scores remain advisory until the initial baseline is reviewed.
+
+The reports are retained as GitHub Actions HTML/JSON artifacts for seven days, using filesystem upload only: no external report hosting, secrets, application dependencies, or third-party service accounts. The workflow measures **a local production build**, not Vercel Production, PageSpeed Insights, field Core Web Vitals, or a WCAG certification.
+
+Local reproduction (requires Node.js 24 and Chrome):
+
+```bash
+npm ci
+npm run build
+npm install --global @lhci/cli@0.16.0
+LHCI_DEVICE=mobile lhci autorun
+LHCI_DEVICE=desktop lhci autorun
+```
+
+Running both profiles sequentially locally overwrites the generated reports unless the first output is copied elsewhere; CI runs them in separate jobs and artifacts. See [Performance and Quality](docs/performance-and-quality.md) for evidence and threshold policy.
+
 ### Continuous Integration
 
 GitHub Actions runs the [Continuous Integration workflow](.github/workflows/ci.yml) on Pull Requests targeting `main`. The job:
@@ -180,7 +198,7 @@ GitHub Actions runs the [Continuous Integration workflow](.github/workflows/ci.y
 5. Runs `npm run test`.
 6. Runs `npm run build`.
 
-A failed step fails the CI job. Additionally, the [Playwright E2E Tests workflow](.github/workflows/playwright.yml) runs on Pull Requests to `main`. It installs Chromium in headless-shell mode on a standard GitHub-hosted Ubuntu runner, runs the browser tests, and retains test artifacts briefly. The workflow does not depend on local Cloud Shell browser installations.
+A failed step fails the CI job. Additionally, the [Playwright E2E Tests workflow](.github/workflows/playwright.yml) and [Lighthouse CI workflow](.github/workflows/lighthouse.yml) run on Pull Requests to `main`. It installs Chromium in headless-shell mode on a standard GitHub-hosted Ubuntu runner, runs the browser tests, and retains test artifacts briefly. The workflow does not depend on local Cloud Shell browser installations.
 
 Vercel deployment checks are handled separately from these GitHub Actions workflows.
 
@@ -262,6 +280,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Introduce five Chromium Playwright E2E tests with Pull Request CI (Issue #99).
 - [x] Expand browser regression coverage to 10 scenarios, including keyboard, reduced motion, links, and viewport overflow (Issue #105).
 - [x] Add 11 axe-core WCAG A/AA audits for PT/EN and representative dialogs; fix confirmed accessible-name issues and pass CI (Issue #107, PR #108).
+- [ ] Integrate Lighthouse CI (P4) for production-build mobile/desktop measurements and artifact retention (Issue #109; pending PR validation/merge).
 - [x] Implement all core portfolio sections.
 - [x] Support Portuguese and English languages.
 - [x] Support light and dark themes.

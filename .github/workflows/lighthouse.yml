@@ -1,0 +1,62 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    name: Lighthouse — ${{ matrix.device }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        device: [mobile, desktop]
+
+    env:
+      LHCI_DEVICE: ${{ matrix.device }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Build production site
+        run: npm run build
+
+      - name: Report installed Chrome version
+        run: |
+          command -v google-chrome
+          google-chrome --version
+          echo "CHROME_PATH=$(command -v google-chrome)" >> "$GITHUB_ENV"
+
+      - name: Install pinned Lighthouse CI CLI
+        run: npm install --global @lhci/cli@0.16.0
+
+      - name: Collect and assert Lighthouse reports
+        run: lhci autorun
+
+      - name: Archive Lighthouse HTML and JSON reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: lighthouse-${{ matrix.device }}
+          path: |
+            lighthouse-reports/
+            .lighthouseci/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn
