@@ -46,11 +46,6 @@ function ContactLink({
       href={contact.url}
       target={contact.external ? '_blank' : undefined}
       rel={contact.external ? 'noopener noreferrer' : undefined}
-      aria-label={
-        contact.external
-          ? `${contact.ariaLabel[language]}. ${text.externalLink}`
-          : contact.ariaLabel[language]
-      }
       className="group flex min-w-0 items-center gap-4 rounded-2xl border border-(--color-border) bg-(--color-background) p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-(--color-primary) hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--color-primary) motion-reduce:transform-none motion-reduce:transition-none sm:p-3"
     >
       <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-(--color-border) bg-(--color-surface) text-(--color-primary) transition-colors group-hover:border-(--color-primary)">
@@ -72,6 +67,10 @@ function ContactLink({
         aria-hidden="true"
         className="shrink-0 text-(--color-primary) transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none motion-reduce:transition-none"
       />
+      <span className="sr-only">
+        {contact.ariaLabel[language]}
+        {contact.external ? `. ${text.externalLink}` : ''}
+      </span>
     </a>
   )
 }

@@ -8,7 +8,7 @@ describe('Footer', () => {
     render(<Footer language="pt" />)
 
     const footer = screen.getByRole('contentinfo')
-    expect(within(footer).getByRole('link', { name: 'Voltar ao início' })).toHaveTextContent('Alexandro Leão')
+    expect(within(footer).getByRole('link', { name: 'Alexandro Leão. — Voltar ao início' })).toHaveTextContent('Alexandro Leão')
     expect(within(footer).getByText('Desenvolvedor de Software')).toBeInTheDocument()
 
     const navigation = within(footer).getByRole('navigation', {
@@ -50,7 +50,7 @@ describe('Footer', () => {
   it('keeps the back-to-top link separate from contact destinations', () => {
     render(<Footer language="pt" />)
 
-    expect(screen.getByRole('link', { name: 'Voltar ao início' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Alexandro Leão. — Voltar ao início' })).toHaveAttribute(
       'href',
       '#home',
     )

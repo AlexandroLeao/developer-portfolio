@@ -150,7 +150,7 @@ Pull Requests targeting `main` trigger two independent GitHub Actions workflows:
 - `.github/workflows/ci.yml` runs ESLint, Vitest component/application tests, and the production build.
 - `.github/workflows/playwright.yml` installs headless Chromium and runs 10 browser E2E regression scenarios covering languages, themes, project details, résumé downloads, mobile navigation, keyboard focus and dialogs, link destinations, reduced motion, and horizontal overflow.
 
-The Playwright tests live in `e2e/` and start the existing Vite development server. They do not add a backend or change the deployed application architecture.
+The Playwright tests live in `e2e/` and start the existing Vite development server. Development-only `@axe-core/playwright` runs WCAG A/AA rule checks on PT/EN homepages and representative dialogs without changing application architecture. They do not add a backend or change the deployed application architecture.
 
 Vercel builds and hosts the static application. Feature branches
 are reviewed through Vercel Preview, while approved changes

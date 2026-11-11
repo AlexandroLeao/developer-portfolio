@@ -8,12 +8,15 @@ Entries below describe the implemented project, not additional release tags.
 
 ### Added
 
+- Add development-only `@axe-core/playwright` WCAG A/AA checks for PT/EN homepages, themes, contact/project/certification dialogs, and a 375px viewport (Issue #107, PR #108; 11 axe audits and 10 functional E2E tests passed).
 - Expand Playwright browser regression coverage from 5 to 10 Chromium scenarios, adding keyboard/focus checks, PT/EN link targets, reduced-motion behavior, and viewport overflow; add a `test:e2e` npm script (Issue #105).
 - Expand the technology catalog from 30 to 36 entries across six categories, including Angular, jQuery, Supabase, Vitest, Playwright, and UX/UI Design (Issue #97).
 - Add compact bilingual evidence badges for implemented work, completed study, ongoing study, and future plans; introduce a dedicated Quality & Testing category.
 - Add five Playwright Chromium end-to-end tests for language switching, themes, project details, Portuguese/English resume downloads, and mobile navigation, with a dedicated Pull Request GitHub Actions workflow (Issue #99, PR #100).
 
 ### Changed
+
+- Fix accessible-name matching for the site logo, footer back-to-top link, timeline buttons and contact links, preserving visible layouts (Issue #107).
 
 - Replace misleading third-party tool logos on general AI, SQL, QA, and Scrum concepts with accurate neutral icons; use lightweight brand vectors for TanStack, Zod, and new supported technologies.
 - Keep the technology cards compact while adapting desktop columns to the new category sizes and reusing the existing detail-panel space for a selection prompt.
