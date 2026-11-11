@@ -26,3 +26,26 @@ test('opens the portfolio and switches languages', async ({ page }) => {
 
   await expect(page.locator('#skills-title')).toContainText('Technologies')
 })
+
+test('switches between light and dark themes', async ({ page }) => {
+  await page.goto('/')
+
+  const html = page.locator('html')
+
+  // The portfolio starts in light mode
+  await expect(html).not.toHaveClass(/\bdark\b/)
+
+  // Switch to dark mode
+  await page.getByRole('button', {
+    name: 'Ativar tema escuro',
+  }).click()
+
+  await expect(html).toHaveClass(/\bdark\b/)
+
+  // Switch back to light mode
+  await page.getByRole('button', {
+    name: 'Ativar tema claro',
+  }).click()
+
+  await expect(html).not.toHaveClass(/\bdark\b/)
+})
