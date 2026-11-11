@@ -159,7 +159,7 @@ Issue #105 adds five further browser checks for keyboard-operated contact/projec
 
 A development-only `@axe-core/playwright` suite in `e2e/axe-accessibility.e2e.ts` checks WCAG 2.0–2.2 Level A/AA rules in Chromium: the homepage in PT/EN and light/dark themes, contact/project/certification dialogs in both languages, and a narrow mobile viewport. Failures report rule IDs and DOM targets. The existing `npm run test:e2e` command and Playwright PR workflow run these checks without adding any runtime dependency to the deployed app.
 
-This automated check does not establish WCAG conformance or replace manual keyboard, screen-reader and real-device verification.
+The PR #108 validation passed **21/21 Chromium Playwright scenarios** (10 functional regression tests plus 11 axe-core audits) and the regular CI checks, including 72 Vitest tests, on 2026-11-11. See [the quality guide](docs/performance-and-quality.md) for run links and limitations. Automated checks do not establish WCAG conformance or replace manual keyboard, screen-reader and real-device verification.
 
 ```bash
 npx playwright test --list   # No browser download needed
@@ -261,6 +261,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Establish and expand automated component/application tests (72 passing tests across 14 files as of 2026-11-11).
 - [x] Introduce five Chromium Playwright E2E tests with Pull Request CI (Issue #99).
 - [x] Expand browser regression coverage to 10 scenarios, including keyboard, reduced motion, links, and viewport overflow (Issue #105).
+- [x] Add 11 axe-core WCAG A/AA audits for PT/EN and representative dialogs; fix confirmed accessible-name issues and pass CI (Issue #107, PR #108).
 - [x] Implement all core portfolio sections.
 - [x] Support Portuguese and English languages.
 - [x] Support light and dark themes.
