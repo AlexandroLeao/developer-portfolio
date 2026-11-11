@@ -130,3 +130,49 @@ test('downloads Portuguese and English resumes', async ({ page }) => {
     'alexandro-leao-resume-en.pdf',
   )
 })
+
+test('navigates projects through the mobile menu', async ({ page }) => {
+  // Simulate a mobile viewport
+  await page.setViewportSize({
+    width: 375,
+    height: 812,
+  })
+
+  await page.goto('/')
+
+  // Open the mobile navigation menu
+  await page.getByRole('button', {
+    name: 'Abrir menu de navegação',
+  }).click()
+
+  const mobileNavigation = page.locator('#mobile-navigation')
+
+  await expect(mobileNavigation).toBeVisible()
+
+  // Navigate to the projects section
+  await mobileNavigation.getByRole('link', {
+    name: 'Projetos',
+  }).click()
+
+  await expect(page).toHaveURL(/#projects$/)
+
+  // The menu should close after navigation
+  await expect(mobileNavigation).not.toBeVisible()
+
+  // Select the Ideas Organizer project
+  const projectOption = page.locator('#project-option-ideas-organizer')
+
+  await projectOption.click()
+
+  await expect(projectOption).toHaveAttribute('aria-pressed', 'true')
+
+  // The selected project should be displayed
+  await expect(
+    page.locator('#project-panel-ideas-organizer'),
+  ).toBeVisible()
+
+  // The previously selected project should be hidden on mobile
+  await expect(
+    page.locator('#project-panel-adventure-files'),
+  ).not.toBeVisible()
+})
