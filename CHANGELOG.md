@@ -31,6 +31,9 @@ Entries below describe the implemented project, not additional release tags.
 
 ### Documentation
 
+- After owner-merged PR #112 (`main` `d0b50e4`), inspect all six original Lighthouse CI JSON reports and record sourced medians: mobile Performance **97**, desktop **98**, other categories **100**. Archive dated metadata and ZIP fingerprints in `docs/evidence/lighthouse-ci-2026-11-11.md`; the 2026-11-09 PageSpeed 100/100 report remains owner-reported without its original export.
+- Add a checked P1–P5 / R1–R7 / O1–O3 engineering roadmap, with P5 and RPG R6 explicitly optional, and synchronize README, architecture, contribution guidance and the quality guide. No application/runtime changes.
+
 - Reconcile the completed P1–P4 portfolio checks and preserve the approved next phases: Adventure Files R1–R6 (with R6 optional), one post-RPG portfolio update (R7), and only then an external open-source contribution (O1–O3). The accepted RPG MVP is not the same as implementing R1–R6.
 - Correct the release process description to acknowledge the already-published `v1.0.0` and add a dated CI/CD ADR addendum for the final 21-browser-test and Lighthouse workflow baselines.
 
