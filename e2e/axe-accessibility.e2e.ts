@@ -14,7 +14,7 @@ async function audit(page: Page, scenario: string, within?: string) {
   })
 
   let builder = new AxeBuilder({ page }).withTags(ruleTags)
-  if (within) builder = builder.within(within)
+  if (within) builder = builder.include(within)
   const result = await builder.analyze()
   const violations = result.violations.map((violation) => ({
     id: violation.id,
