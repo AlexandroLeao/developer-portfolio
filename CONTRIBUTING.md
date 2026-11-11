@@ -157,6 +157,21 @@ Run tests in watch mode during development:
 npm run test:watch
 ```
 
+List the Playwright browser tests without installing browsers:
+
+```bash
+npx playwright test --list
+```
+
+To execute the Playwright tests locally, install Chromium once and run the suite:
+
+```bash
+npx playwright install chromium
+npx playwright test
+```
+
+The GitHub Actions workflow installs headless Chromium automatically, so local browser installation is optional.
+
 Run TypeScript compilation and production build:
 
 ```bash
@@ -190,9 +205,12 @@ Vitest, React Testing Library, Testing Library jest-dom, and jsdom are implement
 
 The test suite covers the application and key components, including mobile-selection behavior, the Hero mascot, dialogs, and certification filtering. For historical context, the verified baseline on 2026-11-09 was 71 passing tests across 14 files. Run `npm run test` to see the current total; do not copy an old count into a new PR without running the suite.
 
-GitHub Actions automatically runs `npm run lint`, `npm run test`, and `npm run build` on pull requests targeting `main`. A failing command causes the CI job to fail.
+Two independent GitHub Actions workflows run on pull requests targeting `main`:
 
-End-to-end tests with Playwright are a potential future improvement; they are not currently implemented.
+- [Continuous Integration](.github/workflows/ci.yml) executes `npm run lint`, `npm run test` (Vitest), and `npm run build`.
+- [Playwright E2E Tests](.github/workflows/playwright.yml) installs headless Chromium and runs `npx playwright test`. A failing browser test fails its job.
+
+The five Playwright scenarios in `e2e/portfolio.e2e.ts` verify language switching, light/dark themes, project details, Portuguese/English resume downloads, and navigation/project selection on a 375 px mobile viewport. The `.e2e.ts` extension keeps them separate from the Vitest test discovery. Browser automation complements, rather than replaces, manual accessibility and device checks.
 
 ### Performance and Accessibility Audits
 

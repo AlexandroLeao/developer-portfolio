@@ -135,8 +135,12 @@ These integrations do not constitute a server-side backend.
 
 GitHub is the source code repository.
 
-Pull Requests targeting `main` trigger GitHub Actions checks
-for ESLint, automated tests, and the production build.
+Pull Requests targeting `main` trigger two independent GitHub Actions workflows:
+
+- `.github/workflows/ci.yml` runs ESLint, Vitest component/application tests, and the production build.
+- `.github/workflows/playwright.yml` installs headless Chromium and runs browser E2E tests for five key visitor journeys (languages, themes, project details, resume downloads, and mobile navigation).
+
+The Playwright tests live in `e2e/` and start the existing Vite development server. They do not add a backend or change the deployed application architecture.
 
 Vercel builds and hosts the static application. Feature branches
 are reviewed through Vercel Preview, while approved changes

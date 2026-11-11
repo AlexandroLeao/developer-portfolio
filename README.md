@@ -37,6 +37,7 @@ The owner reports a **Google PageSpeed Insights result of 100/100 in Performance
 | Styling | Tailwind CSS v4, CSS custom properties |
 | Icons and typography | Lucide React, local Devicon WOFF2 subset, self-hosted Inter and Outfit fonts |
 | Unit/component testing | Vitest, React Testing Library, jest-dom, user-event, jsdom |
+| Browser E2E testing | Playwright Test (Chromium) |
 | Code quality | ESLint, TypeScript compiler |
 | Source control | Git, GitHub, GitHub Codespaces |
 | Continuous integration | GitHub Actions |
@@ -50,11 +51,13 @@ Docker and AWS are **not** required to build or host the current portfolio. They
 .github/
   ISSUE_TEMPLATE/         Issue templates
   workflows/ci.yml       Pull Request CI
+  workflows/playwright.yml  Playwright E2E tests on Pull Requests
 public/
   images/                Responsive WebP mascot frames and project illustrations
   resumes/               Public Portuguese/English resume PDFs
   fonts/                 Self-hosted fonts and icon subset
   favicon.svg            Custom AL favicon
+e2e/                    Playwright browser tests (`*.e2e.ts`)
 src/
   components/            Reusable UI components and component tests
   data/                  Typed content for projects, experience, certifications, and contact
@@ -64,6 +67,7 @@ src/
   App.test.tsx           Main application tests
   index.css              Global styles and theme tokens
 index.html               HTML entry point and SEO metadata
+playwright.config.ts     Playwright Chromium and Vite test configuration
 docs/
   architecture.md         Architecture overview
   use-cases.md            Visitor use case catalog
@@ -107,6 +111,8 @@ Vite starts a local development server and prints its address in the terminal. U
 | `npm run lint` | Run ESLint |
 | `npm run test` | Run the Vitest test suite once |
 | `npm run test:watch` | Run Vitest in watch mode |
+| `npx playwright test --list` | Discover E2E cases without launching a browser |
+| `npx playwright test` | Run Chromium E2E tests (browser installation required locally) |
 | `npm run build` | Run TypeScript compilation and create the production build |
 | `npm run preview` | Serve the production build locally for review |
 
@@ -120,7 +126,27 @@ npm run test
 npm run build
 ```
 
-The test suite exercises representative rendering, language/theme changes, expandable content, contact links, and modal/footer interactions. It does not replace browser-based accessibility or performance audits.
+The Vitest suite exercises representative rendering, language/theme changes, expandable content, contact links, and modal/footer interactions.
+
+### Browser E2E tests
+
+Playwright adds a separate **Chromium browser** test layer without replacing Vitest. As of Issue #99, five E2E tests validate:
+
+1. Opening the portfolio and switching from Portuguese to English.
+2. Switching between light and dark modes.
+3. Opening and closing Adventure Files project details.
+4. Downloading the correct Portuguese and English PDF resumes.
+5. Opening the mobile menu, navigating to projects, and selecting a different project at a 375 px viewport.
+
+The tests live in `e2e/portfolio.e2e.ts` and use `.e2e.ts` names to avoid being collected by Vitest. Playwright starts the Vite development server automatically.
+
+```bash
+npx playwright test --list   # No browser download needed
+npx playwright install chromium   # Optional: local browser setup
+npx playwright test          # Run E2E tests locally
+```
+
+To avoid installing browser binaries on constrained devices, use the GitHub Actions workflow instead. These automated checks do not replace manual accessibility review or performance audits.
 
 ### Continuous Integration
 
@@ -133,7 +159,9 @@ GitHub Actions runs the [Continuous Integration workflow](.github/workflows/ci.y
 5. Runs `npm run test`.
 6. Runs `npm run build`.
 
-A failed step fails the CI job. Vercel deployment checks are handled separately from this GitHub Actions workflow.
+A failed step fails the CI job. Additionally, the [Playwright E2E Tests workflow](.github/workflows/playwright.yml) runs on Pull Requests to `main`. It installs Chromium in headless-shell mode on a standard GitHub-hosted Ubuntu runner, runs the browser tests, and retains test artifacts briefly. The workflow does not depend on local Cloud Shell browser installations.
+
+Vercel deployment checks are handled separately from these GitHub Actions workflows.
 
 ## Technical Documentation
 
@@ -210,6 +238,7 @@ The current application is a static frontend built with Vite; it does not requir
 - [x] Establish an Issue-driven development workflow.
 - [x] Implement GitHub Actions continuous integration.
 - [x] Establish and expand automated component/application tests (71 passing tests across 14 files as of 2026-11-09).
+- [x] Introduce five Chromium Playwright E2E tests with Pull Request CI (Issue #99).
 - [x] Implement all core portfolio sections.
 - [x] Support Portuguese and English languages.
 - [x] Support light and dark themes.
@@ -246,7 +275,7 @@ The current application is a static frontend built with Vite; it does not requir
 ### Deferred / Future Improvements
 
 - [ ] Reevaluate adding the Developer Portfolio to the Projects section.
-- [ ] Consider end-to-end tests if future complexity justifies them.
+- [ ] Expand cross-browser and accessibility test coverage when justified by project needs.
 - [ ] Explore Docker, AWS, and infrastructure automation separately.
 
 The roadmap reflects completed and planned work. The latest PageSpeed Insights scores are recorded as an owner-reported snapshot; results may vary between devices, networks, and audit runs, and do not establish accessibility conformance.

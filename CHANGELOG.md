@@ -6,6 +6,10 @@ Entries below describe the implemented project, not additional release tags.
 
 ## Unreleased
 
+### Added
+
+- Add five Playwright Chromium end-to-end tests for language switching, themes, project details, Portuguese/English resume downloads, and mobile navigation, with a dedicated Pull Request GitHub Actions workflow (Issue #99, PR #100).
+
 ### Documentation
 
 - Refresh technical documentation, use cases, and architecture to match the post-release application.

@@ -35,7 +35,7 @@ These practices help contain asset and layout costs; they are not substitutes fo
 3. Record the audit date/time, URL, device mode, four category scores, and relevant Core Web Vitals data when available.
 4. Check the main interactions manually in a narrow viewport and on desktop: mascot wave/poke, category centering, project switching, certification dialogs, and scroll reveals.
 5. Check Portuguese and English, light/dark themes, keyboard focus, and `prefers-reduced-motion`.
-6. Run the repository's static and automated checks:
+6. Run the repository's static and Vitest checks:
 
    ```bash
    npm ci
@@ -44,7 +44,8 @@ These practices help contain asset and layout costs; they are not substitutes fo
    npm run build
    ```
 
-7. Attach audit links/screenshots to the relevant Issue or PR and note which results were reproduced directly versus reported by someone else.
+7. Verify that the [Playwright E2E Tests workflow](../.github/workflows/playwright.yml) passes on the Pull Request. It checks five real-browser journeys using headless Chromium. For optional local execution, run `npx playwright install chromium` and then `npx playwright test`; on resource-constrained environments, prefer CI instead.
+8. Attach audit links/screenshots to the relevant Issue or PR and note which results were reproduced directly versus reported by someone else.
 
 ## Interpretation
 
