@@ -149,7 +149,7 @@ Pull Requests targeting `main` trigger three independent GitHub Actions workflow
 
 - `.github/workflows/ci.yml` runs ESLint, Vitest component/application tests, and the production build.
 - `.github/workflows/lighthouse.yml` independently builds `dist/` and uses pinned Lighthouse CI CLI for three mobile and three desktop audits, storing HTML/JSON reports as seven-day Actions artifacts (no external LHCI server).
-- `.github/workflows/playwright.yml` installs headless Chromium and runs 10 browser E2E regression scenarios covering languages, themes, project details, résumé downloads, mobile navigation, keyboard focus and dialogs, link destinations, reduced motion, and horizontal overflow.
+- `.github/workflows/playwright.yml` installs headless Chromium and runs **21 browser checks**: 10 functional E2E regression scenarios covering languages, themes, project details, résumé downloads, mobile navigation, keyboard focus and dialogs, link destinations, reduced motion, and horizontal overflow, plus **11 axe-core accessibility audits**.
 
 The Playwright tests live in `e2e/` and start the existing Vite development server. Development-only `@axe-core/playwright` runs WCAG A/AA rule checks on PT/EN homepages and representative dialogs without changing application architecture. They do not add a backend or change the deployed application architecture.
 
