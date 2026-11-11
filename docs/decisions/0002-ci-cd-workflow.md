@@ -86,8 +86,7 @@ Kanban board is not required by this workflow.
 
 - More process steps than directly editing production.
 - Automated checks do not replace manual verification.
-- The project does not currently include end-to-end
-  browser automation.
+- When this ADR was originally adopted, browser end-to-end automation was deferred. Its later introduction is recorded in the addendum below.
 
 ## Evidence
 
@@ -96,3 +95,9 @@ Kanban board is not required by this workflow.
 - src/App.test.tsx
 - src/components/*.test.tsx
 - GitHub Issues and Pull Request history
+
+## Addendum — 2026-11-11: Playwright browser E2E
+
+Issue #99 and PR #100 extend the established review workflow with a **separate** `.github/workflows/playwright.yml` job. The original `ci.yml` lint/Vitest/build checks remain intact. The new job installs headless Chromium on GitHub-hosted Ubuntu and runs five Playwright E2E scenarios from `e2e/portfolio.e2e.ts`, covering language and theme switching, project details, resume downloads, and mobile navigation.
+
+This addition improves browser-level regression coverage without changing the client-side architecture, introducing a backend, or replacing manual accessibility reviews. Evidence: the [Playwright workflow](../../.github/workflows/playwright.yml), [E2E test file](../../e2e/portfolio.e2e.ts), and [Issue #99](https://github.com/AlexandroLeao/developer-portfolio/issues/99).
