@@ -28,6 +28,22 @@ An earlier recorded production Lighthouse result also appears in [ADR 0003](deci
 
 These practices help contain asset and layout costs; they are not substitutes for profiling or field measurements. No specific byte savings, Core Web Vitals values, or Lighthouse run configuration are asserted here without supporting output.
 
+## Vitest test-runner performance — 2026-11-11
+
+This is **developer test execution time**, not the production site's runtime speed or a new Lighthouse result. The measurements below come from Google Cloud Shell terminal output for Vitest 5.0.5 and the same 71 passing tests across 14 files:
+
+| Vitest configuration | Execution | Reported Vitest duration | Shell wall-clock time | Result |
+| --- | --- | ---: | ---: | --- |
+| Default pool | Baseline (`time npm test`) | 36.27 s | 38.11 s | 71/71 passed |
+| `vmThreads` CLI experiment | First run | 14.93 s | 16.31 s | 71/71 passed |
+| `vmThreads` CLI experiment | Second run | 17.33 s | 19.08 s | 71/71 passed |
+| `vmThreads` in `vite.config.ts` | First run (`time npm test`) | 14.83 s | 15.79 s | 71/71 passed |
+| `vmThreads` in `vite.config.ts` | Second run (`time npm test`) | 14.30 s | 15.27 s | 71/71 passed |
+
+The two runs after applying the configuration were approximately **59–60% faster** than the single default-pool baseline in this environment. The default run reported 45% of tracked time in `jsdom` initialization, versus 9–13% in the configured runs. Results may vary by hardware, CI runner, and system load; the measurements do not establish a universal speedup.
+
+The `vmThreads` pool keeps test-file VM contexts separate, but Vitest documents potential cross-realm compatibility and memory-retention limitations. The configuration does **not** disable isolation. Validate the full suite repeatedly and check GitHub Actions before merging any runner changes. See [Vitest performance guidance](https://vitest.dev/guide/improving-performance.html), [pool configuration](https://vitest.dev/config/pool), and [Issue #101](https://github.com/AlexandroLeao/developer-portfolio/issues/101).
+
 ## Reproducible audit checklist
 
 1. Verify the intended Production or Preview deployment and its commit SHA.
