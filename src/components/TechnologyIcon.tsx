@@ -3,6 +3,8 @@ import {
   Brain,
   BrainCircuit,
   Database,
+  FileJson,
+  Server,
   Network,
   Palette,
   RefreshCw,
@@ -21,10 +23,13 @@ const conceptIcons: Record<string, LucideIcon> = {
   'shield-check': ShieldCheck,
   'refresh-cw': RefreshCw,
   database: Database,
+  'file-json': FileJson,
+  server: Server,
   palette: Palette,
   'scan-eye': ScanEye,
 }
 
+// Neutral concept icons represent OpenAPI and Nginx without unrelated brand marks.
 // Lightweight, monochrome brand paths from Simple Icons (CC0).
 // Source: https://github.com/simple-icons/simple-icons
 const brandPaths: Record<string, string> = {
