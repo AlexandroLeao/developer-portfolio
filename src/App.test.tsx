@@ -233,7 +233,7 @@ describe('Developer Portfolio', () => {
     expect(within(grid).getAllByRole('article')).toHaveLength(8)
   })
 
-  it('keeps all 36 technologies in a compact, deselectable category browser', async () => {
+  it('keeps all 38 technologies in a compact, deselectable category browser', async () => {
     const user = userEvent.setup()
     render(<App />)
 
@@ -269,8 +269,8 @@ describe('Developer Portfolio', () => {
 
     await user.click(within(navigation).getByRole('button', { name: /Cloud & DevOps/ }))
     const cloudGrid = screen.getByRole('button', { name: 'Azure' }).parentElement
-    expect(cloudGrid).toHaveClass('sm:grid-cols-3')
-    expect(cloudGrid?.children).toHaveLength(6)
+    expect(cloudGrid).toHaveClass('sm:grid-cols-4')
+    expect(cloudGrid?.children).toHaveLength(7)
 
     await user.click(screen.getByRole('button', { name: 'Azure' }))
     expect(screen.getByRole('region', { name: /Azure — Detalhes da tecnologia/ }))
@@ -291,7 +291,7 @@ describe('Developer Portfolio', () => {
     expect(screen.getByRole('button', { name: 'Git' }).parentElement?.children).toHaveLength(6)
 
     await user.click(within(navigation).getByRole('button', { name: /Back-End & Dados/ }))
-    expect(screen.getByRole('button', { name: 'Node.js' }).parentElement?.children).toHaveLength(7)
+    expect(screen.getByRole('button', { name: 'Node.js' }).parentElement?.children).toHaveLength(8)
     expect(screen.getByRole('button', { name: 'Supabase' }).querySelector('svg path')).toBeInTheDocument()
     const restApiCard = screen.getByRole('button', { name: 'APIs REST' })
     expect(restApiCard.querySelector('svg.technology-icon')).toBeInTheDocument()
@@ -313,6 +313,38 @@ describe('Developer Portfolio', () => {
     expect(screen.getByRole('button', { name: 'Azure' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('region', { name: /Azure — Technology details/ }))
       .toHaveTextContent('I studied Microsoft Azure infrastructure and service fundamentals')
+  })
+
+  it('presents verified Docker, Nginx, OpenAPI and full-stack browser evidence in both languages', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const navigation = screen.getByRole('navigation', { name: 'Áreas de tecnologia' })
+    await user.click(within(navigation).getByRole('button', { name: /Cloud & DevOps/ }))
+    await user.click(screen.getByRole('button', { name: 'Docker' }))
+    expect(screen.getByRole('region', { name: /Docker — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Implementei')
+    expect(screen.getByRole('region', { name: /Docker — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Adventure Files')
+    await user.click(screen.getByRole('button', { name: 'Nginx' }))
+    expect(screen.getByRole('region', { name: /Nginx — Detalhes da tecnologia/ }))
+      .toHaveTextContent('ambiente local e CI')
+    expect(screen.getByRole('region', { name: /Nginx — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Implementei')
+    await user.click(within(navigation).getByRole('button', { name: /Back-End & Dados/ }))
+    await user.click(screen.getByRole('button', { name: 'OpenAPI' }))
+    expect(screen.getByRole('region', { name: /OpenAPI — Detalhes da tecnologia/ }))
+      .toHaveTextContent('16 testes de contrato')
+    expect(screen.getByRole('region', { name: /OpenAPI — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Implementei')
+    await user.click(within(navigation).getByRole('button', { name: /Qualidade & Testes/ }))
+    await user.click(screen.getByRole('button', { name: 'Playwright' }))
+    expect(screen.getByRole('region', { name: /Playwright — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Supabase local isolado')
+    await user.click(screen.getByRole('button', { name: 'EN' }))
+    expect(screen.getByRole('region', { name: /Playwright — Technology details/ }))
+      .toHaveTextContent('isolated local Supabase')
+    expect(screen.getByRole('region', { name: /Playwright — Technology details/ }))
+      .toHaveTextContent('Implemented')
   })
 
   it('labels practical work, coursework, ongoing study, and future plans accurately', async () => {

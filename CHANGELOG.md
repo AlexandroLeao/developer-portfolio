@@ -6,6 +6,12 @@ Entries below describe the implemented project, not additional release tags.
 
 ## Unreleased
 
+### R7 — consolidated evidence (pending review)
+
+- Add OpenAPI and Nginx to the bilingual catalog (38 entries); promote Docker to implemented and extend Playwright, Vitest, QA and CI/CD evidence.
+- Refresh Adventure Files details with 358 approved checks and separately verified API Docker; update chart from the dated repository inventory (other project counts unchanged).
+- P6 [PR #116](https://github.com/AlexandroLeao/developer-portfolio/pull/116) merged with verified local/CI Nginx container, separate from Vercel. No redesign or new runtime dependencies.
+
 ### Added
 
 - Introduce P4 Lighthouse CI for production-build mobile/desktop audits (three samples each), advisory median category thresholds, enforced metadata checks, and seven-day GitHub Actions HTML/JSON artifacts without external upload (Issue #109, merged PR #110; mobile/desktop GitHub Actions jobs passed).

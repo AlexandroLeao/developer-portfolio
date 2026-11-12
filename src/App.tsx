@@ -199,6 +199,16 @@ const technologyCategories: TechnologyCategory[] = [
         },
       },
       {
+        id: 'openapi',
+        name: 'OpenAPI',
+        icon: 'file-json',
+        evidence: 'implemented',
+        description: {
+          pt: 'Documentei cinco operações da API do Adventure Files com OpenAPI 3.1 e implementei 16 testes de contrato com Vitest e Supertest.',
+          en: 'I documented five Adventure Files API operations with OpenAPI 3.1 and implemented 16 contract tests with Vitest and Supertest.',
+        },
+      },
+      {
         id: 'sql',
         name: 'SQL',
         icon: 'database',
@@ -330,10 +340,20 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'docker',
         name: 'Docker',
         icon: 'devicon-docker-plain',
-        evidence: 'studied',
+        evidence: 'implemented',
         description: {
-          pt: 'Conheço os fundamentos de conteinerização e pretendo utilizar Docker para padronizar ambientes de aplicações.',
-          en: 'I understand containerization fundamentals and plan to use Docker to standardize application environments.',
+          pt: 'Implementei imagens Docker multi-stage para a API Express do Adventure Files e o build estático do portfólio, com usuário não-root, healthchecks e testes em CI.',
+          en: 'I implemented multi-stage Docker images for the Adventure Files Express API and the static portfolio build, with non-root users, healthchecks, and CI smoke tests.',
+        },
+      },
+      {
+        id: 'nginx',
+        name: 'Nginx',
+        icon: 'server',
+        evidence: 'implemented',
+        description: {
+          pt: 'Configurei Nginx em Docker para servir o build estático do portfólio em ambiente local e CI, com execução não-root e validação HTTP de arquivos.',
+          en: 'I configured Nginx in Docker to serve the static portfolio build locally and in CI, with a non-root runtime and HTTP asset checks.',
         },
       },
       {
@@ -352,8 +372,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'devicon-githubactions-plain',
         evidence: 'implemented',
         description: {
-          pt: 'Implementei workflows de GitHub Actions para executar testes e builds e apoiar o processo de entrega.',
-          en: 'I implemented GitHub Actions workflows to run tests and builds and support the delivery process.',
+          pt: 'Implementei workflows de GitHub Actions para testes, builds, acessibilidade, Lighthouse e validação de contêineres Docker, apoiando a entrega via Vercel.',
+          en: 'I implemented GitHub Actions workflows for tests, builds, accessibility, Lighthouse, and Docker container checks, supporting delivery through Vercel.',
         },
       },
     ],
@@ -368,8 +388,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'shield-check',
         evidence: 'implemented',
         description: {
-          pt: 'Aplico conceitos de qualidade de software, regras de negócio e testes automatizados para melhorar a confiabilidade das aplicações.',
-          en: 'I apply software quality practices, business rules, and automated testing to improve application reliability.',
+          pt: 'Aplico qualidade de software com testes unitários, de integração, E2E, acessibilidade automatizada e verificações de entrega para melhorar a confiabilidade.',
+          en: 'I apply software quality practices through unit, integration, E2E, automated accessibility, and delivery checks to improve reliability.',
         },
       },
       {
@@ -378,8 +398,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-vitest',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo Vitest para testar componentes, comportamento e regras de negócio em projetos React e TypeScript.',
-          en: 'I use Vitest to test components, behavior, and business rules in React and TypeScript projects.',
+          pt: 'Utilizo Vitest para testes de componentes, regras de negócio, API e contratos OpenAPI no portfólio e no Adventure Files.',
+          en: 'I use Vitest for component, business-rule, API, and OpenAPI contract tests in the portfolio and Adventure Files.',
         },
       },
       {
@@ -388,8 +408,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'scan-eye',
         evidence: 'implemented',
         description: {
-          pt: 'Implementei testes de ponta a ponta com Playwright para validar fluxos reais do portfólio no navegador.',
-          en: 'I implemented Playwright end-to-end tests to verify real portfolio user journeys in a browser.',
+          pt: 'Implementei testes Playwright em Chromium no portfólio e no Adventure Files, incluindo fluxos full-stack com API e Supabase local isolado.',
+          en: 'I implemented Chromium Playwright tests in the portfolio and Adventure Files, including full-stack flows with an API and isolated local Supabase.',
         },
       },
     ],

@@ -12,6 +12,9 @@ const stackColors: Record<string, string> = {
   Express: '#b29b69',
   PostgreSQL: '#7588ad',
   Supabase: '#57a58a',
+  Docker: '#4d94cb',
+  OpenAPI: '#91a653',
+  Playwright: '#b178a2',
   'Tailwind CSS': '#51aaa7',
   'TanStack Router': '#a88183',
   Vitest: '#ac9b5d',
@@ -23,11 +26,11 @@ const stackColors: Record<string, string> = {
 const translations = {
   pt: {
     ariaLabel: 'Distribuição das tecnologias do projeto',
-    method: 'As fatias representam a proporção de arquivos associados a cada stack. Um mesmo arquivo pode utilizar mais de uma tecnologia.',
+    method: 'As fatias representam associações selecionadas de arquivos de código e ferramentas. Um mesmo arquivo pode aparecer em mais de uma stack; não são percentuais de linguagens.',
   },
   en: {
     ariaLabel: 'Project technology distribution',
-    method: 'Slices reflect the relative number of files associated with each stack. The same file may use more than one technology.',
+    method: 'Slices reflect selected code and tooling file associations. The same file may belong to more than one stack; these are not language percentages.',
   },
 }
 
@@ -52,8 +55,8 @@ function slicePath(start: number, end: number) {
   ].join(' ')
 }
 
-// Repository snapshot: 2026-11-07. Proportions use measured source-file
-// associations, not mutually exclusive language percentages.
+// Manual snapshots: 2026-11-07 for other projects; 2026-11-12 for Adventure Files.
+// See the quality guide for the selected code/tooling association rules.
 export default function ProjectStackChart({ project, language }: ProjectStackChartProps) {
   const text = translations[language]
   const total = Math.max(

@@ -52,14 +52,22 @@ export const projects: Project[] = [
       'Express',
       'PostgreSQL',
       'Supabase',
+      'Docker',
+      'OpenAPI',
+      'Playwright',
     ],
+    // Selected file associations audited at RPG main 3fe824b on 2026-11-12.
+    // Exact rules and lists: docs/performance-and-quality.md.
     stackFileCounts: {
       React: 18,
       TypeScript: 35,
       'Node.js': 7,
-      Express: 4,
+      Express: 5,
       PostgreSQL: 2,
-      Supabase: 12,
+      Supabase: 7,
+      Docker: 4,
+      OpenAPI: 2,
+      Playwright: 5,
     },
     stackUsage: {
       React: { pt: 'Interface e personalização dos personagens.', en: 'Character creation and customization interface.' },
@@ -68,6 +76,9 @@ export const projects: Project[] = [
       Express: { pt: 'Rotas e endpoints da API REST.', en: 'REST API routes and endpoints.' },
       PostgreSQL: { pt: 'Armazenamento dos dados dos personagens.', en: 'Storage for character data.' },
       Supabase: { pt: 'Autenticação e controle de acesso.', en: 'Authentication and access control.' },
+      Docker: { pt: 'Imagem multi-stage da API e smoke em CI.', en: 'Multi-stage API image and CI smoke checks.' },
+      OpenAPI: { pt: 'Contrato de cinco operações e testes de regressão.', en: 'Five-operation contract and regression tests.' },
+      Playwright: { pt: 'Três cenários full-stack com Supabase local isolado.', en: 'Three full-stack scenarios with isolated local Supabase.' },
     },
     githubUrl: 'https://github.com/AlexandroLeao/rpg-character-creator',
     liveUrl: 'https://adventure-files-staging.vercel.app/',
@@ -91,16 +102,16 @@ export const projects: Project[] = [
         },
       ],
       architecture: {
-        pt: 'React/TypeScript, API REST Node.js/Express, Supabase Auth e PostgreSQL com RLS.',
-        en: 'React/TypeScript, Node.js/Express REST API, Supabase Auth, and PostgreSQL with RLS.',
+        pt: 'React/TypeScript, API REST Node.js/Express, Supabase Auth e PostgreSQL com RLS. Contrato OpenAPI 3.1 e Docker local para a API.',
+        en: 'React/TypeScript, Node.js/Express REST API, Supabase Auth, and PostgreSQL with RLS. OpenAPI 3.1 contract and local API Docker image.',
       },
       challenges: {
         pt: 'Unir segurança por usuário a uma experiência retrô, responsiva e bilíngue.',
         en: 'Combine user-scoped security with a retro, responsive, bilingual experience.',
       },
       practices: {
-        pt: 'Testes automatizados de front-end, API e banco; integração contínua no GitHub Actions.',
-        en: 'Automated frontend, API, and database tests; GitHub Actions CI.',
+        pt: 'Testes automatizados: 358 verificações aprovadas: 183 front-end, 133 API (16 de contrato OpenAPI), 39 pgTAP e 3 E2E full-stack. Integração contínua no GitHub Actions e smoke Docker separado.',
+        en: 'Automated tests: 358 passing checks: 183 frontend, 133 API (16 OpenAPI contract tests), 39 pgTAP, and 3 full-stack E2E. GitHub Actions CI and a separate Docker smoke.',
       },
       visualReferences: [
         {

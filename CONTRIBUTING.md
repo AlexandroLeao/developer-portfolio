@@ -207,11 +207,12 @@ The test suite covers the application and key components, including mobile-selec
 
 The Vitest configuration uses the `vmThreads` pool to reduce repeated `jsdom` setup while retaining separate VM contexts for test files. Run the normal `npm run test` command; no extra CLI flag is required. The pool can have cross-realm and memory-retention trade-offs, so preserve isolation and confirm repeated runs in CI before accepting further test-runner changes. See [Performance and Quality](docs/performance-and-quality.md) for the dated Cloud Shell timings.
 
-Three independent GitHub Actions workflows run on pull requests targeting `main`:
+Four independent GitHub Actions workflows run on pull requests targeting `main`:
 
 - [Continuous Integration](.github/workflows/ci.yml) executes `npm run lint`, `npm run test` (Vitest), and `npm run build`.
 - [Lighthouse CI](.github/workflows/lighthouse.yml) runs repeated mobile and desktop audits of the production build and archives reports.
 - [Playwright E2E Tests](.github/workflows/playwright.yml) installs headless Chromium and runs `npx playwright test`. A failing browser test fails its job.
+- [Portfolio Docker Checks](.github/workflows/docker.yml) builds and smoke-tests the local Nginx image; run `bash docker/smoke.sh` with Docker and curl. This does not replace the browser suite or change Vercel.
 
 The 10 Playwright scenarios across `e2e/portfolio.e2e.ts` and `e2e/accessibility-and-layout.e2e.ts` verify language switching, themes, project details, PT/EN résumé downloads, mobile navigation, keyboard-operated dialogs and focus restoration, contact/project link targets, reduced motion, and viewport overflow. The `.e2e.ts` extension keeps them separate from Vitest. A separate `e2e/axe-accessibility.e2e.ts` suite adds WCAG A/AA automated checks using `@axe-core/playwright` (see Issue #107). The same `npm run test:e2e` command runs functional and rule-based checks. Browser automation complements, rather than replaces, manual accessibility and device checks.
 
