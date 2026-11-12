@@ -17,7 +17,25 @@ An earlier recorded production Lighthouse result also appears in [ADR 0003](deci
 
 ## Project stack-chart data provenance
 
-The three project pie charts use `stackFileCounts` recorded manually in `src/data/projects.ts` from a **2026-11-07 source-file association snapshot** of the linked project repositories (Issue #66 / PR #67). One source file can be associated with several stacks, so slices represent **relative recorded associations**, not exclusive language percentages or a current code-host measurement. The counts are fixed data in the portfolio; they are **not refreshed automatically** when those repositories change. This documentation-only closure does not recompute or independently re-audit the source counts; future material changes to the source projects should prompt a separate review of the charts.
+The project pie charts are manually maintained associations in `src/data/projects.ts`, not exclusive language percentages or live repository metrics. Ideas Organizer and Natsu Matsuri retain their 2026-11-07 snapshot. Adventure Files is refreshed in R7 from the version-controlled tree and selected source files at [RPG main 3fe824b](https://github.com/AlexandroLeao/rpg-character-creator/tree/3fe824b2966bf83e9e6d45596a23b4891c167de1), November 12, 2026. The chart includes selected code and tooling files, not every dependency or file using a technology.
+
+| Association | Count | Rule / exact scope |
+| --- | ---: | --- |
+| React | 18 | Non-test `web/src/**/*.tsx` files, including main entry |
+| TypeScript | 35 | Non-test `.ts/.tsx` in web/src and api/src (28 web + 7 API); no declaration files |
+| Node.js | 7 | All non-test API TypeScript runtime files |
+| Express | 5 | api/src/app.ts, server.ts, middleware/requireAuth.ts, routes/account.ts, routes/characters.ts |
+| PostgreSQL | 2 | SQL migrations in supabase/migrations |
+| Supabase | 7 | Direct selected client/auth/DB integration files: api/src/lib/supabase.ts, middleware/requireAuth.ts, routes/account.ts, routes/characters.ts; web/src/lib/supabase.ts, lib/auth.ts, App.tsx |
+| Docker | 4 | api/Dockerfile, api/.dockerignore, api/scripts/smoke-container.sh, .github/workflows/api-docker.yml |
+| OpenAPI | 2 | api/openapi.json, api/src/openapi.test.ts |
+| Playwright | 5 | e2e/package.json, e2e/playwright.config.mjs, e2e/run-local.mjs, e2e/tests/adventure.spec.mjs, .github/workflows/full-stack-e2e.yml |
+
+Total **85 associations**, not unique files, lines, percentages of language, complexity, or test coverage. The updated Express/Supabase counts use the explicit selected scope above, not a claim that code was removed. Nginx belongs to the portfolio container, not the RPG chart; the other two project charts are unchanged. Vitest/Supertest/pgTAP and GitHub Actions are also described in project practices, not every tool is a chart slice.
+
+## P6 verified container evidence — November 12, 2026
+
+[PR #116](https://github.com/AlexandroLeao/developer-portfolio/pull/116) merged as `efbc6a0`; [CI](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43239805300) passed 72 tests/14 files, lint/build, [Playwright](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43239805720) 21/21, and [Lighthouse](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43239805399) both profiles. [Docker main smoke](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43241020881) passed: Nginx 1.30.6, UID 101, image 27,521,986 bytes, HTTP 200 for HTML/JS/CSS/WebP/SVG/PDF and 404 for missing paths. No new Lighthouse numerical report was inspected; existing medians below remain dated. Docker/Nginx local/CI is separate from Vercel production. R7 adds two regression cases to the 72-test baseline; approval is pending its CI.
 
 ## Current performance-oriented implementation
 
