@@ -6,10 +6,12 @@ Entries below describe the implemented project, not additional release tags.
 
 ## Unreleased
 
-### R7 — consolidated evidence (pending review)
+### R7 — consolidated evidence (merged November 12, 2026)
 
 - Add OpenAPI and Nginx to the bilingual catalog (38 entries); promote Docker to implemented and extend Playwright, Vitest, QA and CI/CD evidence.
 - Refresh Adventure Files details with 358 approved checks and separately verified API Docker; update chart from the dated repository inventory (other project counts unchanged).
+- [PR #118](https://github.com/AlexandroLeao/developer-portfolio/pull/118) merged as `b3d3f90` (November 12, 2026). Corrected head `beaae21` passed [CI](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952577) (**74 Vitest tests / 14 files**, lint/build), [Playwright](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952037) (**21/21**: 10 functional and 11 axe-core, 31.1s), [Lighthouse](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952404) (both profiles, three samples each, configured assertions) and [Docker](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952375). [Post-merge Docker](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43243406342) passed: Nginx 1.30.6, UID 101, 27,523,076-byte image, static assets and both PDFs HTTP 200, missing paths 404. Vercel reported success.
+- Fix the existing QA association regression by restoring the explicit automated-tests phrase in bilingual project copy; retain all tests. Both development scopes are complete; R2 published smoke is maintenance and external contribution is deferred.
 - P6 [PR #116](https://github.com/AlexandroLeao/developer-portfolio/pull/116) merged with verified local/CI Nginx container, separate from Vercel. No redesign or new runtime dependencies.
 
 ### Added
