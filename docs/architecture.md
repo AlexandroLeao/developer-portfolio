@@ -145,17 +145,21 @@ These integrations do not constitute a server-side backend.
 
 GitHub is the source code repository.
 
-Pull Requests targeting `main` trigger three independent GitHub Actions workflows:
+Pull Requests targeting `main` trigger independent GitHub Actions workflows:
 
 - `.github/workflows/ci.yml` runs ESLint, Vitest component/application tests, and the production build.
 - `.github/workflows/lighthouse.yml` independently builds `dist/` and uses pinned Lighthouse CI CLI for three mobile and three desktop audits, storing HTML/JSON reports as seven-day Actions artifacts (no external LHCI server).
 - `.github/workflows/playwright.yml` installs headless Chromium and runs **21 browser checks**: 10 functional E2E regression scenarios covering languages, themes, project details, résumé downloads, mobile navigation, keyboard focus and dialogs, link destinations, reduced motion, and horizontal overflow, plus **11 axe-core accessibility audits**.
+
+- `.github/workflows/docker.yml` builds the optional local Node 24 / Nginx static image and verifies the non-root runtime, HTTP health and actual built assets/PDFs. The check also runs on relevant pushes to main.
 
 The Playwright tests live in `e2e/` and start the existing Vite development server. Development-only `@axe-core/playwright` runs WCAG A/AA rule checks on PT/EN homepages and representative dialogs without changing application architecture. They do not add a backend or change the deployed application architecture.
 
 Vercel builds and hosts the static application. Feature branches
 are reviewed through Vercel Preview, while approved changes
 merged into `main` are published to Production.
+
+An optional local container builds the same Vite output in a Node 24 stage and serves `dist/` with Nginx on port 8080. The runtime contains static files and Nginx, not the React development server or Node dependencies. It is deliberately separate from the Vercel deployment. No hosting, domain or application routing changes.
 
 The primary domain `alexandroleao.com.br` is connected to
 Vercel Production with validated DNS configuration.
