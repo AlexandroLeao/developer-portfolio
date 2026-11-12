@@ -110,8 +110,8 @@ export const projects: Project[] = [
         en: 'Combine user-scoped security with a retro, responsive, bilingual experience.',
       },
       practices: {
-        pt: '358 verificações aprovadas: 183 front-end, 133 API (16 de contrato OpenAPI), 39 pgTAP e 3 E2E full-stack. Integração contínua no GitHub Actions e smoke Docker separado.',
-        en: '358 passing checks: 183 frontend, 133 API (16 OpenAPI contract tests), 39 pgTAP, and 3 full-stack E2E. GitHub Actions CI and a separate Docker smoke.',
+        pt: 'Testes automatizados: 358 verificações aprovadas: 183 front-end, 133 API (16 de contrato OpenAPI), 39 pgTAP e 3 E2E full-stack. Integração contínua no GitHub Actions e smoke Docker separado.',
+        en: 'Automated tests: 358 passing checks: 183 frontend, 133 API (16 OpenAPI contract tests), 39 pgTAP, and 3 full-stack E2E. GitHub Actions CI and a separate Docker smoke.',
       },
       visualReferences: [
         {
