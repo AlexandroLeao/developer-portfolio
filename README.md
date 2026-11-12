@@ -44,7 +44,7 @@ The owner reports a **Google PageSpeed Insights result of 100/100 in Performance
 | Continuous integration | GitHub Actions |
 | Deployment | Vercel Preview and Production |
 
-Docker and AWS are **not** required to build or host the current portfolio. They may be evaluated in separate learning or infrastructure experiments.
+Docker is an optional local/CI path for serving the built portfolio with Nginx; the established Vercel deployment and Node/Vite development workflow remain unchanged. AWS is not required.
 
 ### Technology catalog and evidence
 
@@ -118,6 +118,20 @@ npm run dev
 ```
 
 Vite starts a local development server and prints its address in the terminal. Use the Vercel Preview deployments to review feature branches in this project's established workflow.
+
+### Optional Docker execution (P6)
+
+From the repository root with Docker running:
+
+```bash
+docker build -t developer-portfolio:local .
+docker run --rm --name developer-portfolio-local \
+  -p 127.0.0.1:8080:8080 developer-portfolio:local
+```
+
+Open `http://127.0.0.1:8080/`. In another terminal, run `docker inspect --format '{{.State.Health.Status}}' developer-portfolio-local` and stop it with `docker stop developer-portfolio-local`. Optionally remove your own image with `docker image rm developer-portfolio:local`. If host port 8080 is occupied, change the host side of the port mapping.
+
+The [Dockerfile](Dockerfile) uses Node 24 and `npm ci` to build Vite's `dist/`, then copies only the static output to the official Nginx Alpine stable image. Nginx runs as a non-root user on port 8080, with writable state in /tmp. The official base tags follow upstream updates; they are not immutable digests. The build context excludes Git history, local secrets and generated artifacts. [Nginx configuration](docker/nginx.conf) serves the existing single-page site and returns 404 for missing paths/assets. Run `bash docker/smoke.sh` to verify a real container, home/JS/CSS, representative images, both PDF résumés, missing paths and health; the script cleans only its own container/tag and temporary files. [Docker CI](.github/workflows/docker.yml) runs separately from browser and Lighthouse tests. No new backend, cloud provider, registry or hosted deployment is introduced.
 
 ### Available Commands
 
@@ -273,7 +287,7 @@ The current application is a static frontend built with Vite; it does not requir
 
 ## Roadmap
 
-For the checked P1–P5 / R1–R7 / O1–O3 plan, original evidence and implementation boundaries, see the [detailed engineering roadmap](docs/engineering-roadmap.md).
+For P1–P6, R1–R7 and the revised active plan, see the [detailed engineering roadmap](docs/engineering-roadmap.md).
 
 ### Completed
 
@@ -318,30 +332,20 @@ For the checked P1–P5 / R1–R7 / O1–O3 plan, original evidence and implemen
 - [x] Close P1–P4 documentation on owner-merged PR #112 (`main` `d0b50e4`, 2026-11-11).
 - [x] Inspect GitHub Lighthouse CI raw JSON from PR #112: mobile/desktop Performance medians **97/98**, with other median categories at **100** (local runner build; [dated evidence](docs/evidence/lighthouse-ci-2026-11-11.md)). Original historical PageSpeed report remains unavailable.
 
-### Next steps — approved cross-project sequence
+### Next steps — revised November 12, 2026
 
-The portfolio's **P1–P4 quality cycle is completed** as of 2026-11-11: P1 content/evidence review ([Issue #97](https://github.com/AlexandroLeao/developer-portfolio/issues/97)), P2 browser regression coverage ([PR #106](https://github.com/AlexandroLeao/developer-portfolio/pull/106)), P3 automated accessibility checks ([PR #108](https://github.com/AlexandroLeao/developer-portfolio/pull/108)), and P4 repeatable mobile/desktop Lighthouse CI ([PR #110](https://github.com/AlexandroLeao/developer-portfolio/pull/110)). The closing documentation review was **owner-merged** in [Issue #111](https://github.com/AlexandroLeao/developer-portfolio/issues/111) / [PR #112](https://github.com/AlexandroLeao/developer-portfolio/pull/112) (`d0b50e4`). The subsequent evidence/documentation reconciliation is tracked separately in [Issue #113](https://github.com/AlexandroLeao/developer-portfolio/issues/113). Automated results and owner-reported manual checks retain distinct evidence labels.
-
-The [Adventure Files](https://github.com/AlexandroLeao/rpg-character-creator) **MVP was accepted on 2026-11-05**; that completed product milestone is **not** evidence that the separately planned R1–R6 engineering improvements have been implemented. Following the agreed portfolio → RPG → portfolio update → external open-source sequence, the remaining work is:
-
-- [ ] **R1 — RPG technical baseline:** recheck the current frontend/API/database test results, CI, free-tier hosting risks, and documentation without modifying production data.
-- [ ] **R2 — Targeted security hardening:** evaluate private API response caching (including direct Render responses), logging hygiene, and narrow regression tests; do not label an unverified concern a vulnerability.
-- [ ] **R3 — OpenAPI contract:** document the existing authenticated API, errors, health endpoint, and examples without inventing new endpoints.
-- [ ] **R4 — Reproducible backend:** add an isolated, non-root Docker development path and, when a compatible local container environment is available, verify database tests without production credentials.
-- [ ] **R5 — Full-stack Playwright:** test existing account and six-stage creator flows, exports, PT/EN, session recovery, and account isolation using disposable **local** data only.
-- [ ] **R6 — Optional operational checks:** consider CSP Report-Only, selective rate limiting, and safe structured logs only if the additional maintenance is justified.
-- [ ] **R7 — One consolidated portfolio update:** after verified RPG improvements, refresh Adventure Files descriptions/stack evidence in PT/EN and rerun the portfolio quality gates before any new portfolio PR.
-- [ ] **O1–O3 — First external open-source contribution:** only after R7, select a suitable issue, submit a focused tested PR, and record its actual review/merge state.
-
-Each new RPG change requires its own justified Issue, reviewable branch and PR. The project owner retains merge approval. The target is **R$ 0 in new services**, with no paid runners, new paid hosting, or production-data experiments.
+- [x] P1–P4 completed; [PR #114](https://github.com/AlexandroLeao/developer-portfolio/pull/114) merged and Issue #113 closed.
+- [x] Adventure Files R1–R5 and closing documentation integrated in [RPG PR #52](https://github.com/AlexandroLeao/rpg-character-creator/pull/52), main `3fe824b`; five workflows passed (183 frontend, 133 API, 39 pgTAP, 3 Playwright; separate Docker smoke). R2 hosted HTTP confirmation remains a maintenance item; R6 deferred.
+- [ ] **P6 — Local Docker/Nginx:** build and verify this static frontend container in CI, owner review/merge; existing Vercel hosting unchanged.
+- [ ] **R7 — Consolidated portfolio update:** refresh Adventure Files bilingual descriptions, technology evidence and manually maintained chart associations; include Docker/OpenAPI/Playwright and Nginx only to the extent actually verified. Rerun all applicable quality checks.
+- [ ] Discuss the next project/learning cycle with the owner before selecting a new stack or implementing new features. Review résumé and LinkedIn at the agreed time using verified evidence.
 
 ### Deferred / Future Improvements
 
-- [ ] **P5 (optional):** add selective Firefox/WebKit or stable visual-regression checks only if a concrete need justifies them; P5 does not block the move to R1.
-- [ ] Revise Portuguese/English résumé content and LinkedIn only after the RPG and external open-source phases, using verified evidence.
-- [ ] Reevaluate a separate project to address real stack gaps **after** the above sequence; do not start one now.
-- [ ] Reevaluate adding the Developer Portfolio itself to the Projects section.
-- [ ] Consider future AWS or other cloud learning experiments separately, subject to explicit approval and zero-new-cost constraints; the portfolio itself does not require Docker or AWS.
+- P5 cross-browser/visual regression, optional if a concrete issue warrants it.
+- R6 CSP/rate limits/observability, deferred; no further RPG features in this cycle.
+- External open-source contribution is removed from the active sequence and may be revisited later.
+- AWS/cloud experiments require separate approval and zero-new-cost safeguards. No paid hosting or production-data experiments.
 
 The roadmap reflects completed and planned work. The latest PageSpeed Insights scores are recorded as an owner-reported snapshot; results may vary between devices, networks, and audit runs, and do not establish accessibility conformance.
 

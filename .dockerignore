@@ -1,0 +1,25 @@
+# Build context allowlist: no Git history, local config, docs or test artifacts.
+**
+!package.json
+!package-lock.json
+!index.html
+!tsconfig*.json
+!vite.config.ts
+!playwright.config.ts
+!src
+!src/**
+!public
+!public/**
+!docker
+!docker/nginx.conf
+# Exclude secrets and generated/local files even under allowed directories.
+**/.env
+**/.env.*
+**/.npmrc
+**/*.pem
+**/*.key
+**/*.log
+**/node_modules
+**/dist
+**/test-results
+**/playwright-report

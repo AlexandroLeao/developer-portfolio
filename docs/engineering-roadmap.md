@@ -1,12 +1,12 @@
-# Cross-Project Engineering Roadmap — 2026-11-11
+# Cross-Project Engineering Roadmap — updated 2026-11-12
 
-**Source:** approved 2026-11-10 portfolio → Adventure Files → external open-source plan.  
-**Status:** Portfolio P1–P4 delivered and merged; historical PageSpeed raw artifact unavailable; P5 is optional/non-blocking. Next stage is **Adventure Files R1**.  
-**Repository baseline:** portfolio `main` `d0b50e4` after owner-merged [PR #112](https://github.com/AlexandroLeao/developer-portfolio/pull/112) on 2026-11-11. RPG `main` `fea7ac8` (2026-11-05), accepted MVP; the later R1–R6 improvements are *not* thereby completed.
+**Source:** original 2026-11-10 plan, revised by owner on 2026-11-12.  
+**Status:** portfolio P1–P4 and RPG R1–R5 completed; RPG documentation closed in PR #52, main `3fe824b`. R2 published header smoke remains maintenance; R6 deferred. P6 optional local Docker/Nginx implementation is the active branch; R7 follows verification and merge. External contribution is not in the active plan.  
+**Portfolio baseline:** main `0d07a97` after [PR #114](https://github.com/AlexandroLeao/developer-portfolio/pull/114).
 
 ## Guardrails
 
-- Work on the portfolio first (completed), then Adventure Files R1–R6, then **one consolidated portfolio refresh R7**, then external open-source O1–O3.
+- Portfolio P1–P4 and RPG R1–R5 are complete; finish P6 Docker, then one consolidated R7 portfolio refresh. Discuss other ideas before starting any new project. External contribution is deferred outside this plan.
 - Keep existing visual identity, PT/EN, accessibility, and deployments; no unrelated redesign, new project, or framework swap merely to add résumé keywords.
 - Prefer **R$ 0 new service cost**; avoid AWS charges, paid GitHub runners, new paid accounts, production-data experiments, and automatic upgrades.
 - Track substantial work by **Issue → branch → tests → Pull Request → owner review/merge**; never auto-merge.
@@ -55,53 +55,37 @@
 
 - [x] Owner merged P1–P4 implementation PRs and closure [PR #112](https://github.com/AlexandroLeao/developer-portfolio/pull/112); latest pre-merge CI, Playwright, Lighthouse and merge-commit Vercel status succeeded.
 - [x] No portfolio Issues or PRs remained open immediately after merging #112.
-- [ ] This post-merge documentation/evidence follow-up is being prepared under [Issue #113](https://github.com/AlexandroLeao/developer-portfolio/issues/113) and remains subject to **owner review/merge**.
+- [x] Post-merge documentation/evidence follow-up [Issue #113](https://github.com/AlexandroLeao/developer-portfolio/issues/113) closed by owner-merged [PR #114](https://github.com/AlexandroLeao/developer-portfolio/pull/114).
 - [ ] Direct independent inspection of the published site was **not performed**; do not imply it from a deployment success status.
 
-## Stage 2 — Adventure Files (MVP accepted; engineering improvements pending)
+## Stage 2 — Adventure Files (closed development scope)
 
-### R1 — Reconfirm technical state and accepted risk
-- [ ] Recheck currently running frontend/API tests, DB security/pgTAP, lint/build and CI; date the results and preserve older historical counts.
-- [ ] Reconfirm existing free **Vercel + Render + Supabase** setup and accepted absence of automatic Supabase Free backups. Do not access production user data or create new infrastructure.
+- [x] R1: [PR #42](https://github.com/AlexandroLeao/rpg-character-creator/pull/42), technical baseline.
+- [x] R2: [PR #44](https://github.com/AlexandroLeao/rpg-character-creator/pull/44), private no-store/error logs, CI and local container verified. Published Render/proxy smoke remains pending maintenance.
+- [x] R3: [PR #46](https://github.com/AlexandroLeao/rpg-character-creator/pull/46), OpenAPI 3.1 and 16 contract cases.
+- [x] R4: [PR #48](https://github.com/AlexandroLeao/rpg-character-creator/pull/48), API Docker and isolated pgTAP.
+- [x] R5: [PR #50](https://github.com/AlexandroLeao/rpg-character-creator/pull/50), 3 full-stack Chromium scenarios with disposable local accounts.
+- [x] Final documentation [PR #52](https://github.com/AlexandroLeao/rpg-character-creator/pull/52), main `3fe824b`. All five main workflows passed: [frontend 183](https://github.com/AlexandroLeao/rpg-character-creator/actions/runs/43238851257), [API 133 + 2 opt-in skipped](https://github.com/AlexandroLeao/rpg-character-creator/actions/runs/43238851435), [pgTAP 39](https://github.com/AlexandroLeao/rpg-character-creator/actions/runs/43238851449), [E2E 3](https://github.com/AlexandroLeao/rpg-character-creator/actions/runs/43238851478), [Docker smoke](https://github.com/AlexandroLeao/rpg-character-creator/actions/runs/43238851482). Total 358 distinct tests/assertions across suites, not a coverage percentage.
+- [x] R6 deferred by owner decision to close development; no CSP, limiter, observability or new features implemented.
+- [ ] Operational follow-up only: verify hosted GET health 200, private GET 401/no-store directly on Render and via Vercel; no credentials or real data. CI is not hosted verification.
 
-### R2 — narrow private-response and logging checks
-- [ ] Evaluate `Cache-Control: no-store` on private API responses (including direct Render access), with unit tests; verify Vercel proxy behavior.
-- [ ] Review error/log handling without collecting tokens or private data; treat as defense-in-depth, not a proven vulnerability.
+No runtime hosting change or authenticated API-container-to-Supabase test is claimed. See [RPG roadmap](https://github.com/AlexandroLeao/rpg-character-creator/blob/main/docs/post-mvp-engineering.md).
 
-### R3 — machine-readable API contract
-- [ ] Write/validate OpenAPI descriptions for existing auth, character CRUD, account deletion, errors, and health endpoints. Avoid duplicating or inventing API behavior.
+## Stage 3 — Portfolio final update
 
-### R4 — reproducible backend using Docker
-- [ ] Add local Node/Express container setup, `.dockerignore`, non-root user when applicable, environment configuration and safe health checks.
-- [ ] Document local-only Supabase integration and DB test reproduction when a compatible container machine is available; no hosted DB changes.
+### P6 — local static Docker/Nginx (active)
 
-### R5 — full-stack Playwright
-- [ ] Add isolated E2E tests for six-stage creation, save/reopen/edit, two PNG exports, PT/EN, mobile, error/session and account isolation using **disposable local accounts only**.
-- [ ] Preserve Turnstile, real-user accounts and production protections.
+- [x] Add multi-stage Node 24/Vite build and non-root Nginx static runtime; restrict context; healthcheck.
+- [x] Add Docker smoke and separate CI, local instructions; unchanged Vercel deployment.
+- [ ] Confirm actual Docker build/HTTP assets, PDF and 404 checks, all applicable CI, and owner review/merge ([Issue #115](https://github.com/AlexandroLeao/developer-portfolio/issues/115)).
 
-### R6 — optional operational maturity
-- [ ] Evaluate CSP Report-Only, selective rate limits and privacy-safe structured logs only with a justified risk/maintenance tradeoff.
+### R7 — one consolidated portfolio evidence refresh
 
-### R7 — single portfolio update after RPG
-- [ ] Once R1–R5 (and any approved R6) are verified, update the RPG card/details **once** and recheck PT/EN/stack-chart provenance.
-- [ ] Claim Docker, Playwright, OpenAPI, etc., **only after implemented in the RPG**; rerun portfolio lint, Vitest, build, browser checks and Preview review.
-
-**RPG exclusions:** no multiplayer, combat, multiple characters, redesign, rule changes, PDF export, OAuth expansion, NestJS rewrite, AWS or paid infrastructure in this cycle.
-
-## Stage 3 — first external open-source contribution (after R7)
-
-### O1 — select a suitable project and issue
-- [ ] Choose an **external**, publicly licensed project; read README/LICENSE/CONTRIBUTING, check an available good-first-issue, owners/comments/linked PRs, and confirm scope if ambiguous.
-
-### O2 — contribute a focused fix
-- [ ] Fork, branch, reproduce, change, test, document, and submit a PR that references the upstream issue.
-
-### O3 — review and record real result
-- [ ] Respond to maintainer feedback, document PR state, and call a contribution **merged** only after upstream accepts it.
+- [ ] After P6 validation, update the RPG card/details once, accurate PT/EN descriptions and technology classifications; document count provenance. Do not present Docker/Nginx as verified in this portfolio before CI.
+- [ ] Confirm all applicable CI and owner review/merge. No redesign or changes to unrelated projects.
 
 ## After the sequence
 
-- [ ] Reevaluate any new project against real remaining job-market stack gaps; **do not start one now**.
-- [ ] Refresh Portuguese/English résumé and LinkedIn using only demonstrable results.
-
-**Next active step:** after owner-approved merge of the documentation/evidence follow-up, start **Adventure Files R1**, with a read-only baseline review before any implementation.
+- [ ] Discuss and prioritize new ideas with owner before implementation. Next.js, NestJS, Python/FastAPI and cloud fundamentals remain candidates, not commitments.
+- [ ] Refresh PT/EN résumé and LinkedIn when agreed, using verified evidence.
+- External open-source contribution is outside the active roadmap; revisit only if the owner requests it.
