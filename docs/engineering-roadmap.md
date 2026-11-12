@@ -1,8 +1,8 @@
 # Cross-Project Engineering Roadmap — updated 2026-11-12
 
 **Source:** original 2026-11-10 plan, revised by owner on 2026-11-12.  
-**Status:** portfolio P1–P4 and RPG R1–R5 completed; RPG documentation closed in PR #52, main `3fe824b`. R2 published header smoke remains maintenance; R6 deferred. P6 optional local Docker/Nginx implementation is the active branch; R7 follows verification and merge. External contribution is not in the active plan.  
-**Portfolio baseline:** main `0d07a97` after [PR #114](https://github.com/AlexandroLeao/developer-portfolio/pull/114).
+**Status:** portfolio P1–P4 and RPG R1–R5 completed; RPG documentation closed in PR #52, main `3fe824b`. R2 published header smoke remains maintenance; R6 deferred. P6 Docker/Nginx completed and merged in PR #116; R7 consolidated refresh is the active branch, pending CI and owner review. External contribution is not in the active plan.  
+**Portfolio baseline:** main `efbc6a0` after [PR #116](https://github.com/AlexandroLeao/developer-portfolio/pull/116); prior `0d07a97` after [PR #114](https://github.com/AlexandroLeao/developer-portfolio/pull/114).
 
 ## Guardrails
 
@@ -73,15 +73,15 @@ No runtime hosting change or authenticated API-container-to-Supabase test is cla
 
 ## Stage 3 — Portfolio final update
 
-### P6 — local static Docker/Nginx (active)
+### P6 — local static Docker/Nginx (completed)
 
 - [x] Add multi-stage Node 24/Vite build and non-root Nginx static runtime; restrict context; healthcheck.
 - [x] Add Docker smoke and separate CI, local instructions; unchanged Vercel deployment.
-- [ ] Confirm actual Docker build/HTTP assets, PDF and 404 checks, all applicable CI, and owner review/merge ([Issue #115](https://github.com/AlexandroLeao/developer-portfolio/issues/115)).
+- [x] [PR #116](https://github.com/AlexandroLeao/developer-portfolio/pull/116) merged; Issue #115 closed. All four PR workflows and Vercel passed. [Docker main](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43241020881) passed with Nginx 1.30.6, non-root UID 101, 27,521,986 bytes, correct static assets/PDFs and 404s.
 
 ### R7 — one consolidated portfolio evidence refresh
 
-- [ ] After P6 validation, update the RPG card/details once, accurate PT/EN descriptions and technology classifications; document count provenance. Do not present Docker/Nginx as verified in this portfolio before CI.
+- [x] Implement consolidated PT/EN RPG details, Docker/OpenAPI/Playwright chart associations and documented count provenance. Docker promoted to implemented; OpenAPI and Nginx added, 38 entries total. Playwright/Vitest/QA/CI descriptions refreshed. Issue #117; R7 CI and merge pending.
 - [ ] Confirm all applicable CI and owner review/merge. No redesign or changes to unrelated projects.
 
 ## After the sequence
