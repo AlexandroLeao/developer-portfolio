@@ -51,7 +51,7 @@ and contact dialog visibility.
 Other portfolio sections, including the Hero, About Me,
 Technologies, and Education, are coordinated within `App.tsx`.
 
-The technology catalog contains 36 entries in six groups. Each item has a typed
+The technology catalog contains 38 entries in six groups (Docker now implemented; OpenAPI and Nginx added). Nginx refers only to the local portfolio container, not Vercel. Each item has a typed
 `evidence` value (`implemented`, `studied`, `studying`, or `planned`)
 and localized explanatory text. The evidence badge appears in the details
 panel only, not on every card, to preserve consistent card dimensions.
