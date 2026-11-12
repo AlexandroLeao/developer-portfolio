@@ -32,7 +32,7 @@ fi
 
 uid="$(docker exec "$container" id -u)"
 [[ "$uid" != 0 ]]
-docker exec "$container" sh -ec 'nginx -v; ! command -v node; ! command -v npm; test ! -e /app/src; test ! -e /app/node_modules; test ! -e /usr/share/nginx/html/.env'
+docker exec "$container" sh -ec 'nginx -v; if command -v node || command -v npm; then exit 1; fi; test ! -e /app/src; test ! -e /app/node_modules; test ! -e /usr/share/nginx/html/.env'
 echo "Runtime: non-root UID $uid; Nginx and built static output only"
 
 get() {
