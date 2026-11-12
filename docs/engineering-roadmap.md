@@ -1,12 +1,12 @@
 # Cross-Project Engineering Roadmap — updated 2026-11-12
 
 **Source:** original 2026-11-10 plan, revised by owner on 2026-11-12.  
-**Status:** portfolio P1–P4 and RPG R1–R5 completed; RPG documentation closed in PR #52, main `3fe824b`. R2 published header smoke remains maintenance; R6 deferred. P6 Docker/Nginx completed and merged in PR #116; R7 consolidated refresh is the active branch, pending CI and owner review. External contribution is not in the active plan.  
-**Portfolio baseline:** main `efbc6a0` after [PR #116](https://github.com/AlexandroLeao/developer-portfolio/pull/116); prior `0d07a97` after [PR #114](https://github.com/AlexandroLeao/developer-portfolio/pull/114).
+**Status:** portfolio P1–P4 and RPG R1–R5 completed; RPG documentation closed in PR #52, main `3fe824b`. R2 published header smoke remains maintenance; R6 deferred. P6 Docker/Nginx completed and merged in PR #116; R7 consolidated refresh merged in PR #118; both development scopes are complete. Only this documentation closeout awaits owner review. External contribution is not in the active plan.  
+**Portfolio verified implementation baseline:** main `b3d3f90` after [PR #118](https://github.com/AlexandroLeao/developer-portfolio/pull/118); earlier `efbc6a0` after [PR #116](https://github.com/AlexandroLeao/developer-portfolio/pull/116); prior `0d07a97` after [PR #114](https://github.com/AlexandroLeao/developer-portfolio/pull/114).
 
 ## Guardrails
 
-- Portfolio P1–P4 and RPG R1–R5 are complete; finish P6 Docker, then one consolidated R7 portfolio refresh. Discuss other ideas before starting any new project. External contribution is deferred outside this plan.
+- Portfolio P1–P4, P6 and R7 and RPG R1–R5 are complete. P5 and R6 are deferred. Discuss other ideas before starting any new project. External contribution is deferred outside this plan.
 - Keep existing visual identity, PT/EN, accessibility, and deployments; no unrelated redesign, new project, or framework swap merely to add résumé keywords.
 - Prefer **R$ 0 new service cost**; avoid AWS charges, paid GitHub runners, new paid accounts, production-data experiments, and automatic upgrades.
 - Track substantial work by **Issue → branch → tests → Pull Request → owner review/merge**; never auto-merge.
@@ -81,8 +81,10 @@ No runtime hosting change or authenticated API-container-to-Supabase test is cla
 
 ### R7 — one consolidated portfolio evidence refresh
 
-- [x] Implement consolidated PT/EN RPG details, Docker/OpenAPI/Playwright chart associations and documented count provenance. Docker promoted to implemented; OpenAPI and Nginx added, 38 entries total. Playwright/Vitest/QA/CI descriptions refreshed. Issue #117; R7 CI and merge pending.
-- [ ] Confirm all applicable CI and owner review/merge. No redesign or changes to unrelated projects.
+- [x] Implement consolidated PT/EN RPG details, Docker/OpenAPI/Playwright chart associations and documented count provenance. Docker promoted to implemented; OpenAPI and Nginx added, 38 entries total. Playwright/Vitest/QA/CI descriptions refreshed. Issue #117 closed; PR #118 merged.
+- [x] [PR #118](https://github.com/AlexandroLeao/developer-portfolio/pull/118) merged as `b3d3f90` (November 12, 2026). Corrected head `beaae21` passed [CI](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952577) (**74 Vitest tests / 14 files**, lint/build), [Playwright](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952037) (**21/21**: 10 functional and 11 axe-core, 31.1s), [Lighthouse](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952404) (both profiles, three samples each, configured assertions) and [Docker](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952375). [Post-merge Docker](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43243406342) passed: Nginx 1.30.6, UID 101, 27,523,076-byte image, static assets and both PDFs HTTP 200, missing paths 404. Vercel reported success. No redesign or changes to unrelated projects.
+- [x] Initial [CI failure](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43241832195) was a QA text-association regression (73/74); restored the explicit automated-tests phrase in both languages in `beaae21`, without weakening tests. Corrected CI passed.
+- [ ] Owner review/merge of this documentation-only closure (Issue #119). This is not additional development scope.
 
 ## After the sequence
 
