@@ -1,83 +1,64 @@
-# Use Cases
+# Visitor Use Cases — Developer Portfolio
 
-This document describes the visitor-facing use cases implemented in
-the Developer Portfolio.
+## Scope and Actors
 
-## Scope
+This document specifies visitor-facing interactions **implemented in Developer Portfolio**, a static bilingual React single-page application.
 
-The portfolio is a static React application presenting professional
-information, projects, technologies, experience, education, certifications,
-and contact channels.
+- **Primary actor:** Visitor.
+- **System boundary:** The portfolio web application.
+- **External destinations:** GitHub, LinkedIn, email/WhatsApp handlers, certification-verification portals and project demos. They are outside the system boundary.
 
-**Primary actor:** Visitor.
+The portfolio does not create visitor accounts, authenticate users, store contact messages or host the backends of featured projects.
 
-**System boundary:** The Developer Portfolio web application.
+## Use-Case Diagram
 
-External services such as GitHub, LinkedIn, certification portals, and
-email handlers are outside the application's system boundary.
+![UML diagram of core visitor-facing portfolio use cases](diagrams/use-cases.svg)
 
-## Use Case Diagram
+[PlantUML source](diagrams/use-cases.puml). The diagram captures **11 foundational use cases**; the catalog below also covers four later interaction refinements. It is intentionally a simplified view rather than a one-to-one rendering of every catalog row.
 
-![Developer Portfolio UML use case diagram](diagrams/use-cases.svg)
+## Use-Case Catalog
 
-Source: [PlantUML use case diagram](diagrams/use-cases.puml).
-
-The diagram illustrates the foundational use cases. The catalog below
-also documents later interaction refinements without treating the
-diagram as an exhaustive list. The PlantUML source can be rendered
-with a compatible viewer or editor.
-
-## Use Case Catalog
-
-| ID | Use case | Expected behavior |
+| ID | Visitor goal | Implemented behavior |
 | --- | --- | --- |
-| UC-01 | Browse portfolio sections | Read the introduction, background, skills, projects, experience, education, certifications, and contact information. |
-| UC-02 | Switch language | Change between Portuguese and English interface content. |
-| UC-03 | Toggle color theme | Switch between the light and dark color themes. |
-| UC-04 | Explore technology details | Select a category and technology; on mobile, the selected option moves gently toward the center of the horizontal track. |
-| UC-05 | Explore project details | Open the structured project-details dialog, including highlights, implementation notes, and visual references. |
-| UC-06 | Open project links | Follow available repository or live-demo links to external destinations. |
-| UC-07 | Explore experience details | Select a timeline entry, review its contributions and skills, and navigate to a related project when available. |
-| UC-08 | View certifications and verification | Review three default highlights, switch to the full catalog or a knowledge area, open details, and use available verification links or codes. |
-| UC-09 | Open contact dialog | Open and close the dialog containing professional contact channels. |
-| UC-10 | Follow contact channels | Open available email, GitHub, LinkedIn, and WhatsApp destinations. |
-| UC-11 | Navigate to page sections | Use navigation links, scrolling, and the back-to-top control. |
-| UC-12 | Download a résumé | Download the Portuguese or English PDF corresponding to the selected language. |
-| UC-13 | Interact with the Hero mascot | Watch the repeating two-frame wave and click/tap the character to trigger a temporary reaction frame. |
-| UC-14 | Navigate mobile selections | Scroll through technology, project, experience, and certification options without widening the page; selected options are brought toward the track's center. |
-| UC-15 | See section reveals | As sections enter the viewport while scrolling in either direction, view subtle reveal animations unless reduced motion is preferred. |
+| UC-01 | Browse professional sections | Read introduction, background, technologies, projects, experience, education, certifications and contact content |
+| UC-02 | Switch language | Select Portuguese or English interface content |
+| UC-03 | Switch color theme | Toggle the light/dark appearance |
+| UC-04 | Explore technology details | Select a category and technology; review explanatory evidence text |
+| UC-05 | Review project details | Open a project dialog with its structured implementation information and visual references |
+| UC-06 | Follow project links | Navigate to available repository or live-demo destinations |
+| UC-07 | Explore professional experience | Select an experience entry and, where available, navigate to its related project |
+| UC-08 | Explore certifications | View featured qualifications, open the full catalog, filter and access verification links/codes where provided |
+| UC-09 | Open contact dialog | Open, inspect and dismiss the professional contact dialog |
+| UC-10 | Use contact channels | Follow available email, GitHub, LinkedIn and WhatsApp destinations |
+| UC-11 | Navigate between sections | Use page anchors, menu controls and back-to-top behavior |
+| UC-12 | Download a résumé | Access the public PDF for the currently selected interface language |
+| UC-13 | Interact with the mascot | View repeating wave frames and trigger a temporary reaction by clicking/tapping |
+| UC-14 | Use mobile selectors | Scroll contained option tracks and bring selected items toward the center without expanding the document width |
+| UC-15 | Observe section reveals | Display subtle scroll-triggered transitions, omitted or reduced when the visitor prefers reduced motion |
 
-## Relevant Behavior and Constraints
+## Functional Constraints
 
-- Interface content supports Portuguese and English.
-- Light and dark themes are available.
-- Language and theme preferences are stored locally in the browser.
-- Some project links or certification verification methods depend on the
-  available data for each entry.
-- Contact actions use external links or browser handlers; no application
-  backend stores or sends messages.
-- The Hero uses optimized image frames; only one pose is visible at a time.
-- Mobile horizontal selection tracks scroll internally rather than expanding the page width.
-- The three-item featured certification view is a curated default, not the entire catalog.
-- Scroll-reveal effects respect the browser's reduced-motion preference.
-- Portuguese and English resume PDFs are available as public static assets.
-- The portfolio does not provide visitor authentication or accounts.
+- The interface supports Portuguese and English; language and theme preferences persist in the browser.
+- Availability of project demos and verification links depends on the data for each item and the external destination.
+- Contact actions open browser handlers/external services; the portfolio has **no contact-submission backend**.
+- Project stack charts are curated associations, not automatically scanned repository statistics.
+- A selected mobile project replaces the visible project panel; desktop presents the project grid.
+- Certification highlights are a subset of the full catalog.
+- Motion effects must not prevent access to content with reduced motion enabled.
+- Résumé files are public static assets; original private educational records are not offered as public downloads.
 
 ## Traceability
 
-The use cases correspond primarily to:
+| Use-case group | Main implementation |
+| --- | --- |
+| UC-01, UC-02, UC-04, UC-08, UC-11, UC-14, UC-15 | [Application](../src/App.tsx) |
+| UC-02, UC-03, UC-11 | [Header](../src/components/Header.tsx) |
+| UC-05, UC-06 | [Project cards](../src/components/ProjectCard.tsx), [details dialog](../src/components/ProjectDetailsDialog.tsx) |
+| UC-07 | [Experience timeline](../src/components/ExperienceTimeline.tsx) |
+| UC-08 | [Certification cards](../src/components/CertificationCard.tsx) |
+| UC-09, UC-10 | [Contact dialog](../src/components/ContactModal.tsx), [contact data](../src/data/contacts.ts) |
+| UC-12 | [Header](../src/components/Header.tsx), [résumé assets](../public/resumes/) |
+| UC-13 | [Hero mascot](../src/components/HeroMascot.tsx) |
+| UC-14 | [Mobile selection helper](../src/utils/centerMobileSelection.ts) |
 
-- [Application and Hero](../src/App.tsx)
-- [Header](../src/components/Header.tsx)
-- [Project cards](../src/components/ProjectCard.tsx)
-- [Project details dialog](../src/components/ProjectDetailsDialog.tsx)
-- [Experience cards](../src/components/ExperienceCard.tsx)
-- [Experience timeline](../src/components/ExperienceTimeline.tsx)
-- [Certification cards](../src/components/CertificationCard.tsx)
-- [Hero mascot](../src/components/HeroMascot.tsx)
-- [Mobile selection helper](../src/utils/centerMobileSelection.ts)
-- [Contact dialog](../src/components/ContactModal.tsx)
-- [Contact data](../src/data/contacts.ts)
-
-The diagram documents existing user interactions. It does not represent
-a new feature, an authentication system, or a server-side workflow.
+Automated regression coverage is described in [Performance and Quality](performance-and-quality.md). This catalog describes the portfolio's existing UI, not future features or behavior promised by external projects.

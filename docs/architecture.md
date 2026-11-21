@@ -1,179 +1,95 @@
-# Software Architecture
+# Software Architecture — Developer Portfolio
 
-## Overview
+## Purpose and System Boundary
 
-Developer Portfolio is a client-side, single-page application built
-with React, TypeScript, Vite, and Tailwind CSS.
+Developer Portfolio is a bilingual, client-side single-page application built with React, TypeScript, Vite, and Tailwind CSS. The application is compiled into static HTML, JavaScript, CSS, fonts and images and deployed through **Vercel**.
 
-The production build consists of static HTML, JavaScript, CSS,
-images, icons, and font files hosted on Vercel.
+**Inside the system:** page composition, portfolio content, visual components, interaction state, browser preferences and static assets.  
+**Outside the system:** GitHub, project demo sites, LinkedIn, WhatsApp, email handlers, certificate-verification services and other linked destinations.
 
-The application does not require its own backend server or database.
+There is **no portfolio-specific backend API, authentication service or application database**. External links do not make those services part of this app's runtime architecture.
 
-## Component Diagram
+## Architecture Overview
 
-![Developer Portfolio UML component diagram](diagrams/components.svg)
+![UML component diagram of the core Developer Portfolio dependencies](diagrams/components.svg)
 
-Source: [PlantUML component diagram](diagrams/components.puml).
+[PlantUML source](diagrams/components.puml). The illustration intentionally shows core components and relationships, **not every current component**. The tables below describe the additional implemented parts.
 
-The diagram describes the application's principal components,
-data dependencies, browser storage, and external destinations.
-It is a simplified architectural overview; the table below also covers
-newer components and helpers that are not drawn individually.
+### Entry Points and Data Flow
 
-## Application Entry Point
+1. `src/main.tsx` imports global CSS and mounts the React application.
+2. `src/App.tsx` composes page sections and controls interface selections, language, dialogs and section reveal behavior.
+3. Typed, local modules under `src/data/` provide content and relationships; they are bundled into the JavaScript build.
+4. Reusable components under `src/components/` render content and interactive controls.
+5. The browser keeps language and theme preferences in `localStorage`. Portfolio content is **not** fetched from a dedicated backend.
+6. Links and downloads use browser navigation and static assets; no server-side contact submission exists.
 
-`src/main.tsx` mounts the React application and imports global
-styles from `src/index.css`.
+## Implementation Structure
 
-`src/App.tsx` coordinates the main portfolio sections, language,
-technology/project/certification selection, scroll-reveal observation,
-and contact dialog visibility.
-
-## Component Responsibilities
-
-| Component | Responsibility |
+| Location | Responsibility |
 | --- | --- |
-| `Header` | Navigation, language controls, theme controls, and responsive menu behavior. |
-| `HeroMascot` | Render optimized stop-motion frames: continuous wave plus an exclusive click/tap reaction. |
-| `ProjectCard` | Display project summary, stack visualization, and available external links. |
-| `ProjectDetailsDialog` | Present structured project details and balanced visual references in an accessible dialog. |
-| `ProjectStackChart` | Show each project's technology distribution. |
-| `ExperienceTimeline` and `ExperienceCard` | Provide desktop timeline/mobile selection and detailed contributions, including related-project navigation. |
-| `CertificationCard` | Display consistent skill chips, details dialogs, and verification mechanisms. |
-| `ScrollProgress` | Indicate progress through the page. |
-| `ContactModal` | Provide an accessible dialog for professional contact channels. |
-| `Footer` | Present footer navigation and contact links. |
-| `ContactIcon` | Render icons shared by contact-related components. |
-| `TechnologyIcon` | Render neutral Lucide concepts, lightweight inline brand SVGs, or existing local Devicon glyphs without loading another icon font. |
-| `centerMobileSelection` | Smoothly bring the chosen option toward the middle of a horizontal mobile selection track. |
+| `src/App.tsx` | Sections, state coordination, translations, selections and dialogs |
+| `src/components/Header.tsx` | Navigation, language/theme controls and mobile menu |
+| `src/components/HeroMascot.tsx` | Optimized whole-frame mascot animation and click/tap reaction |
+| `src/components/ProjectCard.tsx` | Project summaries, images, outbound links and stack chart |
+| `src/components/ProjectDetailsDialog.tsx` | Structured technical details and dialog behavior |
+| `src/components/ProjectStackChart.tsx` | Visualization of manually maintained technology/file associations |
+| `src/components/ExperienceTimeline.tsx`, `ExperienceCard.tsx` | Experience selection and related-project navigation |
+| `src/components/CertificationCard.tsx` | Certifications, details and verification links |
+| `src/components/ContactModal.tsx`, `ContactIcon.tsx` | Contact dialog and reusable icons |
+| `src/components/TechnologyIcon.tsx` | Concept icons and locally supported brand glyphs |
+| `src/components/ScrollProgress.tsx`, `Footer.tsx` | Scroll feedback, footer navigation and links |
+| `src/utils/centerMobileSelection.ts` | Contained horizontal-option centering on mobile |
 
-Other portfolio sections, including the Hero, About Me,
-Technologies, and Education, are coordinated within `App.tsx`.
+| Data module | Content |
+| --- | --- |
+| `src/data/projects.ts` | Portfolio project cards, links, bilingual descriptions and chart associations |
+| `src/data/experiences.ts` | Professional experience records |
+| `src/data/certifications.ts` | Education and certification records |
+| `src/data/contacts.ts` | Contact channel definitions |
+| `src/data/technologyProjects.ts` | Associations between technologies and displayed portfolio projects |
 
-The technology catalog contains 38 entries in six groups (Docker now implemented; OpenAPI and Nginx added). Nginx refers only to the local portfolio container, not Vercel. Each item has a typed
-`evidence` value (`implemented`, `studied`, `studying`, or `planned`)
-and localized explanatory text. The evidence badge appears in the details
-panel only, not on every card, to preserve consistent card dimensions.
-Desktop grids use category-specific column counts; mobile keeps two columns
-and an internally scrolling category selector. A short selection prompt
-uses the existing detail-panel space before an item is chosen.
+Projects featured in `src/data/projects.ts` can link to their **own repositories**. That is a content relationship, not a shared CI/CD or code ownership boundary.
 
-## Data Organization
+## Interactions, Preferences and Accessibility
 
-The `src/data/` directory contains typed application content:
+- Portuguese and English text is coordinated by the application; the selected language is stored under the `portfolio-language` browser storage key.
+- Theme preferences are handled by the header and persisted in browser storage.
+- Mobile category and project selectors scroll within constrained tracks, keeping the page width stable. One project panel is visible at a time on mobile; desktop displays a grid.
+- Experience entries may navigate to a related portfolio project.
+- Certification filters retain a default curated featured view and provide access to the full catalog.
+- Dialogs and controls support keyboard interaction. Reveals and mascot motion respect reduced-motion behavior.
 
-- `projects.ts`: project descriptions, technologies, and links.
-- `experiences.ts`: professional experience records.
-- `certifications.ts`: education and certification records.
-- `contacts.ts`: professional contact channel definitions.
-- `technologyProjects.ts`: relationships between technologies and portfolio projects.
+Automated checks can detect certain regressions but are **not** proof of complete WCAG compliance. See [Performance and Quality](performance-and-quality.md).
 
-The data is bundled into the frontend application. It is not
-retrieved from a dedicated portfolio API or database.
+## Assets and Runtime
 
-## State and Preferences
+- Responsive WebP variants for the mascot and project illustrations in `public/images/`.
+- Portuguese and English PDF résumés in `public/resumes/`.
+- Local Inter/Outfit font files, a Devicon subset and inline brand vectors.
+- SVG favicon and social preview metadata.
 
-React state controls the selected technology/project/experience,
-certification view and category, dialog visibility, language, and
-the mascot's temporary click reaction.
+The application can be built with `npm run build` and served from `dist/`. Vercel runs the production-hosting path; the optional `Dockerfile` builds the same static output and serves it with Nginx on port 8080. The Docker runtime does **not** introduce a React server, API, database, hosted container registry or replacement for Vercel.
 
-The application stores language and theme preferences in the
-browser's LocalStorage.
+## CI/CD and Validation Boundaries
 
-No user authentication or account system is implemented.
+| Workflow | Pull Requests to `main` | Other triggers | Validation |
+| --- | --- | --- | --- |
+| [Continuous Integration](../.github/workflows/ci.yml) | Yes | None configured | ESLint, Vitest, build |
+| [Playwright E2E Tests](../.github/workflows/playwright.yml) | Yes | None configured | Chromium functional and axe-core tests |
+| [Lighthouse CI](../.github/workflows/lighthouse.yml) | Yes | None configured | Local built-site mobile/desktop audits |
+| [Portfolio Docker Checks](../.github/workflows/docker.yml) | Yes | Selected `main` pushes affecting configured paths | Build and HTTP smoke-test Nginx image |
 
-## Responsive Interaction Model
+Each workflow is independent. Lighthouse creates **three runs per device profile**, with advisory category-score warnings and enforced metadata/collection checks; reports are uploaded to GitHub Actions artifacts for seven days. It measures the **local compiled build**, not public Vercel Production. Vercel Preview and Production deployment checks are independent of GitHub Actions.
 
-- On desktop, all project cards are visible in a grid; mobile shows
-  one project panel at a time, changed by a horizontal selection track.
-- Technologies, experience entries, and certification categories
-  use horizontally scrollable tracks on supported mobile widths.
-  Selecting an option calls `centerMobileSelection` so the active item
-  moves gently toward the middle without shifting the page width.
-- The Experience timeline can navigate to its related project.
-  Mobile selects the corresponding project panel before scrolling;
-  desktop scrolls to the target project card.
-- Certifications default to three curated featured items on desktop
-  and mobile. Selecting "All" or a knowledge area makes the broader
-  catalog accessible, including an ongoing Java bootcamp.
+The repository's `main` branch is the integrated production branch. The normal change process is Issue → branch → Pull Request → review and required checks → owner merge → production verification.
 
-## Motion and Accessibility
+## Design Decisions and Related Documents
 
-`HeroMascot` swaps complete responsive WebP character frames instead
-of manipulating an isolated hand layer. The two waving poses alternate
-via stepped CSS keyframes; a click/tap temporarily shows the distinct
-reaction pose. Only the applicable frame is visible at a time.
+- [ADR 0001 — Client-side React architecture](decisions/0001-client-side-architecture.md)
+- [ADR 0002 — Development and CI/CD workflow](decisions/0002-ci-cd-workflow.md)
+- [ADR 0003 — Optimized local assets](decisions/0003-local-assets-performance.md)
+- [ADR 0004 — Accessible motion and mobile navigation](decisions/0004-accessible-motion-mobile-navigation.md)
+- [Use cases](use-cases.md) · [Quality and evidence](performance-and-quality.md) · [Documentation index](README.md)
 
-`App.tsx` observes scroll-reveal regions with `IntersectionObserver`.
-CSS opacity and small translate transitions create reversible section
-entrances when scrolling down or up. The implementation bypasses
-observation and animation under `prefers-reduced-motion: reduce`.
-Semantic controls and keyboard-focus styling remain available.
-
-## Styling and Static Assets
-
-Tailwind CSS and CSS custom properties define the presentation
-and the light and dark color themes.
-
-Static assets include:
-
-- Responsive WebP images for project artwork and the three mascot poses.
-- Language-specific Portuguese and English PDF resumes.
-- The custom SVG favicon.
-- The social sharing preview image.
-- Locally hosted Inter and Outfit font files.
-- A reduced local Devicon font subset and lightweight inline Simple Icons
-  brand paths for catalog entries absent from the subset.
-
-The site does not depend on external Google Fonts or jsDelivr
-requests to load these fonts and icons.
-
-The site uses responsive image sources so the browser can choose a
-smaller asset for narrower viewports. The production build remains
-a static frontend with no special image-processing service at runtime.
-
-## External Integrations
-
-The portfolio uses browser navigation and links to access
-external destinations, such as GitHub, LinkedIn, WhatsApp,
-email handlers, project demos, and verification portals.
-
-These integrations do not constitute a server-side backend.
-
-## Deployment Architecture
-
-GitHub is the source code repository.
-
-Pull Requests targeting `main` trigger independent GitHub Actions workflows:
-
-- `.github/workflows/ci.yml` runs ESLint, Vitest component/application tests, and the production build.
-- `.github/workflows/lighthouse.yml` independently builds `dist/` and uses pinned Lighthouse CI CLI for three mobile and three desktop audits, storing HTML/JSON reports as seven-day Actions artifacts (no external LHCI server).
-- `.github/workflows/playwright.yml` installs headless Chromium and runs **21 browser checks**: 10 functional E2E regression scenarios covering languages, themes, project details, résumé downloads, mobile navigation, keyboard focus and dialogs, link destinations, reduced motion, and horizontal overflow, plus **11 axe-core accessibility audits**.
-
-- `.github/workflows/docker.yml` builds the optional local Node 24 / Nginx static image and verifies the non-root runtime, HTTP health and actual built assets/PDFs. The check also runs on relevant pushes to main.
-
-The Playwright tests live in `e2e/` and start the existing Vite development server. Development-only `@axe-core/playwright` runs WCAG A/AA rule checks on PT/EN homepages and representative dialogs without changing application architecture. They do not add a backend or change the deployed application architecture.
-
-Vercel builds and hosts the static application. Feature branches
-are reviewed through Vercel Preview, while approved changes
-merged into `main` are published to Production.
-
-An optional local container builds the same Vite output in a Node 24 stage and serves `dist/` with Nginx on port 8080. The runtime contains static files and Nginx, not the React development server or Node dependencies. It is deliberately separate from the Vercel deployment. No hosting, domain or application routing changes.
-
-The primary domain `alexandroleao.com.br` is connected to
-Vercel Production with validated DNS configuration.
-The `www` subdomain redirects to the apex domain using HTTP 308.
-
-## Related Documentation
-
-- [Visitor use cases](use-cases.md)
-- [Performance and quality evidence](performance-and-quality.md)
-- [Accessible motion and mobile navigation decision](decisions/0004-accessible-motion-mobile-navigation.md)
-- [Post-release changelog](../CHANGELOG.md)
-- [Contributing and development workflow](../CONTRIBUTING.md)
-- [Main README](../README.md)
-
-This documentation reflects the implemented architecture.
-Planned features and future infrastructure experiments should
-not be interpreted as current production dependencies.
+This document describes implemented portfolio behavior. Optional cross-browser coverage or future cloud experiments are **not** current production dependencies.

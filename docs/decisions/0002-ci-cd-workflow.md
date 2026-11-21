@@ -1,115 +1,71 @@
-# ADR 0002: Issue-Driven Development and CI/CD
+# ADR 0002 — Issue-Driven Development and CI/CD
 
-## Status
-
-Accepted — documented retrospectively.
+**Status:** Accepted (retrospectively documented)  
+**Scope:** Developer Portfolio repository  
+**Decision owner:** Project maintainer
 
 ## Context
 
-The portfolio was developed incrementally through multiple
-features, refinements, and accessibility improvements.
+The portfolio is a static frontend deployed through Vercel. Its changes need reviewable scope, reliable checks and a distinction between Vercel Preview, production deployment and GitHub Actions validation. Direct feature commits to the production branch increase the risk of unreviewed changes.
 
-Changes needed to remain traceable, testable, and reviewable
-without directly modifying the production branch.
+The initial workflow was established before browser E2E, accessibility audits, Lighthouse CI and the optional Docker smoke path were introduced. Those later additions remain independent quality checks rather than architectural backend changes.
 
 ## Decision
 
-Adopt an Issue-driven development workflow:
+Adopt an Issue-driven, Pull Request-based workflow:
 
-1. Define scope and acceptance criteria in GitHub Issues.
-2. Create a dedicated branch from an updated main branch.
-3. Implement focused changes.
-4. Run local validation.
-5. Create commits using Conventional Commits.
-6. Push the branch and review the Vercel Preview deployment.
-7. Open a Pull Request referencing the Issue.
-8. Run GitHub Actions continuous integration.
-9. Review checks and merge approved work into main.
-10. Verify the production deployment.
+1. Define the approved scope and acceptance criteria in a portfolio Issue or PR.
+2. Branch from an updated, clean `main`.
+3. Implement focused changes and update affected documentation.
+4. Run relevant local checks; record anything not executed.
+5. Commit with Conventional Commits and push the branch.
+6. Review Vercel Preview for affected UI/deployment behavior.
+7. Open a PR referencing the Issue and review the GitHub Actions results.
+8. Merge only after review and required checks; prefer squash merging.
+9. Verify the integrated deployment and update the Issue/changelog.
 
-Use squash merging for the established project workflow.
+Use **Node.js 24** for the CI baseline. Deploy the compiled client-side application through Vercel; maintain the Docker/Nginx path only as an **optional local/CI verification target**.
 
-## Continuous Integration
+## Current Automation
 
-GitHub Actions runs for Pull Requests targeting main.
+| Workflow | Trigger | Checks |
+| --- | --- | --- |
+| [`ci.yml`](../../.github/workflows/ci.yml) | PR to `main` | `npm ci`, lint, Vitest, build |
+| [`playwright.yml`](../../.github/workflows/playwright.yml) | PR to `main` | Chromium functional E2E and axe-core accessibility checks |
+| [`lighthouse.yml`](../../.github/workflows/lighthouse.yml) | PR to `main` | Built-site mobile/desktop audits; advisory category medians and enforced metadata checks |
+| [`docker.yml`](../../.github/workflows/docker.yml) | PR to `main`; selected pushes to `main` | Optional static Nginx container build and smoke tests |
 
-The workflow uses Node.js 24 and executes:
+Vercel Preview/Production checks are **separate** from GitHub Actions. Lighthouse runs against a local compiled site, not a production-origin URL. None of these checks establishes complete WCAG conformance or replaces manual review.
 
-- npm ci
-- npm run lint
-- npm run test
-- npm run build
+The quality workflows were added incrementally: Playwright in [PR #100](https://github.com/AlexandroLeao/developer-portfolio/pull/100), extended E2E in [PR #106](https://github.com/AlexandroLeao/developer-portfolio/pull/106), axe-core in [PR #108](https://github.com/AlexandroLeao/developer-portfolio/pull/108), Lighthouse in [PR #110](https://github.com/AlexandroLeao/developer-portfolio/pull/110), and Docker smoke in [PR #116](https://github.com/AlexandroLeao/developer-portfolio/pull/116). The dated test-count baseline and source runs are maintained in [Performance and Quality](../performance-and-quality.md).
 
-The automated suite grows with the project; its current test count
-must be obtained by running `npm run test`. The documented
-2026-11-09 baseline is 71 passing tests across 14 test files.
+## Alternatives Considered
 
-## Continuous Deployment
-
-Vercel provides Preview deployments for feature branches
-and Production deployments for the main branch.
-
-Deployment checks complement the GitHub Actions workflow.
-
-The application is validated after deployment using
-manual reviews and relevant Lighthouse audits.
-
-## Rationale
-
-This process makes changes traceable and encourages early
-detection of code quality, testing, and build problems.
-
-Separating Preview and Production reduces the risk of
-publishing unreviewed changes.
-
-## Alternatives and Scope
-
-Direct commits to main or exclusively manual deployment
-would provide less structured review and traceability.
-
-The project does not use Kubernetes, Terraform, or a
-custom container deployment pipeline.
-
-A formal Scrum process or an active GitHub Projects
-Kanban board is not required by this workflow.
+- **Direct commits and manual deployment:** fewer steps, but weaker review, traceability and risk control.
+- **One combined CI workflow:** simpler trigger model, but less separation of failure domains and resource requirements.
+- **A custom container/cloud deployment pipeline:** unnecessary for the existing static Vercel site.
 
 ## Consequences
 
 ### Benefits
 
-- Traceable changes linked to Issues and Pull Requests.
-- Repeatable automated checks.
-- Isolated Preview environments.
-- Clear integration and release history.
+- Reviewable, attributable changes and predictable branch ownership.
+- Independent build, browser, accessibility, Lighthouse and container results.
+- Clear distinction between local validation, CI results and deployed-site verification.
+- No application backend, paid Lighthouse server or additional hosting requirement.
 
-### Trade-offs
+### Costs and Limitations
 
-- More process steps than directly editing production.
-- Automated checks do not replace manual verification.
-- When this ADR was originally adopted, browser end-to-end automation was deferred. Its later introduction is recorded in the addendum below.
+- PR validation uses runner resources; the four workflows must not be triggered casually for prose-only edits.
+- A `[skip ci]` commit can prevent GitHub Actions execution on supported events but may leave **required checks pending** and block merging on a protected branch. It is not a bypass of branch policy.
+- Automated quality gates do not replace human review, assistive-technology checks or production observation.
+- Test counts and CI scores are historical unless sourced to a specific inspected run.
 
-## Evidence
+## Supporting Evidence
 
-- .github/workflows/ci.yml
-- CONTRIBUTING.md
-- src/App.test.tsx
-- src/components/*.test.tsx
-- GitHub Issues and Pull Request history
+- [Contributing guide](../../CONTRIBUTING.md)
+- [Current workflow definitions](../../.github/workflows/)
+- [Architecture](../architecture.md)
+- [Dated Lighthouse evidence](../evidence/lighthouse-ci-2026-11-11.md)
 
-## Addendum — 2026-11-11: Playwright browser E2E
-
-Issue #99 and PR #100 extend the established review workflow with a **separate** `.github/workflows/playwright.yml` job. The original `ci.yml` lint/Vitest/build checks remain intact. The new job installs headless Chromium on GitHub-hosted Ubuntu and runs five Playwright E2E scenarios from `e2e/portfolio.e2e.ts`, covering language and theme switching, project details, resume downloads, and mobile navigation.
-
-This addition improves browser-level regression coverage without changing the client-side architecture, introducing a backend, or replacing manual accessibility reviews. Evidence: the [Playwright workflow](../../.github/workflows/playwright.yml), [E2E test file](../../e2e/portfolio.e2e.ts), and [Issue #99](https://github.com/AlexandroLeao/developer-portfolio/issues/99).
-
-## Addendum — 2026-11-11: P2–P4 browser, accessibility, and Lighthouse gates
-
-The original five Playwright tests above are a **dated implementation baseline**, not the current total. [PR #106](https://github.com/AlexandroLeao/developer-portfolio/pull/106) extended Chromium functional E2E coverage to **10** scenarios. [PR #108](https://github.com/AlexandroLeao/developer-portfolio/pull/108) added **11** development-only axe-core accessibility audits, giving **21 Playwright scenarios** in the same independent PR workflow, while retaining the 72-test Vitest suite.
-
-[PR #110](https://github.com/AlexandroLeao/developer-portfolio/pull/110) added a **third, independent Lighthouse CI workflow** that audits a compiled local production build on mobile and desktop, three samples each, retaining HTML/JSON artifacts for seven days. The final PR #110 CI, Playwright and both Lighthouse jobs passed before the owner's merge. Median Lighthouse category thresholds are advisory; metadata checks are enforced. No hosted Lighthouse service, paid infrastructure, app backend, or production secrets were introduced.
-
-These additions preserve the Issue → branch → tests → PR → owner-review/merge process. Axe and Lighthouse automation do **not** certify WCAG conformance or replace real-device and production checks. Refer to [Performance and Quality](../performance-and-quality.md) for the evidence, limitations, and reproducible commands.
-
-## Addendum — 2026-11-12: P6 Docker and R7 final quality baseline
-
-A fourth independent workflow, [Portfolio Docker Checks](../../.github/workflows/docker.yml), builds and smoke-tests the static Nginx container on pull requests and relevant main pushes. It is a local/CI verification path, not a change to Vercel hosting or a registry/deployment pipeline. [PR #118](https://github.com/AlexandroLeao/developer-portfolio/pull/118) merged as `b3d3f90` (November 12, 2026). Corrected head `beaae21` passed [CI](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952577) (**74 Vitest tests / 14 files**, lint/build), [Playwright](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952037) (**21/21**: 10 functional and 11 axe-core, 31.1s), [Lighthouse](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952404) (both profiles, three samples each, configured assertions) and [Docker](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43242952375). [Post-merge Docker](https://github.com/AlexandroLeao/developer-portfolio/actions/runs/43243406342) passed: Nginx 1.30.6, UID 101, 27,523,076-byte image, static assets and both PDFs HTTP 200, missing paths 404. Vercel reported success. The 74 Vitest count supersedes the earlier 71/72-test snapshots; the 21 browser checks remain unchanged. No complete WCAG conformance, new production measurement or authenticated RPG container integration is claimed. See the [quality guide](../performance-and-quality.md).
+This ADR governs **Developer Portfolio only**. The operations and release process of showcased projects are out of scope.
