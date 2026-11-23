@@ -669,9 +669,10 @@ function App() {
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id)
   const projectTrackRef = useRef<HTMLDivElement>(null)
-  const projectCarouselPausedRef = useRef(false)
-  const projectCarouselDirectionRef = useRef<1 | -1>(1)
-  const projectCarouselPauseUntilRef = useRef(0)
+  const projectCarouselOffsetRef = useRef(0)
+  const projectCarouselPointerRef = useRef<{ x: number; y: number } | null>(null)
+  const projectCarouselArrowHoverRef = useRef(false)
+  const projectCarouselManualFrameRef = useRef<number | null>(null)
   const [certificationView, setCertificationView] = useState<'featured' | 'all'>('featured')
   const [selectedCertificationCategory, setSelectedCertificationCategory] = useState<CertificationCategory | 'all'>('all')
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
@@ -761,8 +762,31 @@ function App() {
     }
   }, [])
 
-  // Desktop-only gentle back-and-forth motion. No cloned cards or duplicate IDs.
-  // A timer avoids accumulating animation-frame work while tabs are backgrounded.
+  // Keep each project card mounted once; wrap its visual position for an infinite
+  // rightward desktop loop without cloning interactive content or duplicate IDs.
+  function positionDesktopProjects(track: HTMLDivElement, offset: number) {
+    const panels = Array.from(track.children) as HTMLElement[]
+    if (panels.length < 2) return 0
+
+    const measured = panels[1].offsetLeft - panels[0].offsetLeft
+    const gap = Number.parseFloat(window.getComputedStyle(track).columnGap) || 24
+    const step = measured > 0 ? measured : panels[0].getBoundingClientRect().width + gap
+    if (step <= 0) return 0
+
+    const cycle = panels.length * step
+    const movement = ((offset % cycle) + cycle) % cycle
+    const lastPosition = (panels.length - 1) * step
+
+    panels.forEach((panel, index) => {
+      let position = (index * step + movement) % cycle
+      if (position > lastPosition + 0.001) position -= cycle
+      const translation = position - index * step
+      panel.style.transform = `translate3d(${translation.toFixed(2)}px, 0, 0)`
+    })
+    return step
+  }
+
+  // Slow rightward movement only while the carousel is visible and not being used.
   useEffect(() => {
     const track = projectTrackRef.current
     if (!track) return
@@ -775,42 +799,91 @@ function App() {
       const now = performance.now()
       const elapsed = previousTime === null ? 0 : Math.min(now - previousTime, 64)
       previousTime = now
+
+      if (!desktop?.matches) {
+        for (const card of Array.from(track.children) as HTMLElement[]) card.style.transform = ''
+        return
+      }
+
       const bounds = track.getBoundingClientRect()
       const isVisible = bounds.top < window.innerHeight && bounds.bottom > 0
+      const pointer = projectCarouselPointerRef.current
+      const hovered = pointer && typeof document.elementFromPoint === 'function'
+        ? document.elementFromPoint(pointer.x, pointer.y)
+        : null
+      const hoveredPanel = hovered instanceof Element
+        ? hovered.closest<HTMLElement>('[id^="project-panel-"]')
+        : null
+      const chart = hoveredPanel && track.contains(hoveredPanel)
+        ? hoveredPanel.querySelector('figure')
+        : null
+      const overChartOrActions = Boolean(
+        chart && pointer && pointer.y >= chart.getBoundingClientRect().top,
+      )
+      const keyboardFocus = document.activeElement instanceof HTMLElement &&
+        document.activeElement.matches(':focus-visible') &&
+        !!document.activeElement.closest('#projects')
 
       if (
-        desktop?.matches &&
         !reducedMotion?.matches &&
         !document.hidden &&
         isVisible &&
-        !projectCarouselPausedRef.current &&
-        now > projectCarouselPauseUntilRef.current &&
+        !overChartOrActions &&
+        !projectCarouselArrowHoverRef.current &&
+        !keyboardFocus &&
+        projectCarouselManualFrameRef.current === null &&
         !document.querySelector('dialog[open]')
       ) {
-        const maxScroll = track.scrollWidth - track.clientWidth
-        if (maxScroll > 1) {
-          const next = Math.max(0, Math.min(maxScroll, track.scrollLeft + projectCarouselDirectionRef.current * elapsed * 0.035))
-          track.scrollLeft = next
-          if (next >= maxScroll - 0.5) projectCarouselDirectionRef.current = -1
-          else if (next <= 0.5) projectCarouselDirectionRef.current = 1
-        }
+        // 10 pixels/second, always rightward; modulo wrapping avoids bouncing.
+        projectCarouselOffsetRef.current += elapsed * 0.01
       }
+      positionDesktopProjects(track, projectCarouselOffsetRef.current)
     }, 30)
-    return () => window.clearInterval(timer)
+
+    return () => {
+      window.clearInterval(timer)
+      if (projectCarouselManualFrameRef.current !== null) {
+        window.cancelAnimationFrame(projectCarouselManualFrameRef.current)
+        projectCarouselManualFrameRef.current = null
+      }
+    }
   }, [])
 
   function scrollDesktopProjects(direction: 1 | -1) {
     const track = projectTrackRef.current
     if (!track) return
-    const first = track.querySelector<HTMLElement>('[id^="project-panel-"]')
-    const step = (first?.getBoundingClientRect().width ?? track.clientWidth / 2) + 24
-    const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth)
-    projectCarouselPauseUntilRef.current = performance.now() + 5000
-    projectCarouselDirectionRef.current = direction
-    track.scrollTo({
-      left: Math.max(0, Math.min(maxScroll, track.scrollLeft + direction * step)),
-      behavior: 'smooth',
-    })
+    const step = positionDesktopProjects(track, projectCarouselOffsetRef.current)
+    if (!step) return
+
+    if (projectCarouselManualFrameRef.current !== null) {
+      window.cancelAnimationFrame(projectCarouselManualFrameRef.current)
+      projectCarouselManualFrameRef.current = null
+    }
+
+    // Right arrow moves to the next card (left); left arrow moves cards right.
+    const initial = projectCarouselOffsetRef.current
+    const target = initial - direction * step
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (reduceMotion) {
+      projectCarouselOffsetRef.current = target
+      positionDesktopProjects(track, target)
+      return
+    }
+
+    const started = performance.now()
+    const animate = (now: number) => {
+      const progress = Math.min(1, (now - started) / 600)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      projectCarouselOffsetRef.current = initial + (target - initial) * eased
+      positionDesktopProjects(track, projectCarouselOffsetRef.current)
+
+      if (progress < 1) {
+        projectCarouselManualFrameRef.current = window.requestAnimationFrame(animate)
+      } else {
+        projectCarouselManualFrameRef.current = null
+      }
+    }
+    projectCarouselManualFrameRef.current = window.requestAnimationFrame(animate)
   }
 
   const text = translations[language]
@@ -854,6 +927,14 @@ function App() {
       : window.innerWidth < 1024
 
     setSelectedProjectId(projectId)
+    if (!isMobile && projectTrackRef.current) {
+      const index = projects.findIndex((project) => project.id === projectId)
+      const step = positionDesktopProjects(projectTrackRef.current, projectCarouselOffsetRef.current)
+      if (index >= 0 && step > 0) {
+        projectCarouselOffsetRef.current = -index * step
+        positionDesktopProjects(projectTrackRef.current, projectCarouselOffsetRef.current)
+      }
+    }
     window.history.pushState(null, '', isMobile ? '#projects' : `#project-${projectId}`)
 
     window.requestAnimationFrame(() => {
@@ -1213,38 +1294,39 @@ function App() {
               ))}
             </nav>
 
-            <div
-              onMouseEnter={() => { projectCarouselPausedRef.current = true }}
-              onMouseLeave={() => { projectCarouselPausedRef.current = false }}
-              onFocusCapture={() => { projectCarouselPausedRef.current = true }}
-              onBlurCapture={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget)) {
-                  projectCarouselPausedRef.current = false
-                }
-              }}
-            >
-              <div className="mb-4 hidden items-center justify-end gap-2 lg:flex">
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-2 z-20 hidden items-center lg:flex">
                 <button
                   type="button"
                   aria-label={language === 'pt' ? 'Projetos anteriores' : 'Previous projects'}
                   onClick={() => scrollDesktopProjects(-1)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
+                  onMouseEnter={() => { projectCarouselArrowHoverRef.current = true }}
+                  onMouseLeave={() => { projectCarouselArrowHoverRef.current = false }}
+                  className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) shadow-lg transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
                 >
-                  <ChevronLeft size={20} aria-hidden="true" />
+                  <ChevronLeft size={23} aria-hidden="true" />
                 </button>
+              </div>
+              <div className="pointer-events-none absolute inset-y-0 right-2 z-20 hidden items-center lg:flex">
                 <button
                   type="button"
                   aria-label={language === 'pt' ? 'Próximos projetos' : 'Next projects'}
                   onClick={() => scrollDesktopProjects(1)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
+                  onMouseEnter={() => { projectCarouselArrowHoverRef.current = true }}
+                  onMouseLeave={() => { projectCarouselArrowHoverRef.current = false }}
+                  className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) shadow-lg transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
                 >
-                  <ChevronRight size={20} aria-hidden="true" />
+                  <ChevronRight size={23} aria-hidden="true" />
                 </button>
               </div>
               <div
                 id="projects-desktop-carousel"
                 ref={projectTrackRef}
-                className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:flex lg:overflow-x-auto lg:overscroll-x-contain lg:pb-3 project-desktop-carousel"
+                onMouseMove={(event) => {
+                  projectCarouselPointerRef.current = { x: event.clientX, y: event.clientY }
+                }}
+                onMouseLeave={() => { projectCarouselPointerRef.current = null }}
+                className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:flex lg:overflow-hidden lg:pb-3 project-desktop-carousel"
               >
                 {projects.map((project) => (
                   <div

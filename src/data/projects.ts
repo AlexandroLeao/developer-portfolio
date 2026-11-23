@@ -28,6 +28,93 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    id: 'ami-108',
+    name: 'AMI-108',
+    year: 2026,
+    image: '/images/projects/ami-108-640.webp',
+    imageSrcSet: '/images/projects/ami-108-640.webp 640w',
+    imageAlt: {
+      pt: 'Ilustração retrofuturista do AMI-108: um viajante e seu companheiro robótico diante de uma cidade futurista em tons verdes.',
+      en: 'AMI-108 retrofuturistic illustration: a traveler and robotic companion facing a green-toned futuristic city.',
+    },
+    description: {
+      pt: 'Jogo narrativo retrofuturista de sobrevivência, com cinco capítulos bilíngues, decisões ramificadas, progresso salvo e um companheiro de IA com respostas controladas.',
+      en: 'A retrofuturistic narrative survival game with five bilingual chapters, branching decisions, saved progress, and an AI companion with controlled responses.',
+    },
+    technologies: [
+      'Next.js',
+      'React',
+      'TypeScript',
+      'NestJS',
+      'Prisma',
+      'PostgreSQL',
+      'FastAPI',
+      'Python',
+      'Groq',
+      'Docker',
+    ],
+    // Selected, overlapping source/tooling file associations from AMI-108
+    // main 05acde1 (2026-11-23); not exclusive language percentages.
+    stackFileCounts: {
+      'Next.js': 21,
+      React: 9,
+      TypeScript: 43,
+      NestJS: 22,
+      Prisma: 7,
+      PostgreSQL: 6,
+      FastAPI: 1,
+      Python: 10,
+      Groq: 3,
+      Docker: 3,
+    },
+    stackUsage: {
+      'Next.js': { pt: 'Interface do jogo e rotas de mesmo domínio.', en: 'Game interface and same-origin routes.' },
+      React: { pt: 'Cenas e componentes interativos.', en: 'Interactive scenes and components.' },
+      TypeScript: { pt: 'Código tipado do front-end e da API.', en: 'Typed frontend and API code.' },
+      NestJS: { pt: 'API e regras autoritativas da campanha.', en: 'Campaign API and authoritative game rules.' },
+      Prisma: { pt: 'Modelos, migrações e persistência.', en: 'Models, migrations, and persistence.' },
+      PostgreSQL: { pt: 'Sessões, escolhas e checkpoints salvos.', en: 'Stored sessions, choices, and checkpoints.' },
+      FastAPI: { pt: 'Serviço interno de respostas autorizadas.', en: 'Internal authorized-response service.' },
+      Python: { pt: 'Validação e integração da IA.', en: 'AI validation and integration.' },
+      Groq: { pt: 'Inferência restrita para o companheiro de IA.', en: 'Constrained inference for the AI companion.' },
+      Docker: { pt: 'Ambiente local de desenvolvimento com Compose.', en: 'Local development environment using Compose.' },
+    },
+    githubUrl: 'https://github.com/AlexandroLeao/ami-108',
+    liveUrl: 'https://ami-108.vercel.app/game',
+    details: {
+      features: [
+        {
+          pt: 'Campanha completa com cinco capítulos, 12 cenas ilustradas e textos em português e inglês.',
+          en: 'Complete five-chapter campaign with 12 illustrated scenes and Portuguese/English text.',
+        },
+        {
+          pt: 'Escolhas ramificadas, três encontros, checkpoints e retomada do progresso salvo.',
+          en: 'Branching choices, three encounters, checkpoints, and saved-progress recovery.',
+        },
+        {
+          pt: 'Companheiro de IA com respostas validadas, contexto permitido e fallback narrativo seguro.',
+          en: 'AI companion with validated responses, permitted context, and safe authored fallback.',
+        },
+        {
+          pt: 'Interface cinematográfica responsiva, arte original e aviso editorial de conteúdo 16+.',
+          en: 'Responsive cinematic interface, original artwork, and an editorial 16+ content advisory.',
+        },
+      ],
+      architecture: {
+        pt: 'Next.js/React e TypeScript no front-end; API REST NestJS com Prisma e PostgreSQL (Neon); serviço FastAPI/Python com Groq. Publicação na Vercel; Docker Compose apenas para desenvolvimento local.',
+        en: 'Next.js/React and TypeScript frontend; NestJS REST API with Prisma and PostgreSQL (Neon); FastAPI/Python service with Groq. Hosted on Vercel; Docker Compose for local development only.',
+      },
+      challenges: {
+        pt: 'Manter as escolhas e memórias coerentes ao longo da campanha, com regras determinísticas e IA restrita sem perder a experiência narrativa.',
+        en: 'Keep decisions and memories consistent across the campaign, using deterministic rules and constrained AI without losing the narrative experience.',
+      },
+      practices: {
+        pt: 'Testes automatizados e integração contínua; comandos idempotentes, checkpoints persistidos, validação de respostas de IA e limites diários de uso público.',
+        en: 'Automated tests and continuous integration; idempotent commands, persisted checkpoints, AI-response validation, and daily public usage limits.',
+      },
+    },
+  },
+  {
     id: 'adventure-files',
     name: 'Adventure Files',
     year: 2026,
@@ -276,93 +363,6 @@ export const projects: Project[] = [
       practices: {
         pt: 'Componentes reutilizáveis, cálculos reativos e versionamento Git.',
         en: 'Reusable components, reactive calculations, and Git versioning.',
-      },
-    },
-  },
-  {
-    id: 'ami-108',
-    name: 'AMI-108',
-    year: 2026,
-    image: '/images/projects/ami-108-640.webp',
-    imageSrcSet: '/images/projects/ami-108-640.webp 640w',
-    imageAlt: {
-      pt: 'Ilustração retrofuturista do AMI-108: um viajante e seu companheiro robótico diante de uma cidade futurista em tons verdes.',
-      en: 'AMI-108 retrofuturistic illustration: a traveler and robotic companion facing a green-toned futuristic city.',
-    },
-    description: {
-      pt: 'Jogo narrativo retrofuturista de sobrevivência, com cinco capítulos bilíngues, decisões ramificadas, progresso salvo e um companheiro de IA com respostas controladas.',
-      en: 'A retrofuturistic narrative survival game with five bilingual chapters, branching decisions, saved progress, and an AI companion with controlled responses.',
-    },
-    technologies: [
-      'Next.js',
-      'React',
-      'TypeScript',
-      'NestJS',
-      'Prisma',
-      'PostgreSQL',
-      'FastAPI',
-      'Python',
-      'Groq',
-      'Docker',
-    ],
-    // Selected, overlapping source/tooling file associations from AMI-108
-    // main 05acde1 (2026-11-23); not exclusive language percentages.
-    stackFileCounts: {
-      'Next.js': 21,
-      React: 9,
-      TypeScript: 43,
-      NestJS: 22,
-      Prisma: 7,
-      PostgreSQL: 6,
-      FastAPI: 1,
-      Python: 10,
-      Groq: 3,
-      Docker: 3,
-    },
-    stackUsage: {
-      'Next.js': { pt: 'Interface do jogo e rotas de mesmo domínio.', en: 'Game interface and same-origin routes.' },
-      React: { pt: 'Cenas e componentes interativos.', en: 'Interactive scenes and components.' },
-      TypeScript: { pt: 'Código tipado do front-end e da API.', en: 'Typed frontend and API code.' },
-      NestJS: { pt: 'API e regras autoritativas da campanha.', en: 'Campaign API and authoritative game rules.' },
-      Prisma: { pt: 'Modelos, migrações e persistência.', en: 'Models, migrations, and persistence.' },
-      PostgreSQL: { pt: 'Sessões, escolhas e checkpoints salvos.', en: 'Stored sessions, choices, and checkpoints.' },
-      FastAPI: { pt: 'Serviço interno de respostas autorizadas.', en: 'Internal authorized-response service.' },
-      Python: { pt: 'Validação e integração da IA.', en: 'AI validation and integration.' },
-      Groq: { pt: 'Inferência restrita para o companheiro de IA.', en: 'Constrained inference for the AI companion.' },
-      Docker: { pt: 'Ambiente local de desenvolvimento com Compose.', en: 'Local development environment using Compose.' },
-    },
-    githubUrl: 'https://github.com/AlexandroLeao/ami-108',
-    liveUrl: 'https://ami-108.vercel.app/game',
-    details: {
-      features: [
-        {
-          pt: 'Campanha completa com cinco capítulos, 12 cenas ilustradas e textos em português e inglês.',
-          en: 'Complete five-chapter campaign with 12 illustrated scenes and Portuguese/English text.',
-        },
-        {
-          pt: 'Escolhas ramificadas, três encontros, checkpoints e retomada do progresso salvo.',
-          en: 'Branching choices, three encounters, checkpoints, and saved-progress recovery.',
-        },
-        {
-          pt: 'Companheiro de IA com respostas validadas, contexto permitido e fallback narrativo seguro.',
-          en: 'AI companion with validated responses, permitted context, and safe authored fallback.',
-        },
-        {
-          pt: 'Interface cinematográfica responsiva, arte original e aviso editorial de conteúdo 16+.',
-          en: 'Responsive cinematic interface, original artwork, and an editorial 16+ content advisory.',
-        },
-      ],
-      architecture: {
-        pt: 'Next.js/React e TypeScript no front-end; API REST NestJS com Prisma e PostgreSQL (Neon); serviço FastAPI/Python com Groq. Publicação na Vercel; Docker Compose apenas para desenvolvimento local.',
-        en: 'Next.js/React and TypeScript frontend; NestJS REST API with Prisma and PostgreSQL (Neon); FastAPI/Python service with Groq. Hosted on Vercel; Docker Compose for local development only.',
-      },
-      challenges: {
-        pt: 'Manter as escolhas e memórias coerentes ao longo da campanha, com regras determinísticas e IA restrita sem perder a experiência narrativa.',
-        en: 'Keep decisions and memories consistent across the campaign, using deterministic rules and constrained AI without losing the narrative experience.',
-      },
-      practices: {
-        pt: 'Testes automatizados e integração contínua; comandos idempotentes, checkpoints persistidos, validação de respostas de IA e limites diários de uso público.',
-        en: 'Automated tests and continuous integration; idempotent commands, persisted checkpoints, AI-response validation, and daily public usage limits.',
       },
     },
   },

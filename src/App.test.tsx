@@ -95,7 +95,7 @@ describe('Developer Portfolio', () => {
     expect(within(grid).getByText('Em andamento')).toBeInTheDocument()
   })
 
-  it('keeps the mobile selector unchanged and shows a horizontal desktop projects carousel', async () => {
+  it('orders all four projects identically on mobile and in the desktop loop', async () => {
     const user = userEvent.setup()
     const { container } = render(<App />)
     const section = container.querySelector<HTMLElement>('#projects')!
@@ -107,6 +107,13 @@ describe('Developer Portfolio', () => {
     expect(navigation).toHaveAttribute('data-mobile-selection-track')
     expect(navigation).toHaveClass('overflow-x-auto', 'max-w-full', 'lg:hidden')
     expect(options).toHaveLength(4)
+    expect(options.map((option) => option.textContent)).toEqual([
+      'AMI-108', 'Adventure Files', 'Ideas and Projects Organizer', 'Natsu Matsuri Project',
+    ])
+    expect(panels.map((panel) => panel.id)).toEqual([
+      'project-panel-ami-108', 'project-panel-adventure-files',
+      'project-panel-ideas-organizer', 'project-panel-natsu-matsuri',
+    ])
     expect(options.every((option) => option.classList.contains('snap-center'))).toBe(true)
     expect(options[0]).toHaveAttribute('aria-pressed', 'true')
     expect(panels).toHaveLength(4)
@@ -114,16 +121,16 @@ describe('Developer Portfolio', () => {
     expect(panels[1]).toHaveClass('hidden', 'lg:block')
     expect(panels[2]).toHaveClass('hidden', 'lg:block')
     expect(panels[3]).toHaveClass('hidden', 'lg:block')
-    expect(section.querySelector('#projects-desktop-carousel')).toHaveClass('lg:flex', 'lg:overflow-x-auto')
+    expect(section.querySelector('#projects-desktop-carousel')).toHaveClass('lg:flex', 'lg:overflow-hidden')
     expect(within(section).getByRole('button', { name: 'Projetos anteriores' })).toBeInTheDocument()
     expect(within(section).getByRole('button', { name: 'Próximos projetos' })).toBeInTheDocument()
 
-    await user.click(options[1])
+    await user.click(options[2])
     expect(options[0]).toHaveAttribute('aria-pressed', 'false')
-    expect(options[1]).toHaveAttribute('aria-pressed', 'true')
+    expect(options[2]).toHaveAttribute('aria-pressed', 'true')
     expect(panels[0]).toHaveClass('hidden', 'lg:block')
-    expect(panels[1]).toHaveClass('block', 'lg:block')
-    expect(panels[2]).toHaveClass('hidden', 'lg:block')
+    expect(panels[1]).toHaveClass('hidden', 'lg:block')
+    expect(panels[2]).toHaveClass('block', 'lg:block')
     expect(panels[3]).toHaveClass('hidden', 'lg:block')
 
     await user.click(screen.getByRole('button', { name: 'EN' }))
@@ -132,28 +139,57 @@ describe('Developer Portfolio', () => {
     expect(navigation).toHaveAccessibleName('Select project')
   })
 
-  it('moves the desktop carousel with arrows without changing mobile project selection', async () => {
+  it('positions both arrows over the desktop carousel and retains unique card IDs', () => {
+    const { container } = render(<App />)
+    const section = container.querySelector<HTMLElement>('#projects')!
+    const track = section.querySelector<HTMLElement>('#projects-desktop-carousel')!
+    const panels = Array.from(track.children)
+
+    expect(panels).toHaveLength(4)
+    expect(panels.map((panel) => panel.id)).toEqual([
+      'project-panel-ami-108', 'project-panel-adventure-files',
+      'project-panel-ideas-organizer', 'project-panel-natsu-matsuri',
+    ])
+    expect(section.querySelectorAll('#project-ami-108')).toHaveLength(1)
+    expect(within(section).getByRole('button', { name: 'Projetos anteriores' }).parentElement)
+      .toHaveClass('absolute', 'left-2', 'items-center')
+    expect(within(section).getByRole('button', { name: 'Próximos projetos' }).parentElement)
+      .toHaveClass('absolute', 'right-2', 'items-center')
+  })
+
+  it('moves carousel cards in either direction without scrolling or duplicating them', async () => {
     const user = userEvent.setup()
     const { container } = render(<App />)
     const section = container.querySelector<HTMLElement>('#projects')!
     const track = section.querySelector<HTMLElement>('#projects-desktop-carousel')!
-    const scrollTo = vi.fn()
-    const firstPanel = track.querySelector<HTMLElement>('#project-panel-adventure-files')!
+    const panels = Array.from(track.children) as HTMLElement[]
+    const first = panels[0]
 
-    Object.defineProperty(track, 'scrollWidth', { configurable: true, value: 1500 })
-    Object.defineProperty(track, 'clientWidth', { configurable: true, value: 900 })
-    Object.defineProperty(track, 'scrollLeft', { configurable: true, writable: true, value: 0 })
-    Object.defineProperty(track, 'scrollTo', { configurable: true, value: scrollTo })
-    vi.spyOn(firstPanel, 'getBoundingClientRect').mockReturnValue({ width: 320 } as DOMRect)
+    vi.spyOn(first, 'getBoundingClientRect').mockReturnValue({ width: 320 } as DOMRect)
+    const callbacks: FrameRequestCallback[] = []
+    const requestFrame = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      callbacks.push(cb)
+      return callbacks.length
+    })
+    const cancelFrame = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => undefined)
+    const nowSpy = vi.spyOn(performance, 'now').mockReturnValue(1000)
+    try {
+      await user.click(within(section).getByRole('button', { name: 'Próximos projetos' }))
+      expect(callbacks.length).toBe(1)
+      callbacks.shift()?.(1600)
+      expect(panels[1].style.transform).toContain('translate3d(-344.00px')
+      expect(section.querySelectorAll('[id^="project-panel-"]')).toHaveLength(4)
 
-    await user.click(within(section).getByRole('button', { name: 'Próximos projetos' }))
-    expect(scrollTo).toHaveBeenCalledWith({ left: 344, behavior: 'smooth' })
-    expect(section.querySelector('#project-option-adventure-files')).toHaveAttribute('aria-pressed', 'true')
-
-    await user.click(within(section).getByRole('button', { name: 'Projetos anteriores' }))
-    expect(scrollTo).toHaveBeenLastCalledWith({ left: 0, behavior: 'smooth' })
-    expect(section.querySelectorAll('[id^="project-panel-"]')).toHaveLength(4)
-  });
+      await user.click(within(section).getByRole('button', { name: 'Projetos anteriores' }))
+      callbacks.shift()?.(1600)
+      expect(panels[0].style.transform).toContain('translate3d(0.00px')
+      expect(section.querySelector('#project-option-ami-108')).toHaveAttribute('aria-pressed', 'true')
+    } finally {
+      requestFrame.mockRestore()
+      cancelFrame.mockRestore()
+      nowSpy.mockRestore()
+    }
+  })
 
   it('centers a tapped project option inside the mobile track without page scrolling', async () => {
     const originalWidth = window.innerWidth
