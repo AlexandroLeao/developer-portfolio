@@ -763,7 +763,7 @@ function App() {
   }, [])
 
   // Keep each project card mounted once; wrap its visual position for an infinite
-  // rightward desktop loop without cloning interactive content or duplicate IDs.
+  // leftward desktop loop without cloning interactive content or duplicate IDs.
   function positionDesktopProjects(track: HTMLDivElement, offset: number) {
     const panels = Array.from(track.children) as HTMLElement[]
     if (panels.length < 2) return 0
@@ -786,7 +786,7 @@ function App() {
     return step
   }
 
-  // Slow rightward movement only while the carousel is visible and not being used.
+  // Slow leftward movement only while the carousel is visible and not being used.
   useEffect(() => {
     const track = projectTrackRef.current
     if (!track) return
@@ -834,8 +834,8 @@ function App() {
         projectCarouselManualFrameRef.current === null &&
         !document.querySelector('dialog[open]')
       ) {
-        // 10 pixels/second, always rightward; modulo wrapping avoids bouncing.
-        projectCarouselOffsetRef.current += elapsed * 0.01
+        // 10 pixels/second, always leftward; modulo wrapping avoids bouncing.
+        projectCarouselOffsetRef.current -= elapsed * 0.01
       }
       positionDesktopProjects(track, projectCarouselOffsetRef.current)
     }, 30)
@@ -1294,8 +1294,8 @@ function App() {
               ))}
             </nav>
 
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-2 z-20 hidden items-center lg:flex">
+            <div className="relative lg:grid lg:grid-cols-[3rem_minmax(0,1fr)_3rem] lg:items-center lg:gap-3">
+              <div className="hidden lg:col-start-1 lg:row-start-1 lg:flex lg:items-center lg:justify-center">
                 <button
                   type="button"
                   aria-label={language === 'pt' ? 'Projetos anteriores' : 'Previous projects'}
@@ -1307,7 +1307,7 @@ function App() {
                   <ChevronLeft size={23} aria-hidden="true" />
                 </button>
               </div>
-              <div className="pointer-events-none absolute inset-y-0 right-2 z-20 hidden items-center lg:flex">
+              <div className="hidden lg:col-start-3 lg:row-start-1 lg:flex lg:items-center lg:justify-center">
                 <button
                   type="button"
                   aria-label={language === 'pt' ? 'Próximos projetos' : 'Next projects'}
@@ -1326,7 +1326,7 @@ function App() {
                   projectCarouselPointerRef.current = { x: event.clientX, y: event.clientY }
                 }}
                 onMouseLeave={() => { projectCarouselPointerRef.current = null }}
-                className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:flex lg:overflow-hidden lg:pb-3 project-desktop-carousel"
+                className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:col-start-2 lg:row-start-1 lg:flex lg:overflow-hidden lg:pb-3 project-desktop-carousel"
               >
                 {projects.map((project) => (
                   <div

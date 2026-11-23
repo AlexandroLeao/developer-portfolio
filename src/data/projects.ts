@@ -101,16 +101,16 @@ export const projects: Project[] = [
         },
       ],
       architecture: {
-        pt: 'Next.js/React e TypeScript no front-end; API REST NestJS com Prisma e PostgreSQL (Neon); serviço FastAPI/Python com Groq. Publicação na Vercel; Docker Compose apenas para desenvolvimento local.',
-        en: 'Next.js/React and TypeScript frontend; NestJS REST API with Prisma and PostgreSQL (Neon); FastAPI/Python service with Groq. Hosted on Vercel; Docker Compose for local development only.',
+        pt: 'Front-end em Next.js, React e TypeScript. API REST com NestJS, Prisma e PostgreSQL (Neon). Serviço de IA em FastAPI e Python, integrado ao Groq. Publicação na Vercel e Docker Compose apenas no desenvolvimento local.',
+        en: 'Frontend built with Next.js, React, and TypeScript. NestJS REST API with Prisma and PostgreSQL (Neon). AI service using FastAPI and Python, integrated with Groq. Hosted on Vercel, with Docker Compose used only for local development.',
       },
       challenges: {
         pt: 'Manter as escolhas e memórias coerentes ao longo da campanha, com regras determinísticas e IA restrita sem perder a experiência narrativa.',
         en: 'Keep decisions and memories consistent across the campaign, using deterministic rules and constrained AI without losing the narrative experience.',
       },
       practices: {
-        pt: 'Testes automatizados e integração contínua; comandos idempotentes, checkpoints persistidos, validação de respostas de IA e limites diários de uso público.',
-        en: 'Automated tests and continuous integration; idempotent commands, persisted checkpoints, AI-response validation, and daily public usage limits.',
+        pt: 'Testes automatizados e integração contínua, com comandos idempotentes, checkpoints persistidos, validação de respostas de IA e limites diários de uso público.',
+        en: 'Automated tests and continuous integration, with idempotent commands, persisted checkpoints, AI-response validation, and daily public usage limits.',
       },
     },
   },

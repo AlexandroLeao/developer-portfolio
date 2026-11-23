@@ -139,7 +139,7 @@ describe('Developer Portfolio', () => {
     expect(navigation).toHaveAccessibleName('Select project')
   })
 
-  it('positions both arrows over the desktop carousel and retains unique card IDs', () => {
+  it('places both desktop arrows beside the cards and retains unique card IDs', () => {
     const { container } = render(<App />)
     const section = container.querySelector<HTMLElement>('#projects')!
     const track = section.querySelector<HTMLElement>('#projects-desktop-carousel')!
@@ -151,10 +151,12 @@ describe('Developer Portfolio', () => {
       'project-panel-ideas-organizer', 'project-panel-natsu-matsuri',
     ])
     expect(section.querySelectorAll('#project-ami-108')).toHaveLength(1)
+    expect(track.parentElement).toHaveClass('lg:grid-cols-[3rem_minmax(0,1fr)_3rem]', 'lg:gap-3')
+    expect(track).toHaveClass('lg:col-start-2', 'lg:row-start-1')
     expect(within(section).getByRole('button', { name: 'Projetos anteriores' }).parentElement)
-      .toHaveClass('absolute', 'left-2', 'items-center')
+      .toHaveClass('lg:col-start-1', 'lg:row-start-1', 'items-center')
     expect(within(section).getByRole('button', { name: 'Próximos projetos' }).parentElement)
-      .toHaveClass('absolute', 'right-2', 'items-center')
+      .toHaveClass('lg:col-start-3', 'lg:row-start-1', 'items-center')
   })
 
   it('moves carousel cards in either direction without scrolling or duplicating them', async () => {
