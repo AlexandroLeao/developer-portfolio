@@ -120,8 +120,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-nextjs',
         evidence: 'implemented',
         description: {
-          pt: 'Desenvolvi a interface bilíngue do AMI-108 com Next.js, incluindo rotas de servidor e comunicação com a API pelo mesmo domínio.',
-          en: 'I built the bilingual AMI-108 interface with Next.js, including server routes and same-origin API access.',
+          pt: 'Utilizo Next.js para criar interfaces com React, rotas de servidor e integração segura com APIs pelo mesmo domínio.',
+          en: 'I use Next.js to build React interfaces, server routes, and secure same-origin API integrations.',
         },
       },
       {
@@ -186,8 +186,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'devicon-nodejs-plain',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo Node.js para desenvolver APIs com Express e NestJS, incluindo a lógica de servidor do AMI-108.',
-          en: 'I use Node.js to build APIs with Express and NestJS, including the AMI-108 server-side game logic.',
+          pt: 'Utilizo Node.js para desenvolver APIs com Express e NestJS, estruturando serviços, regras de negócio e comunicação entre sistemas.',
+          en: 'I use Node.js to build APIs with Express and NestJS, organizing services, business rules, and communication between systems.',
         },
       },
       {
@@ -206,8 +206,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-nestjs',
         evidence: 'implemented',
         description: {
-          pt: 'Desenvolvi a API do AMI-108 com NestJS, aplicando regras de jogo no servidor, controle de sessões e comandos idempotentes.',
-          en: 'I developed the AMI-108 API with NestJS, implementing server-side game rules, session management, and idempotent commands.',
+          pt: 'Utilizo NestJS para estruturar APIs, aplicar regras de negócio no servidor e organizar sessões e comandos idempotentes.',
+          en: 'I use NestJS to structure APIs, enforce server-side business rules, and manage sessions and idempotent commands.',
         },
       },
       {
@@ -226,8 +226,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'file-json',
         evidence: 'implemented',
         description: {
-          pt: 'Documentei cinco operações e 16 testes de contrato do Adventure Files com OpenAPI 3.1. Também defini contratos OpenAPI para o AMI-108.',
-          en: 'I documented five Adventure Files API operations and 16 contract tests with OpenAPI 3.1. I also defined OpenAPI contracts for AMI-108.',
+          pt: 'Utilizo OpenAPI 3.1 para documentar operações REST, definir contratos de requisição e resposta e apoiar testes automatizados de APIs.',
+          en: 'I use OpenAPI 3.1 to document REST operations, define request and response contracts, and support automated API testing.',
         },
       },
       {
@@ -246,8 +246,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'devicon-postgresql-plain',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo PostgreSQL em aplicações full-stack, incluindo o Neon para persistir sessões e checkpoints do AMI-108.',
-          en: 'I use PostgreSQL in full-stack applications, including Neon to persist AMI-108 sessions and checkpoints.',
+          pt: 'Utilizo PostgreSQL para modelar e persistir dados relacionais, gerenciar transações e armazenar sessões, inclusive com infraestrutura gerenciada no Neon.',
+          en: 'I use PostgreSQL to model and persist relational data, manage transactions, and store sessions, including on managed Neon infrastructure.',
         },
       },
       {
@@ -256,8 +256,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-prisma',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo Prisma para modelar dados e gerenciar migrações do PostgreSQL usado nas sessões e checkpoints do AMI-108.',
-          en: 'I use Prisma to model data and manage PostgreSQL migrations for AMI-108 sessions and checkpoints.',
+          pt: 'Utilizo Prisma para modelar entidades, gerenciar migrações e acessar dados PostgreSQL por meio de serviços de back-end.',
+          en: 'I use Prisma to model entities, manage migrations, and access PostgreSQL data through backend services.',
         },
       },
       {
@@ -266,8 +266,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-python',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo Python no serviço de IA do AMI-108 para validar contratos, integrar provedores e tratar falhas de inferência.',
-          en: 'I use Python in the AMI-108 AI service to validate contracts, integrate providers, and handle inference failures.',
+          pt: 'Utilizo Python para desenvolver serviços internos, validar contratos, integrar provedores de IA e tratar falhas de inferência.',
+          en: 'I use Python to build internal services, validate contracts, integrate AI providers, and handle inference failures.',
         },
       },
       {
@@ -315,8 +315,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'sparkles',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizei um modelo de IA generativa no AMI-108 para escolher falas previamente autorizadas, sem gerar conteúdo livre para a história.',
-          en: 'I used a generative AI model in AMI-108 to select preapproved dialogue without unrestricted story generation.',
+          pt: 'Aplico IA generativa em funcionalidades com opções de resposta autorizadas, validação no servidor e tratamento seguro de falhas.',
+          en: 'I apply generative AI to features with preapproved response options, server-side validation, and safe failure handling.',
         },
       },
       {
@@ -325,8 +325,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brain-circuit',
         evidence: 'implemented',
         description: {
-          pt: 'Integrei um modelo de linguagem via Groq no AMI-108 para selecionar respostas bilíngues autorizadas, mantendo as decisões do jogo no servidor.',
-          en: 'I integrated a language model through Groq in AMI-108 to select approved bilingual responses while keeping game decisions on the server.',
+          pt: 'Integro modelos de linguagem a aplicações por APIs de inferência, com contexto restrito, respostas validadas e regras de negócio no servidor.',
+          en: 'I integrate language models into applications through inference APIs, with limited context, validated responses, and server-side business rules.',
         },
       },
       {
@@ -335,8 +335,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-groq',
         evidence: 'implemented',
         description: {
-          pt: 'Integrei a API Groq ao AMI-108 para selecionar falas previamente aprovadas com validação do resultado no servidor.',
-          en: 'I integrated the Groq API into AMI-108 to select preapproved dialogue with server-side result validation.',
+          pt: 'Utilizo a API Groq para integrar inferência de modelos de linguagem com saídas estruturadas, validação e respostas alternativas em caso de falha.',
+          en: 'I use the Groq API to integrate language-model inference with structured outputs, validation, and fallback responses when needed.',
         },
       },
       {
@@ -355,8 +355,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brain',
         evidence: 'implemented',
         description: {
-          pt: 'Apliquei IA no AMI-108 com contexto limitado, validação de respostas, limites de uso e fallback seguro quando a inferência falha.',
-          en: 'I applied AI in AMI-108 with bounded context, response validation, usage limits, and safe fallback when inference fails.',
+          pt: 'Aplico inteligência artificial com contexto controlado, validação de respostas, limites de uso e mecanismos seguros de fallback.',
+          en: 'I apply artificial intelligence with controlled context, response validation, usage limits, and safe fallback mechanisms.',
         },
       },
     ],
@@ -404,8 +404,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-vercel',
         evidence: 'implemented',
         description: {
-          pt: 'Publiquei o AMI-108 na Vercel com interface web, serviços privados de API e integração com o serviço de IA.',
-          en: 'I deployed AMI-108 on Vercel with a web interface, private API services, and AI service integration.',
+          pt: 'Utilizo Vercel para publicar aplicações web e integrar serviços de API e IA, mantendo rotas e configurações de ambiente organizadas.',
+          en: 'I use Vercel to deploy web applications and integrate API and AI services while managing routes and environment configuration.',
         },
       },
       {
@@ -414,8 +414,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'devicon-docker-plain',
         evidence: 'implemented',
         description: {
-          pt: 'Implementei imagens Docker multi-stage para Adventure Files e o portfólio, com usuário não-root e testes em CI. Usei Docker Compose no desenvolvimento do AMI-108.',
-          en: 'I built multi-stage Docker images for Adventure Files and the portfolio, with non-root users and CI checks. I used Docker Compose for AMI-108 development.',
+          pt: 'Utilizo Docker para criar imagens multi-stage com usuários não-root e verificações em CI, além de organizar serviços locais com Docker Compose.',
+          en: 'I use Docker to build multi-stage images with non-root users and CI checks, and to organize local services with Docker Compose.',
         },
       },
       {
@@ -424,8 +424,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'server',
         evidence: 'implemented',
         description: {
-          pt: 'Configurei Nginx em Docker para servir o build estático do portfólio em ambiente local e CI, com execução não-root e validação HTTP de arquivos.',
-          en: 'I configured Nginx in Docker to serve the static portfolio build locally and in CI, with a non-root runtime and HTTP asset checks.',
+          pt: 'Configuro Nginx em Docker para servir aplicações estáticas em ambiente local e CI, com execução não-root e validação HTTP de arquivos.',
+          en: 'I configure Nginx in Docker to serve static applications locally and in CI, with a non-root runtime and HTTP asset checks.',
         },
       },
       {
@@ -444,8 +444,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'devicon-githubactions-plain',
         evidence: 'implemented',
         description: {
-          pt: 'Implementei workflows de GitHub Actions para testes, builds, acessibilidade, Lighthouse e validação de contêineres, além de CI para os serviços do AMI-108.',
-          en: 'I built GitHub Actions workflows for tests, builds, accessibility, Lighthouse, and container checks, plus CI for the AMI-108 services.',
+          pt: 'Implementei workflows de GitHub Actions para lint, testes automatizados, builds, acessibilidade, Lighthouse e validação de contêineres e serviços.',
+          en: 'I build GitHub Actions workflows for linting, automated tests, builds, accessibility, Lighthouse, and container and service checks.',
         },
       },
     ],
@@ -470,8 +470,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-vitest',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo Vitest para testar componentes, regras de negócio e contratos no portfólio, no Adventure Files e na interface web do AMI-108.',
-          en: 'I use Vitest for component, business-rule, and contract tests in the portfolio, Adventure Files, and the AMI-108 web interface.',
+          pt: 'Utilizo Vitest para testar componentes, regras de negócio, integrações e contratos de APIs.',
+          en: 'I use Vitest to test components, business rules, integrations, and API contracts.',
         },
       },
       {
@@ -480,8 +480,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-jest',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo Jest para testar regras de domínio, serviços e integrações da API NestJS do AMI-108.',
-          en: 'I use Jest to test domain rules, services, and NestJS API integrations in AMI-108.',
+          pt: 'Utilizo Jest para testar regras de domínio, serviços e integrações de APIs NestJS.',
+          en: 'I use Jest to test domain rules, services, and NestJS API integrations.',
         },
       },
       {
@@ -490,8 +490,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-pytest',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo Pytest para verificar contratos, integrações de provedores e cenários de falha no serviço Python do AMI-108.',
-          en: 'I use Pytest to verify contracts, provider integrations, and failure scenarios in the AMI-108 Python service.',
+          pt: 'Utilizo Pytest para verificar contratos, integrações de provedores e cenários de falha em serviços Python.',
+          en: 'I use Pytest to verify contracts, provider integrations, and failure scenarios in Python services.',
         },
       },
       {
@@ -500,8 +500,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'scan-eye',
         evidence: 'implemented',
         description: {
-          pt: 'Implementei testes Playwright em Chromium no portfólio e no Adventure Files, incluindo fluxos full-stack com API e Supabase local isolado.',
-          en: 'I implemented Chromium Playwright tests in the portfolio and Adventure Files, including full-stack flows with an API and isolated local Supabase.',
+          pt: 'Utilizo Playwright em Chromium para testar fluxos E2E de interfaces e APIs, incluindo cenários full-stack com Supabase local isolado.',
+          en: 'I use Playwright in Chromium to test end-to-end UI and API flows, including full-stack scenarios with isolated local Supabase.',
         },
       },
     ],
