@@ -6,7 +6,13 @@ type ProjectStackChartProps = {
 }
 
 const stackColors: Record<string, string> = {
+  'Next.js': '#454e56',
   React: '#128e84',
+  NestJS: '#b85c65',
+  Prisma: '#836c8f',
+  FastAPI: '#438d80',
+  Python: '#c2a24d',
+  Groq: '#be7c53',
   TypeScript: '#3f87a6',
   'Node.js': '#78a16d',
   Express: '#b29b69',
@@ -55,8 +61,9 @@ function slicePath(start: number, end: number) {
   ].join(' ')
 }
 
-// Manual snapshots: 2026-11-07 for other projects; 2026-11-12 for Adventure Files.
-// See the quality guide for the selected code/tooling association rules.
+// Manually curated, overlapping file/tool associations: 2026-11-07 for two original
+// projects, 2026-11-12 for Adventure Files, and 2026-11-23 for AMI-108.
+// Project records carry snapshot notes; chart slices are not language percentages.
 export default function ProjectStackChart({ project, language }: ProjectStackChartProps) {
   const text = translations[language]
   const total = Math.max(

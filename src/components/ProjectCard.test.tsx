@@ -7,8 +7,9 @@ import { projects } from '../data/projects'
 const ideasProject = projects.find((project) => project.id === 'ideas-organizer')
 const adventureProject = projects.find((project) => project.id === 'adventure-files')
 const natsuProject = projects.find((project) => project.id === 'natsu-matsuri')
+const amiProject = projects.find((project) => project.id === 'ami-108')
 
-if (!ideasProject || !adventureProject || !natsuProject) {
+if (!ideasProject || !adventureProject || !natsuProject || !amiProject) {
   throw new Error('Required portfolio projects are missing.')
 }
 
@@ -119,6 +120,24 @@ describe('ProjectCard', () => {
     expect(within(dialog).getByText(adventureProject.details.architecture.en)).toBeInTheDocument()
     await user.click(within(dialog).getByRole('button', { name: 'Close details' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('shows sourced AMI-108 content and its links in both languages', async () => {
+    const user = userEvent.setup()
+    const { rerender } = render(<ProjectCard project={amiProject} language="pt" />)
+    expect(screen.getByRole('heading', { name: 'AMI-108' })).toBeInTheDocument()
+    expect(screen.getByText(amiProject.description.pt)).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: amiProject.imageAlt.pt })).toHaveAttribute('src', '/images/projects/ami-108-640.webp')
+    expect(screen.getByRole('link', { name: /AMI-108.*GitHub/ })).toHaveAttribute('href', 'https://github.com/AlexandroLeao/ami-108')
+    expect(screen.getByRole('link', { name: /AMI-108.*Visitar/ })).toHaveAttribute('href', 'https://ami-108.vercel.app/game')
+    await user.click(screen.getByRole('button', { name: 'Detalhes' }))
+    const dialog = screen.getByRole('dialog', { name: 'AMI-108' })
+    expect(within(dialog).getByText(amiProject.details.features[0].pt)).toBeInTheDocument()
+
+    rerender(<ProjectCard project={amiProject} language="en" />)
+    expect(screen.getByText(amiProject.description.en)).toBeInTheDocument()
+    expect(within(dialog).getByText(amiProject.details.architecture.en)).toBeInTheDocument()
+    await user.click(within(dialog).getByRole('button', { name: 'Close details' }))
   })
 
   it('anchors the stack chart to the bottom of each project card', () => {

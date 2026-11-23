@@ -4,6 +4,8 @@ import {
   BookOpen,
   GraduationCap,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Download,
   Mail,
 } from 'lucide-react'
@@ -666,6 +668,10 @@ function App() {
 
   const [showBackToTop, setShowBackToTop] = useState(false)
   const [selectedProjectId, setSelectedProjectId] = useState(projects[0].id)
+  const projectTrackRef = useRef<HTMLDivElement>(null)
+  const projectCarouselPausedRef = useRef(false)
+  const projectCarouselDirectionRef = useRef<1 | -1>(1)
+  const projectCarouselPauseUntilRef = useRef(0)
   const [certificationView, setCertificationView] = useState<'featured' | 'all'>('featured')
   const [selectedCertificationCategory, setSelectedCertificationCategory] = useState<CertificationCategory | 'all'>('all')
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
@@ -754,6 +760,58 @@ function App() {
       )
     }
   }, [])
+
+  // Desktop-only gentle back-and-forth motion. No cloned cards or duplicate IDs.
+  // A timer avoids accumulating animation-frame work while tabs are backgrounded.
+  useEffect(() => {
+    const track = projectTrackRef.current
+    if (!track) return
+
+    const desktop = window.matchMedia?.('(min-width: 1024px)')
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')
+    let previousTime: number | null = null
+
+    const timer = window.setInterval(() => {
+      const now = performance.now()
+      const elapsed = previousTime === null ? 0 : Math.min(now - previousTime, 64)
+      previousTime = now
+      const bounds = track.getBoundingClientRect()
+      const isVisible = bounds.top < window.innerHeight && bounds.bottom > 0
+
+      if (
+        desktop?.matches &&
+        !reducedMotion?.matches &&
+        !document.hidden &&
+        isVisible &&
+        !projectCarouselPausedRef.current &&
+        now > projectCarouselPauseUntilRef.current &&
+        !document.querySelector('dialog[open]')
+      ) {
+        const maxScroll = track.scrollWidth - track.clientWidth
+        if (maxScroll > 1) {
+          const next = Math.max(0, Math.min(maxScroll, track.scrollLeft + projectCarouselDirectionRef.current * elapsed * 0.035))
+          track.scrollLeft = next
+          if (next >= maxScroll - 0.5) projectCarouselDirectionRef.current = -1
+          else if (next <= 0.5) projectCarouselDirectionRef.current = 1
+        }
+      }
+    }, 30)
+    return () => window.clearInterval(timer)
+  }, [])
+
+  function scrollDesktopProjects(direction: 1 | -1) {
+    const track = projectTrackRef.current
+    if (!track) return
+    const first = track.querySelector<HTMLElement>('[id^="project-panel-"]')
+    const step = (first?.getBoundingClientRect().width ?? track.clientWidth / 2) + 24
+    const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth)
+    projectCarouselPauseUntilRef.current = performance.now() + 5000
+    projectCarouselDirectionRef.current = direction
+    track.scrollTo({
+      left: Math.max(0, Math.min(maxScroll, track.scrollLeft + direction * step)),
+      behavior: 'smooth',
+    })
+  }
 
   const text = translations[language]
 
@@ -1155,16 +1213,49 @@ function App() {
               ))}
             </nav>
 
-            <div className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-8">
-              {projects.map((project) => (
-                <div
-                  key={project.id}
-                  id={`project-panel-${project.id}`}
-                  className={`min-w-0 ${selectedProjectId === project.id ? 'block' : 'hidden'} lg:block`}
+            <div
+              onMouseEnter={() => { projectCarouselPausedRef.current = true }}
+              onMouseLeave={() => { projectCarouselPausedRef.current = false }}
+              onFocusCapture={() => { projectCarouselPausedRef.current = true }}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  projectCarouselPausedRef.current = false
+                }
+              }}
+            >
+              <div className="mb-4 hidden items-center justify-end gap-2 lg:flex">
+                <button
+                  type="button"
+                  aria-label={language === 'pt' ? 'Projetos anteriores' : 'Previous projects'}
+                  onClick={() => scrollDesktopProjects(-1)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
                 >
-                  <ProjectCard project={project} language={language} />
-                </div>
-              ))}
+                  <ChevronLeft size={20} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  aria-label={language === 'pt' ? 'Próximos projetos' : 'Next projects'}
+                  onClick={() => scrollDesktopProjects(1)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-(--color-border) bg-(--color-surface) text-(--color-text) transition-colors hover:border-(--color-primary) hover:text-(--color-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-primary)"
+                >
+                  <ChevronRight size={20} aria-hidden="true" />
+                </button>
+              </div>
+              <div
+                id="projects-desktop-carousel"
+                ref={projectTrackRef}
+                className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:flex lg:overflow-x-auto lg:overscroll-x-contain lg:pb-3 project-desktop-carousel"
+              >
+                {projects.map((project) => (
+                  <div
+                    key={project.id}
+                    id={'project-panel-' + project.id}
+                    className={'min-w-0 ' + (selectedProjectId === project.id ? 'block' : 'hidden') + ' lg:block lg:shrink-0 lg:basis-[48%] xl:basis-[31.5%]'}
+                  >
+                    <ProjectCard project={project} language={language} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

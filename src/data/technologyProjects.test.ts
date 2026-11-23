@@ -11,24 +11,26 @@ describe('findProjectsForTechnology', () => {
       'adventure-files',
       'ideas-organizer',
       'natsu-matsuri',
+      'ami-108',
     ])
     expect(ids('typescript', 'TypeScript')).toEqual([
       'adventure-files',
       'ideas-organizer',
+      'ami-108',
     ])
-    expect(ids('postgresql', 'PostgreSQL')).toEqual(['adventure-files'])
+    expect(ids('postgresql', 'PostgreSQL')).toEqual(['adventure-files', 'ami-108'])
   })
 
   it('matches documented aliases and development practices', () => {
     expect(ids('tanstack', 'TanStack')).toEqual(['ideas-organizer'])
-    expect(ids('rest', 'APIs REST')).toEqual(['adventure-files'])
-    expect(ids('cicd', 'CI/CD')).toEqual(['adventure-files', 'ideas-organizer'])
-    expect(ids('qa', 'QA')).toEqual(['adventure-files', 'ideas-organizer'])
-    expect(ids('github', 'GitHub')).toHaveLength(3)
+    expect(ids('rest', 'APIs REST')).toEqual(['adventure-files', 'ami-108'])
+    expect(ids('cicd', 'CI/CD')).toEqual(['adventure-files', 'ideas-organizer', 'ami-108'])
+    expect(ids('qa', 'QA')).toEqual(['adventure-files', 'ideas-organizer', 'ami-108'])
+    expect(ids('github', 'GitHub')).toHaveLength(4)
   })
 
   it('links verified RPG tooling and preserves the audited chart counts', () => {
-    expect(ids('docker', 'Docker')).toEqual(['adventure-files'])
+    expect(ids('docker', 'Docker')).toEqual(['adventure-files', 'ami-108'])
     expect(ids('openapi', 'OpenAPI')).toEqual(['adventure-files'])
     expect(ids('playwright', 'Playwright')).toEqual(['adventure-files'])
     expect(ids('nginx', 'Nginx')).toEqual([])

@@ -121,6 +121,12 @@ body {
   display: none;
 }
 
+/* Horizontal cards scroll only on desktop; arrows remain visible. */
+@media (min-width: 1024px) {
+  .project-desktop-carousel { scrollbar-width: none; }
+  .project-desktop-carousel::-webkit-scrollbar { display: none; }
+}
+
 /* Stop-motion: exactly one complete, transparent frame is painted at a time. */
 .hero-mascot-frame {
   position: absolute;

@@ -95,7 +95,7 @@ describe('Developer Portfolio', () => {
     expect(within(grid).getByText('Em andamento')).toBeInTheDocument()
   })
 
-  it('shows one selectable project at a time on mobile while preserving the desktop grid', async () => {
+  it('keeps the mobile selector unchanged and shows a horizontal desktop projects carousel', async () => {
     const user = userEvent.setup()
     const { container } = render(<App />)
     const section = container.querySelector<HTMLElement>('#projects')!
@@ -106,14 +106,17 @@ describe('Developer Portfolio', () => {
     expect(section).toHaveClass('overflow-x-clip')
     expect(navigation).toHaveAttribute('data-mobile-selection-track')
     expect(navigation).toHaveClass('overflow-x-auto', 'max-w-full', 'lg:hidden')
-    expect(options).toHaveLength(3)
+    expect(options).toHaveLength(4)
     expect(options.every((option) => option.classList.contains('snap-center'))).toBe(true)
     expect(options[0]).toHaveAttribute('aria-pressed', 'true')
-    expect(panels).toHaveLength(3)
+    expect(panels).toHaveLength(4)
     expect(panels[0]).toHaveClass('block', 'lg:block')
     expect(panels[1]).toHaveClass('hidden', 'lg:block')
     expect(panels[2]).toHaveClass('hidden', 'lg:block')
-    expect(section.querySelector('.lg\\:grid-cols-3')).toBeInTheDocument()
+    expect(panels[3]).toHaveClass('hidden', 'lg:block')
+    expect(section.querySelector('#projects-desktop-carousel')).toHaveClass('lg:flex', 'lg:overflow-x-auto')
+    expect(within(section).getByRole('button', { name: 'Projetos anteriores' })).toBeInTheDocument()
+    expect(within(section).getByRole('button', { name: 'Próximos projetos' })).toBeInTheDocument()
 
     await user.click(options[1])
     expect(options[0]).toHaveAttribute('aria-pressed', 'false')
@@ -121,12 +124,36 @@ describe('Developer Portfolio', () => {
     expect(panels[0]).toHaveClass('hidden', 'lg:block')
     expect(panels[1]).toHaveClass('block', 'lg:block')
     expect(panels[2]).toHaveClass('hidden', 'lg:block')
+    expect(panels[3]).toHaveClass('hidden', 'lg:block')
 
     await user.click(screen.getByRole('button', { name: 'EN' }))
     expect(within(navigation).getByRole('button', { name: 'Ideas and Projects Organizer' }))
       .toHaveAttribute('aria-pressed', 'true')
     expect(navigation).toHaveAccessibleName('Select project')
   })
+
+  it('moves the desktop carousel with arrows without changing mobile project selection', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<App />)
+    const section = container.querySelector<HTMLElement>('#projects')!
+    const track = section.querySelector<HTMLElement>('#projects-desktop-carousel')!
+    const scrollTo = vi.fn()
+    const firstPanel = track.querySelector<HTMLElement>('#project-panel-adventure-files')!
+
+    Object.defineProperty(track, 'scrollWidth', { configurable: true, value: 1500 })
+    Object.defineProperty(track, 'clientWidth', { configurable: true, value: 900 })
+    Object.defineProperty(track, 'scrollLeft', { configurable: true, writable: true, value: 0 })
+    Object.defineProperty(track, 'scrollTo', { configurable: true, value: scrollTo })
+    vi.spyOn(firstPanel, 'getBoundingClientRect').mockReturnValue({ width: 320 } as DOMRect)
+
+    await user.click(within(section).getByRole('button', { name: 'Próximos projetos' }))
+    expect(scrollTo).toHaveBeenCalledWith({ left: 344, behavior: 'smooth' })
+    expect(section.querySelector('#project-option-adventure-files')).toHaveAttribute('aria-pressed', 'true')
+
+    await user.click(within(section).getByRole('button', { name: 'Projetos anteriores' }))
+    expect(scrollTo).toHaveBeenLastCalledWith({ left: 0, behavior: 'smooth' })
+    expect(section.querySelectorAll('[id^="project-panel-"]')).toHaveLength(4)
+  });
 
   it('centers a tapped project option inside the mobile track without page scrolling', async () => {
     const originalWidth = window.innerWidth
