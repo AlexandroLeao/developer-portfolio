@@ -82,7 +82,7 @@ The application can be built with `npm run build` and served from `dist/`. Verce
 
 Each workflow is independent. Lighthouse creates **three runs per device profile**, with advisory category-score warnings and enforced metadata/collection checks; reports are uploaded to GitHub Actions artifacts for seven days. It measures the **local compiled build**, not public Vercel Production. Vercel Preview and Production deployment checks are independent of GitHub Actions.
 
-The repository's `main` branch is the integrated production branch. The normal change process is Issue → branch → Pull Request → review and required checks → owner merge → production verification.
+The repository's `main` branch is the integrated production branch. Historical engineering changes generally used Issue → branch → Pull Request → checks → owner merge. Documentation can now be prepared on a standalone branch **without** an Issue or open PR; that does not change `main`. The active protected-branch ruleset still requires a PR, squash merge and `Build, Lint and Test` for integration until the maintainer explicitly changes that policy. See [Contributing](../CONTRIBUTING.md).
 
 ## Design Decisions and Related Documents
 

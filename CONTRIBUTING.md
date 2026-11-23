@@ -7,15 +7,15 @@ These conventions apply to **`AlexandroLeao/developer-portfolio` only**. They su
 - Define the problem and acceptance criteria before implementation.
 - Restrict each change to the approved portfolio scope; changes to showcased applications belong in their own repositories.
 - Preserve existing behavior, bilingual content, accessibility and visual identity unless the change explicitly requires otherwise.
-- Use clear commits, reviewable Pull Requests and reproducible validation evidence.
+- Use clear commits and reproducible review notes; a Pull Request is currently required to integrate changes into the protected `main`, not to prepare documentation on a branch.
 - Never state that an audit, test or production verification passed unless it was actually performed.
 - Avoid new paid services, credentials, infrastructure or dependency changes without explicit approval.
 
 ## Issues and Branches
 
-Use a GitHub Issue for substantive changes, including objective, context, acceptance criteria, dependencies and affected documentation. Small documentation corrections can reference the related issue or explain why no issue is needed.
+Record the objective, affected files, acceptance criteria and validation evidence in a commit message or change note. GitHub Issues are **optional tracking**, not a prerequisite for documentation or other scoped work. Use an Issue when a task needs discussion, coordination or a separate backlog.
 
-The `main` branch is the integrated production branch. Do **not** implement new work directly on `main`. From a clean working tree:
+The `main` branch is the integrated production branch. As of 2026-11-23, the active `Protect main branch` ruleset requires a Pull Request with squash merge and the `Build, Lint and Test` status check. A documentation branch may be edited without a PR, but those commits are **not integrated or deployed** until an authorized integration path is completed. From a clean working tree:
 
 ```bash
 git status
@@ -27,7 +27,7 @@ git switch -c docs/short-description
 
 Recommended branch prefixes: `feat/`, `fix/`, `docs/`, `test/`, `refactor/`, `chore/` and `ci/`. Include the relevant Issue number when useful, for example `docs/issue-123-readme-review`.
 
-## Commits and Pull Requests
+## Commits, Review and Integration
 
 Use short, descriptive [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) subjects such as:
 
@@ -39,15 +39,15 @@ docs: align architecture and README
 ci: clarify quality check
 ```
 
-For each Pull Request:
+When opening a Pull Request for protected-branch integration:
 
 1. Explain the problem, scope and changes.
-2. Link the relevant portfolio Issue; use `Closes #123` only when its acceptance criteria are fully met.
+2. Link a portfolio Issue only if one exists; use `Closes #123` only when its acceptance criteria are fully met.
 3. Record the **exact validation performed**, including commands/results, manual checks and anything not run.
 4. Add screenshots for visual changes when useful.
 5. Review Vercel Preview and GitHub Actions results when applicable and available.
 6. Request review; merge only after approval and any required branch checks. Prefer squash merge when appropriate.
-7. Verify the production deployment after a code-changing merge and update the relevant Issue/changelog.
+7. Verify production after a code-changing merge; update the changelog and any related Issue **if one was created**.
 
 Do not assume a successful Preview or Actions status proves a complete public-site audit.
 
@@ -83,19 +83,25 @@ Additional commands:
 
 Node.js **24** is the CI baseline. The `vmThreads` Vitest pool is already configured; no additional test-runner flag is needed.
 
-## CI Resource Awareness for Documentation Edits
+## Documentation-only Work Without Actions Runs
 
-The repository has **four independent GitHub Actions workflows** triggered by Pull Requests targeting `main`: [CI](.github/workflows/ci.yml), [Playwright](.github/workflows/playwright.yml), [Lighthouse](.github/workflows/lighthouse.yml) and [Docker](.github/workflows/docker.yml). A docs-only Pull Request can therefore consume CI resources even when no application code changed.
+The repository currently defines four GitHub Actions workflows triggered by Pull Requests targeting `main`: [CI](.github/workflows/ci.yml), [Playwright](.github/workflows/playwright.yml), [Lighthouse](.github/workflows/lighthouse.yml) and [Docker](.github/workflows/docker.yml). Docker also runs on specified changes pushed to `main`. **Creating a PR is not an Actions execution; running jobs is what uses runner resources.** The standard `ubuntu-latest` runners are free for this public repository, although unnecessary execution still wastes resources.
 
-For a strictly documentation-only change:
+To prepare a strictly documentation-only change without starting these workflows:
 
-- Check local Markdown links, paths, headings and consistency first. Do not run lint, E2E, Lighthouse or Docker solely to reformat prose.
-- Do **not** change workflow trigger rules as an unrelated workaround.
-- Where explicitly agreed with the maintainer, a commit message containing `[skip ci]` can suppress GitHub Actions runs initiated by `push`/`pull_request` events. **Required status checks may then remain pending**, so the protected branch may not be mergeable until the normal required checks run or the maintainer resolves the policy.
-- Record the skip and its reason in the Pull Request; never mark tests as passed when they were skipped.
-- Do not rerun or merge automatically just to close a documentation change.
+1. Work on a standalone `docs/` branch with **no open PR**, and do not push to `main`.
+2. Confirm that only Markdown or documentation artifacts changed; do not edit application, dependencies, workflow or deployment settings as part of a docs-only correction.
+3. Inspect relative links and paths, Markdown structure, technical claims against code/configuration, historical evidence, and the scope of other showcased projects.
+4. Commit the reviewed documentation to the branch. Record tests as **not run** when they were not executed. A commit on this branch does not itself update production.
+5. Distinguish **prepared on branch** from **integrated into `main`** in the changelog and any delivery summary.
 
-This guidance is for resource-conscious review, **not** an exception to required branch protection.
+### Publishing changes to the protected branch
+
+The active `Protect main branch` ruleset requires a PR, a squash merge, and a passing `Build, Lint and Test` status. Consequently, branch-only documentation cannot be published to `main` without either satisfying that rule through the PR workflow or having the repository owner **explicitly revise the ruleset** before a direct integration. Do not disable the protections silently or force-push the branch.
+
+**Do not add `[skip ci]` to a PR commit to avoid its required status check.** GitHub may keep that check pending indefinitely, preventing merge. A PR running only the required build check would require a separately reviewed workflow/ruleset design; path-filtering an entire required workflow is not a safe shortcut.
+
+Vercel deployment checks are independent of GitHub Actions. Local Markdown review does not assert a successful application build, a live deployment, or a new Lighthouse result.
 
 ## Documentation Standards
 
@@ -119,7 +125,7 @@ Rules:
 - Separate **current implementation**, **dated historical evidence**, **owner-reported results** and **future proposals**.
 - Do not copy another project's backlog, validation metrics or release history into this repository.
 - Preserve ADR and historical evidence semantics; use a dated amendment rather than silently rewriting an earlier decision.
-- If modifying a PlantUML diagram source, regenerate its SVG in the same PR.
+- If modifying a PlantUML diagram source, regenerate its SVG in the same change.
 
 ## Security and Privacy
 
@@ -137,8 +143,8 @@ A portfolio change is Done only when:
 - [ ] Applicable validation is completed **or explicitly recorded as not run**, with rationale.
 - [ ] Affected links, translations, responsiveness and accessibility are reviewed as appropriate.
 - [ ] Related documentation and the changelog are updated when necessary.
-- [ ] Review and any required GitHub branch checks are satisfied.
-- [ ] The change is merged by an authorized maintainer, and the Issue updated or closed.
+- [ ] If integrating into protected `main`, all required reviews and GitHub branch checks are satisfied.
+- [ ] The delivery state is explicit: **prepared on a branch** or **integrated into `main`**. Update/close an Issue only if one was used.
 - [ ] Deployment is checked for a code-changing production release.
 
 ## Releases

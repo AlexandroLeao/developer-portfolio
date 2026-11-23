@@ -124,6 +124,12 @@ Pull Requests targeting `main` are checked by four independent GitHub Actions wo
 
 The Docker workflow also runs on relevant pushes to `main`. Vercel Preview/Production checks are separate from these workflows. **Lighthouse results are laboratory snapshots, and automated accessibility checks do not certify WCAG conformance.** Historical test counts and audit results belong in the [quality guide](docs/performance-and-quality.md) and its [dated evidence](docs/evidence/lighthouse-ci-2026-11-11.md), rather than being treated as continuously current README metrics.
 
+### Documentation-only changes and GitHub Actions
+
+The four workflows above run for Pull Requests targeting `main`; Docker also runs for selected pushes to `main`. Committing documentation to a standalone branch **without an open Pull Request** does not trigger those workflow events, but it also does **not** publish the documentation to `main` or to the production site.
+
+Do not use `[skip ci]` as a workaround for merging a PR that requires `Build, Lint and Test`: the required check may remain pending and block the squash merge. Opening a PR does not itself incur GitHub Actions compute charges; runner jobs use resources, and standard GitHub-hosted runners are free in public repositories. See [Contributing](CONTRIBUTING.md#documentation-only-work-without-actions-runs) for the supported low-overhead process.
+
 ## Architecture and Documentation
 
 The portfolio bundles typed content from `src/data/`, presents it through React components, and stores language/theme preferences in browser storage. External links open services such as GitHub and LinkedIn; the site does not authenticate visitors or process contact messages on a backend.
@@ -138,7 +144,7 @@ For the full documentation set, see the [documentation index](docs/README.md), i
 
 ## Release and Scope
 
-The initial stable release `v1.0.0` was published; subsequent improvements are recorded in the [changelog](CHANGELOG.md) and do **not** imply additional release tags. The `main` branch is the production integration branch. New work follows a feature/documentation branch and Pull Request review process; see [Contributing](CONTRIBUTING.md).
+The initial stable release `v1.0.0` was published; subsequent improvements are recorded in the [changelog](CHANGELOG.md) and do **not** imply additional release tags. The `main` branch is the production integration branch. Documentation can be prepared on a separate branch without opening an Issue or Pull Request. However, as of 2026-11-23, the active `Protect main branch` ruleset still requires a Pull Request, squash merge, and a successful `Build, Lint and Test` check before changes can enter `main`; see [Contributing](CONTRIBUTING.md).
 
 Other applications may appear **as showcased portfolio projects**. Their engineering roadmaps, verification results and deployment policies are maintained in their own repositories, not in this portfolio's project documentation.
 

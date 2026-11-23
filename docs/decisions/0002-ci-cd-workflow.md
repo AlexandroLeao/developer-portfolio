@@ -61,6 +61,12 @@ The quality workflows were added incrementally: Playwright in [PR #100](https://
 - Automated quality gates do not replace human review, assistive-technology checks or production observation.
 - Test counts and CI scores are historical unless sourced to a specific inspected run.
 
+## Maintainer workflow note — 2026-11-23
+
+This ADR records the project's earlier Issue-driven, PR-based development decision; it does not imply that every current documentation correction needs a new Issue or PR. The maintainer may prepare and review documentation on a standalone branch without either. At this date, the active `Protect main branch` ruleset **still** requires a PR, squash merge and a successful `Build, Lint and Test` check for integration into `main`.
+
+A branch-only commit is not a production update. A PR with `[skip ci]` can leave the mandatory check pending, as occurred with [PR #123](https://github.com/AlexandroLeao/developer-portfolio/pull/123), which was closed without merging. A no-PR integration would first require a deliberate, separately authorized ruleset change. See [Contributing](../../CONTRIBUTING.md) for the current operating instructions. This dated note updates the workflow guidance without rewriting the historical rationale of the ADR.
+
 ## Supporting Evidence
 
 - [Contributing guide](../../CONTRIBUTING.md)

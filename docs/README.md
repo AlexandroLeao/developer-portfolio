@@ -15,7 +15,7 @@ The root [README](../README.md) introduces the product and local setup. The docu
 | [Engineering roadmap](engineering-roadmap.md) | Completed and candidate **portfolio-only** work | Portfolio Issues and merged PRs |
 | [Architecture decisions](decisions/0001-client-side-architecture.md) | Decision rationale, constraints and consequences | Current code and historical decision context |
 | [Changelog](../CHANGELOG.md) | Dated changes to Developer Portfolio | Releases and portfolio PRs |
-| [Contributing](../CONTRIBUTING.md) | Branching, PR review and validation expectations | Project workflow and tooling |
+| [Contributing](../CONTRIBUTING.md) | Branch-only documentation review, integration and validation | Current branch ruleset and workflow files |
 | [Lighthouse CI evidence — 2026-11-11](evidence/lighthouse-ci-2026-11-11.md) | Immutable historical summary with source and measurement boundaries | Inspected historical CI reports |
 
 ## Architecture Decisions
@@ -50,4 +50,4 @@ The diagrams show **selected core relationships**; the component table and use-c
 - If a diagram source changed, was its rendered artifact updated?
 - Were code, workflow and deployment changes excluded from a documentation-only scope?
 
-See [Contributing](../CONTRIBUTING.md) for the Pull Request and validation process.
+See [Contributing](../CONTRIBUTING.md) for documentation-only branch work, the current protected-branch integration requirements, and validation rules.

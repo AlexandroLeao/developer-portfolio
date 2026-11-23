@@ -1,6 +1,6 @@
 # Changelog
 
-Notable changes to **Developer Portfolio** are recorded here. The file follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) while distinguishing **post-release changes** from officially published version tags. Issues and Pull Requests provide the detailed implementation record.
+Notable changes to **Developer Portfolio** are recorded here. The file follows the spirit of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) while distinguishing **post-release changes** from officially published version tags. Commit history provides the implementation record; Issues and Pull Requests provide additional traceability where used.
 
 ## [Unreleased]
 
@@ -9,8 +9,9 @@ Notable changes to **Developer Portfolio** are recorded here. The file follows t
 - Standardize the README, documentation navigation, portfolio-specific roadmap, contribution guidance, architecture/quality descriptions and CI/CD decision record.
 - Separate historical evidence from current operational instructions and remove cross-repository planning from portfolio documentation.
 - Clarify documentation-only review and validation without modifying application code or CI workflows.
+- Document branch-only, no-Issue/no-PR preparation and the existing protected-`main` requirement for PR, squash and the mandatory CI check (2026-11-23).
 
-These documentation edits do not imply a new application release or a new quality audit.
+**Unreleased / branch-only:** these documentation edits are currently prepared on a documentation branch, **not integrated into `main`**. They do not imply a new application release, production deployment or quality audit.
 
 ## 2026-11-12 — Post-release portfolio updates
 

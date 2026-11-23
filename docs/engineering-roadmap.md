@@ -2,7 +2,7 @@
 
 **Scope:** `AlexandroLeao/developer-portfolio` only  
 **Reviewed against:** repository `main` as of 2026-11-21  
-**Status:** original stable release and the documented portfolio quality/DevOps cycle completed; additional work requires a new, scoped Issue and owner approval.
+**Status:** original stable release and the documented portfolio quality/DevOps cycle completed; new work needs a clear scope and maintainer approval, not necessarily an Issue or PR during preparation.
 
 This roadmap tracks **work on the portfolio application and its supporting tooling**. Descriptions of other applications showcased in portfolio cards are content references, **not tasks or milestones for those repositories**.
 
@@ -11,7 +11,7 @@ This roadmap tracks **work on the portfolio application and its supporting tooli
 - Preserve the existing bilingual interface, visual identity, accessibility behavior, and Vercel deployment unless an approved requirement changes them.
 - Prefer changes with evidence-based value; do not introduce infrastructure, dependencies, or recurring cost solely for résumé keywords.
 - Distinguish **implemented**, **studied**, **studying**, and **planned** technology experience.
-- Follow Issue → scoped branch → appropriate validation → Pull Request → review/merge.
+- Define scope and acceptance criteria before editing. A docs-only branch can be prepared without an Issue or PR; integration still follows the active `main` ruleset.
 - Keep dated measurements and historical test counts in the [quality guide](performance-and-quality.md); do not report them as live metrics.
 
 ## Completed Portfolio Milestones
@@ -43,11 +43,11 @@ An unchecked item here denotes a **documentation/evidence limitation or candidat
 
 ## Next Work
 
-Before implementing new features, agree on a **portfolio-specific** objective, create an Issue with acceptance criteria and evaluate its impact on performance, accessibility, hosting and cost. Résumé and external professional-profile updates require verified source material and separate approval.
+Before implementing new features, agree on a **portfolio-specific** objective, record acceptance criteria in the change notes (or an optional Issue), and evaluate performance, accessibility, hosting and cost. Keep changes prepared on an isolated branch until the protected `main` integration requirements are satisfied. Résumé and external professional-profile updates require verified source material and separate approval.
 
 ## Traceability and Ownership
 
-- [GitHub Issues](https://github.com/AlexandroLeao/developer-portfolio/issues) and [Pull Requests](https://github.com/AlexandroLeao/developer-portfolio/pulls) track implementation.
+- [GitHub Issues](https://github.com/AlexandroLeao/developer-portfolio/issues) and [Pull Requests](https://github.com/AlexandroLeao/developer-portfolio/pulls) preserve historical reviews when used; neither is mandatory to **prepare** new documentation.
 - [Changelog](../CHANGELOG.md) records user-visible and engineering changes.
 - [Architecture decisions](decisions/0001-client-side-architecture.md) explain technical trade-offs.
 - [Performance and Quality](performance-and-quality.md) records validation method, provenance and known limits.
