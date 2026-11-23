@@ -8,30 +8,30 @@ const ids = (technologyId: string, name: string) =>
 describe('findProjectsForTechnology', () => {
   it('matches explicit project technology stacks', () => {
     expect(ids('react', 'React')).toEqual([
+      'ami-108',
       'adventure-files',
       'ideas-organizer',
       'natsu-matsuri',
-      'ami-108',
     ])
     expect(ids('typescript', 'TypeScript')).toEqual([
+      'ami-108',
       'adventure-files',
       'ideas-organizer',
-      'ami-108',
     ])
-    expect(ids('postgresql', 'PostgreSQL')).toEqual(['adventure-files', 'ami-108'])
+    expect(ids('postgresql', 'PostgreSQL')).toEqual(['ami-108', 'adventure-files'])
   })
 
   it('matches documented aliases and development practices', () => {
     expect(ids('tanstack', 'TanStack')).toEqual(['ideas-organizer'])
-    expect(ids('rest', 'APIs REST')).toEqual(['adventure-files', 'ami-108'])
-    expect(ids('cicd', 'CI/CD')).toEqual(['adventure-files', 'ideas-organizer', 'ami-108'])
-    expect(ids('qa', 'QA')).toEqual(['adventure-files', 'ideas-organizer', 'ami-108'])
+    expect(ids('rest', 'APIs REST')).toEqual(['ami-108', 'adventure-files'])
+    expect(ids('cicd', 'CI/CD')).toEqual(['ami-108', 'adventure-files', 'ideas-organizer'])
+    expect(ids('qa', 'QA')).toEqual(['ami-108', 'adventure-files', 'ideas-organizer'])
     expect(ids('github', 'GitHub')).toHaveLength(4)
   })
 
   it('links verified RPG tooling and preserves the audited chart counts', () => {
-    expect(ids('docker', 'Docker')).toEqual(['adventure-files', 'ami-108'])
-    expect(ids('openapi', 'OpenAPI')).toEqual(['adventure-files'])
+    expect(ids('docker', 'Docker')).toEqual(['ami-108', 'adventure-files'])
+    expect(ids('openapi', 'OpenAPI')).toEqual(['ami-108', 'adventure-files'])
     expect(ids('playwright', 'Playwright')).toEqual(['adventure-files'])
     expect(ids('nginx', 'Nginx')).toEqual([])
     const rpg = projects.find((project) => project.id === 'adventure-files')!
@@ -44,9 +44,25 @@ describe('findProjectsForTechnology', () => {
     expect(rpg.details.architecture.en).toContain('local API Docker')
   })
 
+  it('links the verified AMI-108 frameworks, providers and quality tools', () => {
+    for (const [id, name] of [
+      ['nextjs', 'Next.js'], ['nestjs', 'NestJS'], ['prisma', 'Prisma'],
+      ['python', 'Python'], ['fastapi', 'FastAPI'], ['groq', 'Groq'],
+      ['vercel', 'Vercel'], ['jest', 'Jest'], ['pytest', 'Pytest'],
+      ['nodejs', 'Node.js'], ['vitest', 'Vitest'],
+      ['generative-ai', 'IA Generativa'], ['applied-ai', 'IA Aplicada'],
+    ]) {
+      expect(ids(id, name), `${name} should link to AMI-108`).toContain('ami-108')
+    }
+    expect(ids('vercel', 'Vercel')).toEqual(['ami-108'])
+    expect(ids('jest', 'Jest')).toEqual(['ami-108'])
+    expect(ids('pytest', 'Pytest')).toEqual(['ami-108'])
+  })
+
   it('does not invent associations for topics not documented in projects', () => {
     expect(ids('java', 'Java')).toEqual([])
     expect(ids('aws', 'AWS')).toEqual([])
-    expect(ids('llms', 'LLMs')).toEqual([])
+    expect(ids('llms', 'LLMs')).toEqual(['ami-108'])
+    expect(ids('ai-agents', 'Agentes de IA')).toEqual([])
   })
 })

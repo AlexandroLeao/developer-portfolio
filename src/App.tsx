@@ -115,6 +115,16 @@ const technologyCategories: TechnologyCategory[] = [
         },
       },
       {
+        id: 'nextjs',
+        name: 'Next.js',
+        icon: 'brand-nextjs',
+        evidence: 'implemented',
+        description: {
+          pt: 'Desenvolvi a interface bilíngue do AMI-108 com Next.js, incluindo rotas de servidor e comunicação com a API pelo mesmo domínio.',
+          en: 'I built the bilingual AMI-108 interface with Next.js, including server routes and same-origin API access.',
+        },
+      },
+      {
         id: 'tailwind',
         name: 'Tailwind CSS',
         icon: 'devicon-tailwindcss-original',
@@ -176,8 +186,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'devicon-nodejs-plain',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo Node.js para desenvolver serviços e aplicações back-end com JavaScript.',
-          en: 'I use Node.js to develop back-end services and applications with JavaScript.',
+          pt: 'Utilizo Node.js para desenvolver APIs com Express e NestJS, incluindo a lógica de servidor do AMI-108.',
+          en: 'I use Node.js to build APIs with Express and NestJS, including the AMI-108 server-side game logic.',
         },
       },
       {
@@ -188,6 +198,16 @@ const technologyCategories: TechnologyCategory[] = [
         description: {
           pt: 'Utilizo Express para estruturar rotas, middlewares e APIs em aplicações Node.js.',
           en: 'I use Express to structure routes, middleware, and APIs in Node.js applications.',
+        },
+      },
+      {
+        id: 'nestjs',
+        name: 'NestJS',
+        icon: 'brand-nestjs',
+        evidence: 'implemented',
+        description: {
+          pt: 'Desenvolvi a API do AMI-108 com NestJS, aplicando regras de jogo no servidor, controle de sessões e comandos idempotentes.',
+          en: 'I developed the AMI-108 API with NestJS, implementing server-side game rules, session management, and idempotent commands.',
         },
       },
       {
@@ -206,8 +226,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'file-json',
         evidence: 'implemented',
         description: {
-          pt: 'Documentei cinco operações da API do Adventure Files com OpenAPI 3.1 e implementei 16 testes de contrato com Vitest e Supertest.',
-          en: 'I documented five Adventure Files API operations with OpenAPI 3.1 and implemented 16 contract tests with Vitest and Supertest.',
+          pt: 'Documentei cinco operações e 16 testes de contrato do Adventure Files com OpenAPI 3.1. Também defini contratos OpenAPI para o AMI-108.',
+          en: 'I documented five Adventure Files API operations and 16 contract tests with OpenAPI 3.1. I also defined OpenAPI contracts for AMI-108.',
         },
       },
       {
@@ -226,8 +246,38 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'devicon-postgresql-plain',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo PostgreSQL para modelagem relacional, armazenamento de dados e consultas em aplicações.',
-          en: 'I use PostgreSQL for relational modeling, data storage, and application queries.',
+          pt: 'Utilizo PostgreSQL em aplicações full-stack, incluindo o Neon para persistir sessões e checkpoints do AMI-108.',
+          en: 'I use PostgreSQL in full-stack applications, including Neon to persist AMI-108 sessions and checkpoints.',
+        },
+      },
+      {
+        id: 'prisma',
+        name: 'Prisma',
+        icon: 'brand-prisma',
+        evidence: 'implemented',
+        description: {
+          pt: 'Utilizo Prisma para modelar dados e gerenciar migrações do PostgreSQL usado nas sessões e checkpoints do AMI-108.',
+          en: 'I use Prisma to model data and manage PostgreSQL migrations for AMI-108 sessions and checkpoints.',
+        },
+      },
+      {
+        id: 'python',
+        name: 'Python',
+        icon: 'brand-python',
+        evidence: 'implemented',
+        description: {
+          pt: 'Utilizo Python no serviço de IA do AMI-108 para validar contratos, integrar provedores e tratar falhas de inferência.',
+          en: 'I use Python in the AMI-108 AI service to validate contracts, integrate providers, and handle inference failures.',
+        },
+      },
+      {
+        id: 'fastapi',
+        name: 'FastAPI',
+        icon: 'brand-fastapi',
+        evidence: 'implemented',
+        description: {
+          pt: 'Implementei um serviço interno com FastAPI para processar solicitações autorizadas e validar entradas com Pydantic.',
+          en: 'I implemented an internal FastAPI service to process authorized requests and validate input with Pydantic.',
         },
       },
       {
@@ -263,20 +313,30 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'generative-ai',
         name: 'IA Generativa',
         icon: 'sparkles',
-        evidence: 'studying',
+        evidence: 'implemented',
         description: {
-          pt: 'Estudo aplicações de IA Generativa para apoiar a criação de conteúdo, análise de informações e automação de processos.',
-          en: 'I study Generative AI applications for content generation, information analysis, and process automation.',
+          pt: 'Utilizei um modelo de IA generativa no AMI-108 para escolher falas previamente autorizadas, sem gerar conteúdo livre para a história.',
+          en: 'I used a generative AI model in AMI-108 to select preapproved dialogue without unrestricted story generation.',
         },
       },
       {
         id: 'llms',
         name: 'LLMs',
         icon: 'brain-circuit',
-        evidence: 'studying',
+        evidence: 'implemented',
         description: {
-          pt: 'Exploro modelos de linguagem para desenvolver funcionalidades inteligentes e integrar recursos de IA a sistemas.',
-          en: 'I explore language models to build intelligent features and integrate AI capabilities into software.',
+          pt: 'Integrei um modelo de linguagem via Groq no AMI-108 para selecionar respostas bilíngues autorizadas, mantendo as decisões do jogo no servidor.',
+          en: 'I integrated a language model through Groq in AMI-108 to select approved bilingual responses while keeping game decisions on the server.',
+        },
+      },
+      {
+        id: 'groq',
+        name: 'Groq',
+        icon: 'brand-groq',
+        evidence: 'implemented',
+        description: {
+          pt: 'Integrei a API Groq ao AMI-108 para selecionar falas previamente aprovadas com validação do resultado no servidor.',
+          en: 'I integrated the Groq API into AMI-108 to select preapproved dialogue with server-side result validation.',
         },
       },
       {
@@ -293,10 +353,10 @@ const technologyCategories: TechnologyCategory[] = [
         id: 'applied-ai',
         name: 'IA Aplicada',
         icon: 'brain',
-        evidence: 'planned',
+        evidence: 'implemented',
         description: {
-          pt: 'Busco aplicar inteligência artificial na resolução de problemas reais e na criação de soluções de software úteis.',
-          en: 'I aim to apply artificial intelligence to real-world problems and useful software solutions.',
+          pt: 'Apliquei IA no AMI-108 com contexto limitado, validação de respostas, limites de uso e fallback seguro quando a inferência falha.',
+          en: 'I applied AI in AMI-108 with bounded context, response validation, usage limits, and safe fallback when inference fails.',
         },
       },
     ],
@@ -339,13 +399,23 @@ const technologyCategories: TechnologyCategory[] = [
         },
       },
       {
+        id: 'vercel',
+        name: 'Vercel',
+        icon: 'brand-vercel',
+        evidence: 'implemented',
+        description: {
+          pt: 'Publiquei o AMI-108 na Vercel com interface web, serviços privados de API e integração com o serviço de IA.',
+          en: 'I deployed AMI-108 on Vercel with a web interface, private API services, and AI service integration.',
+        },
+      },
+      {
         id: 'docker',
         name: 'Docker',
         icon: 'devicon-docker-plain',
         evidence: 'implemented',
         description: {
-          pt: 'Implementei imagens Docker multi-stage para a API Express do Adventure Files e o build estático do portfólio, com usuário não-root, healthchecks e testes em CI.',
-          en: 'I implemented multi-stage Docker images for the Adventure Files Express API and the static portfolio build, with non-root users, healthchecks, and CI smoke tests.',
+          pt: 'Implementei imagens Docker multi-stage para Adventure Files e o portfólio, com usuário não-root e testes em CI. Usei Docker Compose no desenvolvimento do AMI-108.',
+          en: 'I built multi-stage Docker images for Adventure Files and the portfolio, with non-root users and CI checks. I used Docker Compose for AMI-108 development.',
         },
       },
       {
@@ -374,8 +444,8 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'devicon-githubactions-plain',
         evidence: 'implemented',
         description: {
-          pt: 'Implementei workflows de GitHub Actions para testes, builds, acessibilidade, Lighthouse e validação de contêineres Docker, apoiando a entrega via Vercel.',
-          en: 'I implemented GitHub Actions workflows for tests, builds, accessibility, Lighthouse, and Docker container checks, supporting delivery through Vercel.',
+          pt: 'Implementei workflows de GitHub Actions para testes, builds, acessibilidade, Lighthouse e validação de contêineres, além de CI para os serviços do AMI-108.',
+          en: 'I built GitHub Actions workflows for tests, builds, accessibility, Lighthouse, and container checks, plus CI for the AMI-108 services.',
         },
       },
     ],
@@ -400,8 +470,28 @@ const technologyCategories: TechnologyCategory[] = [
         icon: 'brand-vitest',
         evidence: 'implemented',
         description: {
-          pt: 'Utilizo Vitest para testes de componentes, regras de negócio, API e contratos OpenAPI no portfólio e no Adventure Files.',
-          en: 'I use Vitest for component, business-rule, API, and OpenAPI contract tests in the portfolio and Adventure Files.',
+          pt: 'Utilizo Vitest para testar componentes, regras de negócio e contratos no portfólio, no Adventure Files e na interface web do AMI-108.',
+          en: 'I use Vitest for component, business-rule, and contract tests in the portfolio, Adventure Files, and the AMI-108 web interface.',
+        },
+      },
+      {
+        id: 'jest',
+        name: 'Jest',
+        icon: 'brand-jest',
+        evidence: 'implemented',
+        description: {
+          pt: 'Utilizo Jest para testar regras de domínio, serviços e integrações da API NestJS do AMI-108.',
+          en: 'I use Jest to test domain rules, services, and NestJS API integrations in AMI-108.',
+        },
+      },
+      {
+        id: 'pytest',
+        name: 'Pytest',
+        icon: 'brand-pytest',
+        evidence: 'implemented',
+        description: {
+          pt: 'Utilizo Pytest para verificar contratos, integrações de provedores e cenários de falha no serviço Python do AMI-108.',
+          en: 'I use Pytest to verify contracts, provider integrations, and failure scenarios in the AMI-108 Python service.',
         },
       },
       {
@@ -1166,8 +1256,12 @@ function App() {
               <div
                 ref={technologyGridRef}
                 className={`mt-3 grid grid-cols-2 gap-2.5 ${
-                  activeCategory.technologies.length >= 10
-                    ? 'sm:grid-cols-5'
+                  activeCategory.technologies.length === 11 || activeCategory.technologies.length === 12
+                    ? 'sm:grid-cols-4'
+                    : activeCategory.technologies.length === 5
+                      ? 'sm:grid-cols-3 xl:grid-cols-5'
+                      : activeCategory.technologies.length >= 10
+                        ? 'sm:grid-cols-5'
                     : activeCategory.technologies.length >= 7
                       ? 'sm:grid-cols-4'
                       : activeCategory.technologies.length === 6 || activeCategory.technologies.length === 3

@@ -21,6 +21,18 @@ export function findProjectsForTechnology(
         return /controle de versão|\bGit\b/i.test(project.details.practices.pt)
       case 'github':
         return project.githubUrl.startsWith('https://github.com/')
+      // Confirmed by AMI-108 source, tests and deployed service. Keep the
+      // existing project showcase technology chips unchanged.
+      case 'nodejs':
+      case 'openapi':
+      case 'vitest':
+      case 'generative-ai':
+      case 'llms':
+      case 'applied-ai':
+      case 'vercel':
+      case 'jest':
+      case 'pytest':
+        return project.id === 'ami-108'
       default:
         return false
     }

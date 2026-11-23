@@ -298,7 +298,7 @@ describe('Developer Portfolio', () => {
     expect(within(grid).getAllByRole('article')).toHaveLength(8)
   })
 
-  it('keeps all 38 technologies in a compact, deselectable category browser', async () => {
+  it('keeps all 47 technologies in a compact, deselectable category browser', async () => {
     const user = userEvent.setup()
     render(<App />)
 
@@ -311,8 +311,8 @@ describe('Developer Portfolio', () => {
     expect(within(navigation).queryByText('Explore por área')).not.toBeInTheDocument()
 
     const frontendGrid = screen.getByRole('button', { name: 'HTML5' }).parentElement
-    expect(frontendGrid).toHaveClass('sm:grid-cols-5')
-    expect(frontendGrid?.children).toHaveLength(10)
+    expect(frontendGrid).toHaveClass('sm:grid-cols-4')
+    expect(frontendGrid?.children).toHaveLength(11)
     for (const name of ['Angular', 'jQuery', 'TanStack']) {
       expect(screen.getByRole('button', { name }).querySelector('svg path')).toBeInTheDocument()
     }
@@ -335,7 +335,7 @@ describe('Developer Portfolio', () => {
     await user.click(within(navigation).getByRole('button', { name: /Cloud & DevOps/ }))
     const cloudGrid = screen.getByRole('button', { name: 'Azure' }).parentElement
     expect(cloudGrid).toHaveClass('sm:grid-cols-4')
-    expect(cloudGrid?.children).toHaveLength(7)
+    expect(cloudGrid?.children).toHaveLength(8)
 
     await user.click(screen.getByRole('button', { name: 'Azure' }))
     expect(screen.getByRole('region', { name: /Azure — Detalhes da tecnologia/ }))
@@ -344,11 +344,11 @@ describe('Developer Portfolio', () => {
     expect(screen.getByRole('button', { name: 'Azure' })).toHaveAttribute('aria-pressed', 'false')
 
     await user.click(within(navigation).getByRole('button', { name: /Inteligência Artificial/ }))
-    expect(screen.getByRole('button', { name: 'IA Generativa' }).parentElement?.children).toHaveLength(4)
+    expect(screen.getByRole('button', { name: 'IA Generativa' }).parentElement?.children).toHaveLength(5)
     expect(screen.getByRole('button', { name: 'LLMs' }).querySelector('svg.technology-icon')).toBeInTheDocument()
 
     await user.click(within(navigation).getByRole('button', { name: /Qualidade & Testes/ }))
-    expect(screen.getByRole('button', { name: 'QA' }).parentElement?.children).toHaveLength(3)
+    expect(screen.getByRole('button', { name: 'QA' }).parentElement?.children).toHaveLength(5)
     expect(screen.getByRole('button', { name: 'Vitest' }).querySelector('svg path')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Playwright' }).querySelector('svg')).toBeInTheDocument()
 
@@ -356,7 +356,7 @@ describe('Developer Portfolio', () => {
     expect(screen.getByRole('button', { name: 'Git' }).parentElement?.children).toHaveLength(6)
 
     await user.click(within(navigation).getByRole('button', { name: /Back-End & Dados/ }))
-    expect(screen.getByRole('button', { name: 'Node.js' }).parentElement?.children).toHaveLength(8)
+    expect(screen.getByRole('button', { name: 'Node.js' }).parentElement?.children).toHaveLength(12)
     expect(screen.getByRole('button', { name: 'Supabase' }).querySelector('svg path')).toBeInTheDocument()
     const restApiCard = screen.getByRole('button', { name: 'APIs REST' })
     expect(restApiCard.querySelector('svg.technology-icon')).toBeInTheDocument()
@@ -378,6 +378,41 @@ describe('Developer Portfolio', () => {
     expect(screen.getByRole('button', { name: 'Azure' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('region', { name: /Azure — Technology details/ }))
       .toHaveTextContent('I studied Microsoft Azure infrastructure and service fundamentals')
+  })
+
+  it('shows verified AMI-108 technologies with brand icons and practical evidence', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const categories = screen.getByRole('navigation', { name: 'Áreas de tecnologia' })
+
+    for (const [category, names] of [
+      [/Front-End/, ['Next.js']],
+      [/Back-End & Dados/, ['NestJS', 'Prisma', 'Python', 'FastAPI']],
+      [/Inteligência Artificial/, ['Groq', 'IA Generativa', 'LLMs', 'IA Aplicada']],
+      [/Cloud & DevOps/, ['Vercel']],
+      [/Qualidade & Testes/, ['Jest', 'Pytest']],
+    ] as const) {
+      await user.click(within(categories).getByRole('button', { name: category }))
+      for (const name of names) {
+        const card = screen.getByRole('button', { name })
+        expect(card.querySelector('svg path'), name).toBeInTheDocument()
+        await user.click(card)
+        const detail = screen.getByRole('region', { name: `${name} — Detalhes da tecnologia` })
+        expect(detail).toHaveTextContent('Implementei')
+        expect(detail.textContent).not.toContain(';')
+        await user.click(card)
+      }
+    }
+
+    await user.click(within(categories).getByRole('button', { name: /Inteligência Artificial/ }))
+    await user.click(screen.getByRole('button', { name: 'Agentes de IA' }))
+    expect(screen.getByRole('region', { name: /Agentes de IA — Detalhes da tecnologia/ }))
+      .toHaveTextContent('Pretendo aplicar')
+
+    await user.click(screen.getByRole('button', { name: 'Groq' }))
+    await user.click(screen.getByRole('button', { name: 'EN' }))
+    expect(screen.getByRole('region', { name: /Groq — Technology details/ }))
+      .toHaveTextContent('Implemented')
   })
 
   it('presents verified Docker, Nginx, OpenAPI and full-stack browser evidence in both languages', async () => {
