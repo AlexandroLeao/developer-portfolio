@@ -1,57 +1,49 @@
-# ADR 0004: Accessible Motion and Viewport-Safe Mobile Navigation
+# ADR 0004 — Accessible Motion and Viewport-Safe Mobile Navigation
 
-## Status
-
-Accepted — documented retrospectively on 2026-11-09.
+**Status:** Accepted (retrospectively documented on 2026-11-09)  
+**Scope:** Developer Portfolio interactions
 
 ## Context
 
-The portfolio combines a distinctive illustrated Hero, several option-heavy sections, and project/certification cards. Iterative visual testing exposed several risks:
+The portfolio combines an illustrated Hero, option-heavy sections, responsive project cards and certifications. Iterative reviews identified risks of misaligned animation frames, mobile overflow, inconsistent card spacing and distracting section transitions.
 
-- Cropping, size/color mismatch, and layered artifacts when a mascot's hand was animated independently of the character.
-- Horizontal page expansion when mobile option lists were not contained within their section.
-- Uneven card spacing and dense content competing with visual hierarchy.
-- Section entrances that felt abrupt or distracting when scrolling in either direction.
-
-The goal was to preserve the approved visual style while improving consistency, legibility, and interaction clarity.
+The requirement was to preserve the established visual identity while improving interaction clarity and accessibility, including visitors who prefer reduced motion.
 
 ## Decision
 
-1. **Use full-frame stop motion.** Render two matching, optimized whole-character WebP frames for the repeating wave. Temporarily replace the wave with a dedicated complete click/tap reaction frame. Do not animate isolated limb cutouts or leave the static pose visible behind another frame.
-2. **Contain mobile selection tracks.** Keep page sections viewport-safe; allow internal horizontal scrolling for technology, experience, project, and certification choices. Gently center the selected control through the shared `centerMobileSelection` helper. Show one project panel at a time on mobile and a multi-card grid on desktop.
-3. **Keep certification information predictable.** Present three curated default highlights on desktop and mobile, with explicit access to all qualifications and category filters. Align card action areas and center skill chips while preserving their headings.
-4. **Use restrained reveal motion.** Animate section opacity and a small vertical offset with reversible CSS transitions driven by `IntersectionObserver`. Respect `prefers-reduced-motion`, avoid layout-changing transforms, and keep motion independent from content visibility when animation is disabled.
+1. **Animate whole-character frames.** Use two optimized WebP poses for a repeating stop-motion wave and a distinct frame for a temporary click/tap reaction. Avoid separately animated limbs or overlapping default poses.
+2. **Constrain mobile selectors.** Keep technology, experience, project and certification selection tracks inside their sections. Scroll options horizontally and gently center the selected control with `centerMobileSelection`. Show one selected project at a time on mobile and a grid on desktop.
+3. **Provide predictable qualification access.** Show three curated featured qualifications by default while exposing the full catalog and filters.
+4. **Keep section reveals restrained.** Use `IntersectionObserver` plus opacity/small translation transitions. Respect `prefers-reduced-motion: reduce` and avoid content loss when motion is disabled.
 
-## Rationale
+## Alternatives Considered
 
-Full frames preserve the character's proportions, shadows, and lighting. Contained selection tracks keep narrow screens stable. Shared, subtle interactions reduce visual noise and make repeated controls predictable. Reduced-motion handling prevents movement from becoming a barrier to reading the site.
+- Animate isolated mascot layers: lighter asset reuse, but caused visible alignment problems.
+- Show every item in dense mobile grids: reduced interaction state, but increased overflow and readability risk.
+- Remove all animations: simple, but not required when motion can be made optional and subtle.
 
 ## Consequences
 
 ### Benefits
 
-- Consistent character imagery and a recognizable, lightweight stop-motion gesture.
-- Mobile navigation without unintended horizontal page overflow.
-- More regular project, experience, and certification presentation.
-- Less abrupt scroll effects with an accessible reduced-motion path.
+- Cohesive character styling and recognizable gesture.
+- Mobile navigation without accidental page-wide horizontal expansion.
+- Predictable card/selection behavior and full access to catalog content.
+- Reduced-motion behavior without removing content.
 
 ### Trade-offs
 
-- Full-frame animation requires multiple optimized image assets and careful frame alignment.
-- A selected mobile item may not be exactly centered at a scroll boundary; adjacent options must remain discoverable.
-- Viewport-driven reveals require lifecycle cleanup and careful behavior when motion is disabled or observation is unsupported.
-- The default three-item certification selection requires a visible route to the complete catalog.
+- Whole-frame animation requires aligned responsive assets.
+- Selector centering may be limited near a scroll-track boundary.
+- Observer-driven transitions need lifecycle cleanup and resilient reduced-motion handling.
+- Curated certification defaults must offer an obvious path to all entries.
 
-## Validation
+## Verification and References
 
-- Component and application tests exercise mascot behavior, responsive selection state, project details, certification filtering, and related-project navigation.
-- ESLint, TypeScript/Vite build, and automated tests run in GitHub Actions for pull requests.
-- Manual review should include narrow viewports, both languages/themes, keyboard focus, and reduced-motion mode.
-- The project owner reported PageSpeed Insights 100/100 across four categories on 2026-11-09 after the refinements. See [Performance and Quality](../performance-and-quality.md) for provenance and limitations; this is not presented as an independently reproduced ADR test.
-
-## References
-
-- `src/components/HeroMascot.tsx`, `src/index.css`
-- `src/utils/centerMobileSelection.ts`, `src/App.tsx`
-- `src/components/ExperienceTimeline.tsx`, `src/components/CertificationCard.tsx`
+- [Hero mascot](../../src/components/HeroMascot.tsx), [global styles](../../src/index.css)
+- [App interactions](../../src/App.tsx), [mobile selection helper](../../src/utils/centerMobileSelection.ts)
+- [Experience timeline](../../src/components/ExperienceTimeline.tsx), [certification cards](../../src/components/CertificationCard.tsx)
 - [Issue #93](https://github.com/AlexandroLeao/developer-portfolio/issues/93) and [PR #94](https://github.com/AlexandroLeao/developer-portfolio/pull/94)
+- [Performance and Quality](../performance-and-quality.md) for dated observations and automation limitations
+
+Automated checks cover relevant interaction regressions but do **not** establish full WCAG conformance. The owner's 2026-11-09 PageSpeed report is **historical and unarchived**, not an independently verified result of this ADR.

@@ -1,47 +1,56 @@
-
 ## Summary
 
-Describe the purpose of this Pull Request and the main changes.
+Explain the purpose of this **Developer Portfolio** Pull Request and its scope.
 
 ## Related Issue
 
-Closes #
-
-> Use `Closes #NUMBER` only when this Pull Request fully resolves the Issue. Otherwise, use `Refs #NUMBER`.
+Reference the portfolio Issue when applicable (`Refs #123`). Use `Closes #123` only when the Issue's acceptance criteria are fully met.
 
 ## Changes
 
-- Describe the first change.
-- Describe the second change.
-- Describe the third change.
+- Describe the change and affected files.
+- Confirm that unrelated repositories, features and workflows are outside scope.
 
-## Validation
+## Change Type
+
+- [ ] Application / UI / data
+- [ ] Tests / quality
+- [ ] Build / deployment / CI
+- [ ] Documentation only
+
+## Verification Performed
+
+Mark **only** checks actually executed:
 
 - [ ] `npm run lint`
+- [ ] `npm run test`
 - [ ] `npm run build`
-- [ ] Applicable automated tests, if available
-- [ ] Relevant manual testing
-- [ ] Responsive layout checked, if applicable
-- [ ] Light and dark themes checked, if applicable
-- [ ] Portuguese and English content checked, if applicable
+- [ ] `npm run test:e2e` when applicable
+- [ ] Docker smoke or Lighthouse when applicable
+- [ ] Relevant manual behavior/translation/responsive checks
+- [ ] Documentation links, paths, Markdown structure and technical claims reviewed
 
-## Screenshots
+**Not run / skipped and why:** Explain any omitted checks. Do not mark skipped tests as passed. Avoid `[skip ci]` where a required status check is configured: the check may remain pending and block merging.
 
-Add screenshots or recordings for visual changes, when relevant.
+## Visual Changes
 
-## Documentation
+Attach screenshots or recordings only when relevant.
 
-- [ ] Documentation updated, if needed
-- [ ] No documentation changes required
+## Documentation and Evidence
 
-## Review Checklist
+- [ ] Affected documentation is updated (or no change is necessary).
+- [ ] Historical scores/test counts are dated and source-attributed.
+- [ ] No cross-project plans, release claims or private data were introduced.
+- [ ] PlantUML and SVG artifacts remain synchronized if changed.
 
-- [ ] The changes match the agreed scope.
-- [ ] No unrelated changes are included.
-- [ ] No secrets or sensitive information are committed.
-- [ ] The related Issue is referenced.
-- [ ] Known limitations or follow-up tasks are documented.
+## Review and Release
+
+- [ ] Changes match the approved scope.
+- [ ] No secrets or sensitive assets were committed.
+- [ ] Known limitations are documented.
+- [ ] Applicable checks, current branch rules and any requested reviewer approval will be honored.
+- [ ] Production verification is planned if application behavior changes.
 
 ## Additional Notes
 
-Add implementation decisions, limitations, or relevant context.
+Record important decisions, follow-ups and any constraints on CI resources.
